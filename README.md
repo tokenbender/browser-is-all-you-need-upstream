@@ -293,9 +293,9 @@ Verify their schema, measured counts, and the 790-row non-shrink invariant with
 `python3 scripts/verify_aider_sft_defect_inventory.py`.
 All project-tracked Aider dataset lineages are preserved in the private,
 manual-approval
-[`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922)
+[`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/f21122d33f99e552aee0557699b5e3e71b6e12e5)
 catalog. Evaluator-only histories and result JSONs are separately preserved in
-[`glm47-aider-fixed26-responses`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c).
+[`glm47-aider-fixed26-responses`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/53a7e4f41b72bdbe7c67db4408bca6796d33ceb3).
 Both repositories are private, manually gated, and pinned here to revisions
 that passed a file-by-file authenticated round trip.
 
@@ -314,14 +314,18 @@ python3 scripts/download_assets.py aider-responses --output-root /workspace/asse
 | SFT v1 | 401 source / 321 train / 320 consumed | 1/26 | 5/26 | 26/26 | 1,732,287 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v1-321) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/sft-v1-fixed26-20260718) · [W&B](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-v1-sft-20260717T130336Z) |
 | SFT v2 | 1,211 packaged / 1,184 consumed | 1/26 | 6/26 | 25/26 tasks | 1,582,781 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v2-1211) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/sft-v2-fixed26-20260719) · [W&B](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-1211-sft-20260718T192250Z) |
 | SFT v3 | 530 packaged / 520 consumed | 0/26 | **7/26** | 26/26 | 1,611,304 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v3-complement-530) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/sft-v3-fixed26-20260721) · [W&B](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-complement-530-sft-20260721) |
+| SFT v4 | 790 packaged / 780 consumed per epoch; 3 epochs | 0/26 | 6/26 | 26/26 | See receipt | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/c0db40db76fb16014103d131335fb15a2c0cfd19/datasets/sft-v4-holistic-790) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723) · [W&B](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z) |
+| SFT v5 | 1,340 packaged and consumed per epoch; 3 epochs / 4,020 exposures | **2/26** | 5/26 | 26/26 | 1,680,607 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/f21122d33f99e552aee0557699b5e3e71b6e12e5/datasets/sft-v5-experimental-1340) · [checkpoint](https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/main/evals/sft-v5-experimental-1340-3ep-fixed26-20260723) · [W&B](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z) · [reproduce](docs/AIDER_SFT_V5_1340_REPRODUCE.md) |
 | RL v2 | 169 train + 22 monitor; 11 updates, about 2.08 epochs | 1/26 | 6/26 | 26/26 | 1,650,420 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/rl-v2-shadow-169) · [response receipt](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/rl-v2-iter10-fixed26-20260722) |
 
-SFT v3 is the strongest completed assisted result: 7/26 versus the base
-model's 4/26, a 75% relative increase. The repaired RL run restores one
-first-attempt pass and preserves valid formatting, but does not exceed SFT v3
-on pass@2. This result is consistent with the working hypothesis that the lane
-is limited by training duration and high-signal data coverage, but the
-fixed-26 experiment does not prove that diagnosis by itself.
+SFT v3 remains the strongest completed result by the second assisted attempt:
+7/26 versus the base model's 4/26, a 75% relative increase. SFT v5 is the
+strongest first-attempt result at 2/26 and preserves valid formatting on all
+26 tasks, but reaches only 5/26 after feedback. The repaired RL run reaches
+1/26 first-attempt and 6/26 after feedback. These results are consistent with
+the working hypothesis that the lane is limited by training duration and
+high-signal data coverage, but the fixed-26 experiments do not prove that
+diagnosis by themselves.
 
 An earlier reward-parser trial is intentionally excluded from the table
 because it produced no comparable fixed-26 receipt. It exposed terminal-token
@@ -358,6 +362,7 @@ extracted asset path.
 | SFT v1 | Source archive SHA-256 `2efe714c454de7ba1c5fd523f5849b3c6c9af65e8e5ca5bf4cf438017fb1e03a`; inner 401-row JSONL SHA-256 `2ddfe6966c828007f7d6c439e51bfaf07c8959dddc4423ceadb602dc3d49517b` | `glm47-runs:/glm47-aider-v1-sft-20260717T130336Z/checkpoints/sft_lora_r16/iter_0000009/adapter` |
 | SFT v2 | Train JSONL SHA-256 `13219cae85551714d4280b60600bb7ef5336dffda54698340ba40f3405ccd51b` | `glm47-runs:/glm47-aider-1211-sft-20260718T192250Z/checkpoints/sft_lora_r16/iter_0000036/adapter` |
 | SFT v3 | Train JSONL SHA-256 `805aa59bbc936ee20687a293ef47d2fb9bcaee12419c6539ecd6180dfab02089` | `glm47-runs:/glm47-aider-complement-530-sft-20260721/checkpoints/sft_lora_r16/iter_0000025/adapter` |
+| SFT v5 | Manifest SHA-256 `0906e1abcec775ca52362679fe39d83af9ac1744c984faf1125f4de0c7b2e130`; train JSONL SHA-256 `a01a07c9d4e2706683814a3d5afc2bcd47172ff92b08f15e2c673729f185bd66` | `iter_0000200`; adapter SHA-256 `bdd808bf98d26b467af7fec1a20d7ed6502bac0ffd50eae9cb6a1e702613daaa`; [gated checkpoint](https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep) |
 | RL v2 | Manifest SHA-256 `a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157`; train JSONL SHA-256 `b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2` | Merged start adapter SHA-256 `dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91`; final adapter SHA-256 `046a1018b605aa29f8b8c4f2677f47ce55489105f6766155f4c009798f48abe2` |
 
 The same data revision also maps, without omission, the heuristic-32,
