@@ -509,10 +509,12 @@ def test_modal_aider_profile_binds_objective_adapter_and_safe_reward() -> None:
     assert "num_rollout=num_rollout" in text
 
 
-def test_aider_fixed_26_eval_requires_grpo_gate() -> None:
+def test_aider_fixed_26_eval_requires_phase_specific_training_gate() -> None:
     text = GLM47_AIDER_EVAL_MODAL_RUNNER.read_text(encoding="utf-8")
     assert '"glm47-aider-grpo-training-gate"' in text
+    assert '"glm47-aider-sft-training-gate"' in text
     assert '"grpo_lora_r16", "grpo_training_gate.json"' in text
+    assert '"sft_lora_r16", "sft_training_gate.json"' in text
     assert '"training_task_count": EXPECTED_TRAINING_TASK_COUNT' in text
     assert 'os.environ.get("GLM47_EXPECTED_TRAINING_TASK_COUNT", "253")' in text
     assert 'os.environ.get("GLM47_EVAL_LORA_RANK", "16")' in text
@@ -524,6 +526,8 @@ def test_aider_fixed_26_eval_requires_grpo_gate() -> None:
     assert "def evaluate_shard(" in text
     assert "def merge_shards(" in text
     assert "elif parallel:" in text
+    assert "modal.Retries(max_retries=2" in text
+    assert "adapter load failure" in text
 
 
 def test_lium_aider_reproduction_pins_inputs_and_fixed_schedule() -> None:

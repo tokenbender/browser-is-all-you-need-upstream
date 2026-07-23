@@ -125,12 +125,19 @@ def verify_training_binding(
     if sha256_path(source / "adapter_model.bin") != adapter_sha256:
         raise RuntimeError("selected adapter bytes do not match the caller-bound SHA-256")
     run_id = source.parts[2]
-    gate_path = Path("/runs", run_id, "grpo_lora_r16", "grpo_training_gate.json")
+    is_sft = expected_training_phase == "sft"
+    expected_gate_kind = (
+        "glm47-aider-sft-training-gate" if is_sft else EXPECTED_TRAINING_GATE_KIND
+    )
+    if is_sft:
+        gate_path = Path("/runs", run_id, "sft_lora_r16", "sft_training_gate.json")
+    else:
+        gate_path = Path("/runs", run_id, "grpo_lora_r16", "grpo_training_gate.json")
     if not gate_path.is_file():
         raise FileNotFoundError(f"missing full-run training gate: {gate_path}")
     gate = json.loads(gate_path.read_text(encoding="utf-8"))
     expected = {
-        "kind": EXPECTED_TRAINING_GATE_KIND,
+        "kind": expected_gate_kind,
         "status": "passed",
         "phase": expected_training_phase,
         "run_id": run_id,
@@ -332,6 +339,13 @@ def main(
             )
             for index in range(2)
         ]
+        print(
+            json.dumps(
+                {"shard_function_call_ids": [call.object_id for call in calls]},
+                indent=2,
+            ),
+            flush=True,
+        )
         shard_receipts = [call.get() for call in calls]
         payload = merge_shards.remote(
             run_id=resolved_run_id,
@@ -511,6 +525,7 @@ def _validate_benchmark_results(
     image=image,
     gpu="H100:4",
     timeout=7200,
+    retries=modal.Retries(max_retries=2, initial_delay=5.0, max_delay=30.0),
     volumes={"/models": models, "/runs": runs, "/results": results},
 )
 def evaluate_shard(
@@ -592,6 +607,7 @@ def evaluate_shard(
     ]
     started = datetime.now(timezone.utc)
     log_path = Path(f"/tmp/sglang-grpo-shard-{shard_index}.log")
+    print(f"[shard {shard_index}] starting SGLang", flush=True)
     with log_path.open("w", encoding="utf-8") as log:
         server = subprocess.Popen(server_command, stdout=log, stderr=subprocess.STDOUT, text=True)
         try:
@@ -600,8 +616,17 @@ def evaluate_shard(
             except Exception as exc:
                 log.flush()
                 tail = log_path.read_text(encoding="utf-8", errors="replace")[-12000:]
+                print(f"[shard {shard_index}] SGLang startup failure:\n{tail}", flush=True)
                 raise RuntimeError(f"{exc}\nSGLang log tail:\n{tail}") from exc
-            adapter_load = _load_adapter(serving_path)
+            print(f"[shard {shard_index}] SGLang healthy; loading adapter", flush=True)
+            try:
+                adapter_load = _load_adapter(serving_path)
+            except Exception:
+                log.flush()
+                tail = log_path.read_text(encoding="utf-8", errors="replace")[-12000:]
+                print(f"[shard {shard_index}] adapter load failure:\n{tail}", flush=True)
+                raise
+            print(f"[shard {shard_index}] adapter loaded; starting benchmark", flush=True)
             full = _benchmark(
                 f"{resolved_run_id}-shard-{shard_index}",
                 num_tests=None,
