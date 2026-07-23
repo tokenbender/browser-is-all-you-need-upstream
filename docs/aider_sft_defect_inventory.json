@@ -1,0 +1,724 @@
+{
+  "schema_version": 1,
+  "updated_at_utc": "2026-07-24T00:00:00Z",
+  "scope": {
+    "system": "GLM-4.7-Flash Aider Polyglot C++ supervised fine-tuning",
+    "benchmark_tasks": 26,
+    "purpose": "Complete, evidence-linked inventory of defects that can prevent SFT data or training from improving first-turn executable repository edits.",
+    "out_of_scope": [
+      "Changing RL rollout counts",
+      "Claiming that any listed diagnosis is fixed",
+      "Promoting a checkpoint from training loss alone"
+    ]
+  },
+  "sft_dataset_size_invariant": {
+    "canonical_dataset": "sft-v4-holistic-790",
+    "minimum_unique_packaged_rows": 790,
+    "current_unique_packaged_rows": 790,
+    "current_rows_consumed_per_epoch": 780,
+    "target_rows_consumed_per_epoch": 790,
+    "policy": "Rows rejected as positive supervision must be repaired, replaced, or backfilled with independently verified rows. Quality work must not reduce the unique packaged corpus below 790. Tail-batch remediation must consume all rows or backfill; it must not shrink the corpus to a convenient multiple."
+  },
+  "evidence_sources": {
+    "master_issue": {
+      "kind": "github_issue",
+      "url": "https://github.com/tokenbender/browser-is-all-you-need/issues/37"
+    },
+    "inventory_issue": {
+      "kind": "github_issue",
+      "url": "https://github.com/tokenbender/browser-is-all-you-need/issues/38"
+    },
+    "run_registry": {
+      "kind": "repository_file",
+      "path": "docs/aider_posttraining_runs.json"
+    },
+    "data_catalog": {
+      "kind": "gated_huggingface_revision",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922"
+    },
+    "v4_data": {
+      "kind": "gated_huggingface_revision",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/c0db40db76fb16014103d131335fb15a2c0cfd19/datasets/sft-v4-holistic-790"
+    },
+    "v3_eval": {
+      "kind": "gated_huggingface_revision",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/sft-v3-fixed26-20260721"
+    },
+    "v4_1ep_eval": {
+      "kind": "gated_huggingface_revision",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/4b888cd8ae024f1e90003b2b45a3c097603d66bb/evals/sft-v4-holistic-790-fixed26-20260723"
+    },
+    "v4_3ep_eval": {
+      "kind": "gated_huggingface_revision",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723"
+    },
+    "v4_1ep_wandb": {
+      "kind": "wandb_run",
+      "url": "https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z"
+    },
+    "v4_3ep_wandb": {
+      "kind": "wandb_run",
+      "url": "https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z"
+    }
+  },
+  "dataset_history": [
+    {
+      "id": "sft-v1",
+      "unique_packaged_rows": 321,
+      "rows_consumed_per_epoch": 320,
+      "epochs": 1,
+      "first_turn_passes": 1,
+      "assisted_passes": 5
+    },
+    {
+      "id": "sft-v2",
+      "unique_packaged_rows": 1211,
+      "rows_consumed_per_epoch": 1184,
+      "epochs": 1,
+      "first_turn_passes": 1,
+      "assisted_passes": 6
+    },
+    {
+      "id": "sft-v3",
+      "unique_packaged_rows": 530,
+      "rows_consumed_per_epoch": 520,
+      "epochs": 1,
+      "first_turn_passes": 0,
+      "assisted_passes": 7
+    },
+    {
+      "id": "sft-v4-1ep",
+      "unique_packaged_rows": 790,
+      "rows_consumed_per_epoch": 780,
+      "epochs": 1,
+      "first_turn_passes": 1,
+      "assisted_passes": 4
+    },
+    {
+      "id": "sft-v4-3ep",
+      "unique_packaged_rows": 790,
+      "rows_consumed_per_epoch": 780,
+      "epochs": 3,
+      "first_turn_passes": 0,
+      "assisted_passes": 6
+    }
+  ],
+  "raw_715_audit": {
+    "total_rows": 715,
+    "train_ready_rows": 0,
+    "review_rows": 643,
+    "reject_rows": 72,
+    "compile_pass_rows": 690,
+    "compile_fail_rows": 25,
+    "contradictory_pairs": 40,
+    "gold_conflicts": 7,
+    "unresolved_lineage_rows": 104,
+    "missing_example_rows": 60,
+    "dense_or_minified_answers": 606,
+    "independent_row_semantic_receipts": 0,
+    "raw_concat_total_rows": 875,
+    "raw_715_share_percent": 81.71
+  },
+  "summary": {
+    "defect_count": 55,
+    "by_category": {
+      "dataset": 17,
+      "loader": 7,
+      "training": 10,
+      "behavior": 7,
+      "evaluation": 7,
+      "observability": 7
+    },
+    "by_severity": {
+      "critical": 10,
+      "high": 31,
+      "medium": 14
+    },
+    "by_evidence_status": {
+      "confirmed": 49,
+      "risk": 6
+    }
+  },
+  "defects": [
+    {
+      "id": "D001",
+      "category": "dataset",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "The raw-715 audit found zero rows ready for training without review.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Reverify every retained row and record an executable semantic receipt.",
+      "acceptance_test": "Every positive row has a passing row-level receipt and an explicit disposition."
+    },
+    {
+      "id": "D002",
+      "category": "dataset",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "Seventy-two raw-715 rows are classified reject.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Remove them from positive supervision only after one-for-one repair, replacement, or backfill.",
+      "acceptance_test": "No rejected row remains positive and the packaged dataset still contains at least 790 unique rows."
+    },
+    {
+      "id": "D003",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Six hundred forty-three raw-715 rows remain review-only.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Resolve review rows with compile, test, interface, and semantic checks.",
+      "acceptance_test": "No review-only row is silently promoted to positive supervision."
+    },
+    {
+      "id": "D004",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Twenty-five raw-715 answers fail compilation.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Repair or replace each compile-failing answer.",
+      "acceptance_test": "All positive answers compile in their declared fixture."
+    },
+    {
+      "id": "D005",
+      "category": "dataset",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "The audit contains 40 contradictory prompt pairs.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Resolve each pair using executable correctness and provenance.",
+      "acceptance_test": "No normalized prompt maps to incompatible positive targets."
+    },
+    {
+      "id": "D006",
+      "category": "dataset",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "Seven rows conflict with Gold targets.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Adjudicate conflicts and retain only the verified target.",
+      "acceptance_test": "Every Gold conflict has a decision, receipt, and superseded-row link."
+    },
+    {
+      "id": "D007",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "One hundred four raw-715 rows have unresolved lineage.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Attach immutable source, transform, and parent identifiers.",
+      "acceptance_test": "Every positive row has reconstructable lineage."
+    },
+    {
+      "id": "D008",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Sixty raw-715 records lack the example needed to audit the target.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Restore the missing fixture or replace the row.",
+      "acceptance_test": "Each positive row is self-contained enough for deterministic replay."
+    },
+    {
+      "id": "D009",
+      "category": "dataset",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "Six hundred six raw-715 answers are dense or minified, weakening edit pedagogy and auditability.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Normalize style without changing semantics, then replay verification.",
+      "acceptance_test": "Style gates flag no unreadable positive target."
+    },
+    {
+      "id": "D010",
+      "category": "dataset",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "No raw-715 row has an independent row-level semantic receipt.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Generate immutable compile, test, sanitizer, and contract receipts per row.",
+      "acceptance_test": "Receipt coverage equals positive-row count."
+    },
+    {
+      "id": "D011",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Raw-715 supplies 81.71% of the 875-row raw-concat mixture that regressed from SFT v2.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Keep raw-715 out of positive mixtures until adjudicated.",
+      "acceptance_test": "Promotion tests show no first-turn or assisted regression versus the declared baseline."
+    },
+    {
+      "id": "D012",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "The v4 package verifies the 260 new rows strongly, but does not independently replay all 530 inherited rows.",
+      "evidence_refs": ["master_issue", "v4_data"],
+      "remediation": "Replay the same strict checks over inherited and new rows.",
+      "acceptance_test": "All 790 rows pass one uniform verification pipeline."
+    },
+    {
+      "id": "D013",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "risk",
+      "finding": "Exact fixed-26 overlap is zero, but semantic contamination has not been fully excluded.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Run AST, behavior, and problem-concept similarity audits against fixed-26.",
+      "acceptance_test": "Every near match is adjudicated and held-out claims exclude contaminated rows."
+    },
+    {
+      "id": "D014",
+      "category": "dataset",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "Quality filtering can falsely improve audit rates by shrinking the 790-row corpus.",
+      "evidence_refs": ["inventory_issue", "v4_data"],
+      "remediation": "Enforce repair, replacement, or backfill for every rejected positive row.",
+      "acceptance_test": "The verified unique packaged corpus remains at least 790 rows after every intervention."
+    },
+    {
+      "id": "D015",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "All 715 raw rows were exposed as usable by the earlier API even though the later audit found zero train-ready rows.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Make the audited disposition authoritative and remove permissive legacy labels.",
+      "acceptance_test": "No consumer can select a row as positive when its current audited disposition is review or reject."
+    },
+    {
+      "id": "D016",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "risk",
+      "finding": "Seven hundred five of 715 raw answers share the same curriculum namespace, indicating a highly concentrated generation lineage.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Measure generator, template, and solution-family diversity before treating row count as independent coverage.",
+      "acceptance_test": "The corpus report separates unique behavioral coverage from repeated generator style."
+    },
+    {
+      "id": "D017",
+      "category": "dataset",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "The 600-row pass1-skills mixture achieved 0/26 first-turn and 2/26 assisted passes, so its added skill rows did not transfer under that run.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Audit the skill labels, target correctness, and mixture weights before reuse.",
+      "acceptance_test": "A matched ablation shows positive first-turn transfer before this mixture is promoted."
+    },
+    {
+      "id": "L001",
+      "category": "loader",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "SFT v1 consumed 320 of 321 packaged rows.",
+      "evidence_refs": ["run_registry"],
+      "remediation": "Make tail handling explicit and consume all unique rows.",
+      "acceptance_test": "The epoch receipt accounts for all 321 row identities."
+    },
+    {
+      "id": "L002",
+      "category": "loader",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "SFT v2 consumed 1,184 of 1,211 packaged rows.",
+      "evidence_refs": ["run_registry"],
+      "remediation": "Use a non-dropping final batch or deterministic backfill.",
+      "acceptance_test": "The epoch receipt accounts for all 1,211 row identities."
+    },
+    {
+      "id": "L003",
+      "category": "loader",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "SFT v3 and both v4 schedules drop tail rows; v4 consumes 780 of 790 each epoch.",
+      "evidence_refs": ["master_issue", "v4_1ep_wandb", "v4_3ep_wandb"],
+      "remediation": "Consume the final ten rows without reducing the packaged dataset.",
+      "acceptance_test": "Each v4 epoch accounts for 790 distinct row identities."
+    },
+    {
+      "id": "L004",
+      "category": "loader",
+      "severity": "high",
+      "evidence_status": "risk",
+      "finding": "Current receipts do not expose the row identities consumed at each optimizer step.",
+      "evidence_refs": ["master_issue", "v4_1ep_wandb", "v4_3ep_wandb"],
+      "remediation": "Log deterministic row IDs and packed-sample membership.",
+      "acceptance_test": "A run can reconstruct row coverage and repetition per epoch."
+    },
+    {
+      "id": "L005",
+      "category": "loader",
+      "severity": "high",
+      "evidence_status": "risk",
+      "finding": "The corpus has no checked-in per-row token-length and truncation report.",
+      "evidence_refs": ["master_issue", "v4_data"],
+      "remediation": "Record raw, rendered, packed, and truncated token counts per row.",
+      "acceptance_test": "The report proves whether every target fits the training window."
+    },
+    {
+      "id": "L006",
+      "category": "loader",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "Training is capped at 4,096 tokens while evaluation permits outputs up to 32,768 tokens.",
+      "evidence_refs": ["master_issue", "v4_3ep_eval"],
+      "remediation": "Measure failure sensitivity to training-window coverage before changing the cap.",
+      "acceptance_test": "A length-stratified evaluation quantifies the train/eval window mismatch."
+    },
+    {
+      "id": "L007",
+      "category": "loader",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "The pass1-skills-600 experiment used a 3,072-token sequence length despite data fitting 4,096.",
+      "evidence_refs": ["master_issue", "data_catalog"],
+      "remediation": "Match sequence length when comparing data interventions.",
+      "acceptance_test": "Ablations vary one declared factor and record the effective token cap."
+    },
+    {
+      "id": "T001",
+      "category": "training",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "No disjoint validation split is reported for SFT training.",
+      "evidence_refs": ["master_issue", "v4_1ep_wandb", "v4_3ep_wandb"],
+      "remediation": "Create immutable train, validation, and fixed-26 holdout boundaries.",
+      "acceptance_test": "Training receipts include non-overlapping split manifests."
+    },
+    {
+      "id": "T002",
+      "category": "training",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "W&B reports training loss but no validation loss or executable validation score.",
+      "evidence_refs": ["v4_1ep_wandb", "v4_3ep_wandb"],
+      "remediation": "Log validation loss and first-turn executable metrics at fixed intervals.",
+      "acceptance_test": "Every promoted run has synchronized train and validation curves."
+    },
+    {
+      "id": "T003",
+      "category": "training",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "There is no evidence-based early stopping criterion.",
+      "evidence_refs": ["master_issue", "v4_3ep_wandb"],
+      "remediation": "Predeclare a validation-based checkpoint selection rule.",
+      "acceptance_test": "Checkpoint choice follows the recorded rule rather than final-step convenience."
+    },
+    {
+      "id": "T004",
+      "category": "training",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Intermediate checkpoints from the three-epoch run were not all evaluated on fixed-26.",
+      "evidence_refs": ["master_issue", "v4_3ep_wandb", "v4_3ep_eval"],
+      "remediation": "Evaluate each saved epoch or selected interval under one harness.",
+      "acceptance_test": "A checkpoint-by-checkpoint table identifies the actual behavioral frontier."
+    },
+    {
+      "id": "T005",
+      "category": "training",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Schedule comparisons are not compute- and token-matched.",
+      "evidence_refs": ["master_issue", "run_registry"],
+      "remediation": "Report seen tokens, optimizer updates, effective batches, and wall time.",
+      "acceptance_test": "Comparative claims use matched budgets or state the confound."
+    },
+    {
+      "id": "T006",
+      "category": "training",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Data interventions have not been isolated from simultaneous schedule and sequence-length changes.",
+      "evidence_refs": ["master_issue", "run_registry"],
+      "remediation": "Run one-factor ablations against a frozen recipe.",
+      "acceptance_test": "Each ablation changes one declared variable."
+    },
+    {
+      "id": "T007",
+      "category": "training",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "Reported SFT benchmark results are single-seed measurements.",
+      "evidence_refs": ["master_issue", "run_registry"],
+      "remediation": "Repeat promoted recipes with predeclared seeds.",
+      "acceptance_test": "Results include dispersion or an explicit single-seed limitation."
+    },
+    {
+      "id": "T008",
+      "category": "training",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "V4 performs only 39 optimizer steps per epoch.",
+      "evidence_refs": ["v4_1ep_wandb", "v4_3ep_wandb"],
+      "remediation": "Interpret epoch count jointly with optimizer updates and tokens seen.",
+      "acceptance_test": "Run summaries state all three quantities."
+    },
+    {
+      "id": "T009",
+      "category": "training",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Falling training loss did not produce a monotonic fixed-26 improvement, so undertraining is not established as the primary cause.",
+      "evidence_refs": ["v4_1ep_wandb", "v4_3ep_wandb", "v4_1ep_eval", "v4_3ep_eval"],
+      "remediation": "Treat data-target alignment, validation, and checkpoint selection as competing diagnoses.",
+      "acceptance_test": "Any undertraining claim is supported by matched learning curves and held-out improvement."
+    },
+    {
+      "id": "T010",
+      "category": "training",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "The three-epoch run reports a mean wait ratio of 54.67%, but the waiting source is not attributed in the run receipt.",
+      "evidence_refs": ["master_issue", "v4_3ep_wandb"],
+      "remediation": "Break wait time down by data loading, synchronization, checkpointing, and tracking.",
+      "acceptance_test": "The next receipt attributes wait time and reports throughput from the same interval."
+    },
+    {
+      "id": "B001",
+      "category": "behavior",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "The observed first-turn frontier is only 1 of 26 tasks.",
+      "evidence_refs": ["run_registry", "v4_1ep_eval", "v4_3ep_eval"],
+      "remediation": "Prioritize first-turn interface fidelity and executable correctness targets.",
+      "acceptance_test": "A promoted checkpoint exceeds 1/26 first-turn passes under the frozen harness."
+    },
+    {
+      "id": "B002",
+      "category": "behavior",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Assisted performance varies non-monotonically across SFT versions and epochs.",
+      "evidence_refs": ["run_registry", "v4_1ep_eval", "v4_3ep_eval"],
+      "remediation": "Use task-level regression gates, not aggregate score alone.",
+      "acceptance_test": "Promotion reports recovered, retained, and regressed tasks."
+    },
+    {
+      "id": "B003",
+      "category": "behavior",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "Some repair attempts exhaust context or fail to converge after feedback.",
+      "evidence_refs": ["master_issue", "v4_3ep_eval"],
+      "remediation": "Train concise diagnosis-to-patch examples and measure context use.",
+      "acceptance_test": "Repair traces remain within the declared budget and improve executable outcomes."
+    },
+    {
+      "id": "B004",
+      "category": "behavior",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Well-formed output is much more common than executable success.",
+      "evidence_refs": ["run_registry", "v4_3ep_eval"],
+      "remediation": "Separate formatting supervision from compile, interface, and semantic targets.",
+      "acceptance_test": "Evaluation reports format, compile, interface, test, and semantic stages separately."
+    },
+    {
+      "id": "B005",
+      "category": "behavior",
+      "severity": "critical",
+      "evidence_status": "confirmed",
+      "finding": "Sixteen of twenty terminal v4 three-epoch failures are interface or compile-contract failures.",
+      "evidence_refs": ["v4_3ep_eval"],
+      "remediation": "Add verified examples that preserve exact headers, types, symbols, ownership, and template visibility.",
+      "acceptance_test": "Contract-failure count falls on held-out tasks without semantic regression."
+    },
+    {
+      "id": "B006",
+      "category": "behavior",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "Four terminal v4 three-epoch failures are semantic rather than interface failures.",
+      "evidence_refs": ["v4_3ep_eval"],
+      "remediation": "Add independently verified semantic edge-case coverage.",
+      "acceptance_test": "Bank-account, dnd-character, yacht, and zebra-puzzle failure classes have targeted held-out analogues."
+    },
+    {
+      "id": "B007",
+      "category": "behavior",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "No completed SFT checkpoint dominates both first-turn and assisted outcomes: v3 leads assisted at 7/26, while v1, v2, and v4 one-epoch share the 1/26 first-turn frontier.",
+      "evidence_refs": ["run_registry", "v3_eval", "v4_1ep_eval", "v4_3ep_eval"],
+      "remediation": "Use a predeclared multi-metric promotion rule with retained-task gates.",
+      "acceptance_test": "The selected checkpoint satisfies the rule without hiding a regression in the other metric."
+    },
+    {
+      "id": "E001",
+      "category": "evaluation",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "The repository label pass@2 denotes sequential feedback-assisted repair, not two independent samples.",
+      "evidence_refs": ["run_registry", "master_issue"],
+      "remediation": "Rename the metric assisted-pass-by-attempt-2 in new reports while preserving legacy mapping.",
+      "acceptance_test": "No report conflates assisted repair with independent pass@k."
+    },
+    {
+      "id": "E002",
+      "category": "evaluation",
+      "severity": "high",
+      "evidence_status": "risk",
+      "finding": "Repeated tuning on the fixed 26 tasks risks adaptive benchmark overfitting.",
+      "evidence_refs": ["master_issue", "run_registry"],
+      "remediation": "Use fixed-26 for regression and add an untouched promotion set.",
+      "acceptance_test": "Final promotion is decided on a predeclared untouched split."
+    },
+    {
+      "id": "E003",
+      "category": "evaluation",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "Aggregate scores lack uncertainty estimates despite sampling at temperature 0.7.",
+      "evidence_refs": ["run_registry"],
+      "remediation": "Run independent seeds or trials and report intervals.",
+      "acceptance_test": "Promotion evidence includes uncertainty or is explicitly labeled deterministic/single-trial."
+    },
+    {
+      "id": "E004",
+      "category": "evaluation",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "At least one prior evaluation was invalid and had to be excluded because of harness failure.",
+      "evidence_refs": ["master_issue"],
+      "remediation": "Make harness validity a hard precondition with receipts.",
+      "acceptance_test": "Every score has task count, response count, parser, compile, and test integrity checks."
+    },
+    {
+      "id": "E005",
+      "category": "evaluation",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "SFT v2 produced two malformed responses and only 25 well-formed tasks.",
+      "evidence_refs": ["run_registry"],
+      "remediation": "Retain malformed-output accounting as a promotion gate.",
+      "acceptance_test": "All 26 tasks have auditable response artifacts and format outcomes."
+    },
+    {
+      "id": "E006",
+      "category": "evaluation",
+      "severity": "high",
+      "evidence_status": "risk",
+      "finding": "Task transition tables are descriptive but are not yet enforced as regression gates.",
+      "evidence_refs": ["master_issue", "v4_3ep_eval"],
+      "remediation": "Encode retained-win and maximum-regression thresholds.",
+      "acceptance_test": "CI rejects a candidate that violates the predeclared task-level gate."
+    },
+    {
+      "id": "E007",
+      "category": "evaluation",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "Post-hoc minimal corrections derived from failed responses are useful error analysis but are not independent evidence of model capability.",
+      "evidence_refs": ["master_issue", "v4_3ep_eval"],
+      "remediation": "Store analyst corrections separately and test any resulting data on untouched tasks.",
+      "acceptance_test": "Reports label observed model outputs, assisted attempts, and analyst-authored corrections as distinct artifacts."
+    },
+    {
+      "id": "O001",
+      "category": "observability",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "The v4 one-epoch and three-epoch runs live under different W&B entities.",
+      "evidence_refs": ["v4_1ep_wandb", "v4_3ep_wandb"],
+      "remediation": "Use one controlled entity/project and record immutable run URLs.",
+      "acceptance_test": "The project owner can access all promoted run histories."
+    },
+    {
+      "id": "O002",
+      "category": "observability",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "The one-epoch W&B history duplicates steps 0 through 37.",
+      "evidence_refs": ["v4_1ep_wandb", "master_issue"],
+      "remediation": "Use monotonic step keys and reject duplicate metric steps.",
+      "acceptance_test": "History contains exactly one metric record per declared optimizer step."
+    },
+    {
+      "id": "O003",
+      "category": "observability",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "The three-epoch run produced three local W&B resume directories under one run ID.",
+      "evidence_refs": ["v4_3ep_wandb", "master_issue"],
+      "remediation": "Record resume lineage and a single canonical history.",
+      "acceptance_test": "Run receipt enumerates sessions and proves lossless history merging."
+    },
+    {
+      "id": "O004",
+      "category": "observability",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "The three-epoch shutdown logged transport or EOF errors despite successful HTTP upload responses.",
+      "evidence_refs": ["v4_3ep_wandb", "master_issue"],
+      "remediation": "Add an explicit post-run sync and remote artifact verification gate.",
+      "acceptance_test": "The receipt proves remote history and artifact completeness after shutdown."
+    },
+    {
+      "id": "O005",
+      "category": "observability",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "W&B contains no validation metrics for the v4 SFT runs.",
+      "evidence_refs": ["v4_1ep_wandb", "v4_3ep_wandb"],
+      "remediation": "Publish validation loss and executable validation tables.",
+      "acceptance_test": "A promoted run has queryable validation metrics and samples."
+    },
+    {
+      "id": "O006",
+      "category": "observability",
+      "severity": "medium",
+      "evidence_status": "confirmed",
+      "finding": "Dataset revision, row manifest, training receipt, checkpoint, W&B run, and evaluation are not uniformly joined by one provenance record.",
+      "evidence_refs": ["master_issue", "run_registry"],
+      "remediation": "Create one immutable run receipt that links every artifact and hash.",
+      "acceptance_test": "A reviewer can traverse dataset to checkpoint to every response without inference."
+    },
+    {
+      "id": "O007",
+      "category": "observability",
+      "severity": "high",
+      "evidence_status": "confirmed",
+      "finding": "The current project account cannot access the W&B entity that owns the three-epoch run.",
+      "evidence_refs": ["master_issue", "v4_3ep_wandb"],
+      "remediation": "Mirror or transfer the run to the controlled project while preserving the original URL and run ID.",
+      "acceptance_test": "The project owner and designated reviewers can query the complete remote history."
+    }
+  ],
+  "v4_3ep_terminal_failures": [
+    {"task": "all-your-base", "class": "interface_or_compile_contract"},
+    {"task": "allergies", "class": "interface_or_compile_contract"},
+    {"task": "bank-account", "class": "semantic"},
+    {"task": "binary-search-tree", "class": "interface_or_compile_contract"},
+    {"task": "circular-buffer", "class": "interface_or_compile_contract"},
+    {"task": "clock", "class": "interface_or_compile_contract"},
+    {"task": "diamond", "class": "interface_or_compile_contract"},
+    {"task": "dnd-character", "class": "semantic"},
+    {"task": "gigasecond", "class": "interface_or_compile_contract"},
+    {"task": "kindergarten-garden", "class": "interface_or_compile_contract"},
+    {"task": "linked-list", "class": "interface_or_compile_contract"},
+    {"task": "meetup", "class": "interface_or_compile_contract"},
+    {"task": "parallel-letter-frequency", "class": "interface_or_compile_contract"},
+    {"task": "perfect-numbers", "class": "interface_or_compile_contract"},
+    {"task": "phone-number", "class": "interface_or_compile_contract"},
+    {"task": "queen-attack", "class": "interface_or_compile_contract"},
+    {"task": "spiral-matrix", "class": "interface_or_compile_contract"},
+    {"task": "sublist", "class": "interface_or_compile_contract"},
+    {"task": "yacht", "class": "semantic"},
+    {"task": "zebra-puzzle", "class": "semantic"}
+  ],
+  "v4_3ep_assisted_recoveries": [
+    "complex-numbers",
+    "crypto-square",
+    "grade-school",
+    "knapsack",
+    "robot-name",
+    "space-age"
+  ]
+}

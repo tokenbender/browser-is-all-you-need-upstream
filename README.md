@@ -285,6 +285,12 @@ Polyglot commit `7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f`.
 
 The machine-readable ledger is
 [`docs/aider_posttraining_runs.json`](docs/aider_posttraining_runs.json).
+The evidence-linked SFT defect ledger and its deterministic audit report are
+[`docs/aider_sft_defect_inventory.json`](docs/aider_sft_defect_inventory.json)
+and
+[`docs/AIDER_SFT_DEFECT_INVENTORY.md`](docs/AIDER_SFT_DEFECT_INVENTORY.md).
+Verify their schema, measured counts, and the 790-row non-shrink invariant with
+`python3 scripts/verify_aider_sft_defect_inventory.py`.
 All project-tracked Aider dataset lineages are preserved in the private,
 manual-approval
 [`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922)
@@ -529,11 +535,14 @@ examples/lium/aider_fixed26_eval.py  two-shard fixed-26 Lium evaluator
 examples/modal/modal_app.py        Modal 8x H100 reproduction
 examples/modal/aider_eval_app.py   provenance-gated fixed-26 Aider evaluation
 docs/aider_posttraining_runs.json  machine-readable Aider progress ledger
+docs/aider_sft_defect_inventory.json  machine-verifiable SFT defect ledger
+docs/AIDER_SFT_DEFECT_INVENTORY.md  human-readable SFT defect report
 docs/receipts/                     immutable measured evaluation receipts
 scripts/convert_checkpoint.sh      TP4/PP1/EP8 conversion
 scripts/download_assets.py         verified Hugging Face asset download
 scripts/package_aider_shadow.py    deterministic Aider shadow archive builder
 scripts/publish_aider_data_catalog.py  gated data/evaluation publication
+scripts/verify_aider_sft_defect_inventory.py  SFT defect and size-invariant check
 scripts/evaluate.py                held-out generation and scoring
 scripts/prepare_grpo_adapter.py    serving adapter preparation
 scripts/create_grpo_training_gate.py  Aider GRPO checkpoint provenance gate
