@@ -153,8 +153,33 @@ def preserve_eval(api: HfApi, results_root: Path, temporary: Path) -> dict[str, 
     )
     catalog = json.loads(catalog_path.read_text())
     upload_manifest = json.loads(upload_manifest_path.read_text())
-    if any(entry["eval_id"] == EVAL_ID for entry in catalog["evals"]):
-        return {"repo": EVAL_REPO, "revision": info.sha, "status": "already-present"}
+    existing = next(
+        (entry for entry in catalog["evals"] if entry["eval_id"] == EVAL_ID),
+        None,
+    )
+    if existing is not None:
+        for name, record in existing["files"].items():
+            downloaded = Path(
+                hf_hub_download(
+                    repo_id=EVAL_REPO,
+                    repo_type="dataset",
+                    filename=f"evals/{EVAL_ID}/{name}",
+                    revision=info.sha,
+                )
+            )
+            if file_record(downloaded) != record:
+                raise RuntimeError(f"existing response round-trip mismatch: {name}")
+        return {
+            "repo": EVAL_REPO,
+            "revision": info.sha,
+            "status": "passed-already-present",
+            "eval_id": EVAL_ID,
+            "archive_sha256": existing["files"]["responses.tar.gz"]["sha256"],
+            "history_files": existing["history_files"],
+            "result_files": existing["result_files"],
+            "hidden_tests_oracles_republished": False,
+            "roundtrip": "passed",
+        }
 
     members, outcomes = collect_responses(results_root)
     correction = temporary / "provenance_correction.json"
@@ -300,6 +325,41 @@ def preserve_model(
         "post-hoc gate correction.\n"
     )
     files["README.md"] = readme
+    if "MANIFEST.json" in api.list_repo_files(MODEL_REPO, revision=info.sha):
+        remote_manifest = Path(
+            hf_hub_download(
+                repo_id=MODEL_REPO,
+                filename="MANIFEST.json",
+                revision=info.sha,
+            )
+        )
+        if json.loads(remote_manifest.read_text()) == manifest_value:
+            for name in (
+                "MANIFEST.json",
+                "checkpoint/adapter_config.json",
+                "checkpoint/adapter_model.bin",
+            ):
+                downloaded = Path(
+                    hf_hub_download(
+                        repo_id=MODEL_REPO,
+                        filename=name,
+                        revision=info.sha,
+                    )
+                )
+                if file_record(downloaded) != file_record(files[name]):
+                    raise RuntimeError(f"existing model round-trip mismatch: {name}")
+            return {
+                "repo": MODEL_REPO,
+                "revision": info.sha,
+                "status": "passed-already-present",
+                "files": len(files),
+                "adapter_sha256": ADAPTER_SHA256,
+                "roundtrip_verified": [
+                    "MANIFEST.json",
+                    "checkpoint/adapter_config.json",
+                    "checkpoint/adapter_model.bin",
+                ],
+            }
     existing = set(api.list_repo_files(MODEL_REPO, revision=info.sha))
     target = set(files) | {".gitattributes"}
     delete_operations = []

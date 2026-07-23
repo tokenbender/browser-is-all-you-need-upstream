@@ -239,7 +239,8 @@
         "wandb": "https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z"
       },
       "checkpoint": "glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z/checkpoints/sft_lora_r16/iter_0000200/adapter",
-      "checkpoint_hf": "https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep",
+      "checkpoint_hf": "https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep/tree/43110cf15fa9cd87373b726638bf80c8f08858ce",
+      "checkpoint_hf_revision": "43110cf15fa9cd87373b726638bf80c8f08858ce",
       "adapter_sha256": "bdd808bf98d26b467af7fec1a20d7ed6502bac0ffd50eae9cb6a1e702613daaa",
       "pass_at_1": 2,
       "pass_at_2": 5,
@@ -252,7 +253,7 @@
       "completion_tokens": 677481,
       "canonical_evaluation_source_commit": "33572c480776b1d13f1896e3282223159124bf4a",
       "receipt": "docs/receipts/glm47-aider-sft-v5-1340-preservation.json",
-      "responses": "https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/main/evals/sft-v5-experimental-1340-3ep-fixed26-20260723",
+      "responses": "https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/53a7e4f41b72bdbe7c67db4408bca6796d33ceb3/evals/sft-v5-experimental-1340-3ep-fixed26-20260723",
       "reproduction": "docs/AIDER_SFT_V5_1340_REPRODUCE.md",
       "provenance_note": "The post-hoc gate recorded 7a81e71; the launch worktree and timestamps establish 0bb26d2 as the training source. The original is retained with a separate correction receipt."
     },

@@ -22,8 +22,8 @@ hidden tests, rubrics, and grader/oracle material.
 | Adapter SHA-256 | `bdd808bf98d26b467af7fec1a20d7ed6502bac0ffd50eae9cb6a1e702613daaa` |
 | Adapter config SHA-256 | `0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e` |
 | W&B | [`glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z`](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z) |
-| Checkpoint repository | [`TokenBender/glm47-aider-sft-v5-1340-modal-3ep`](https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep) |
-| Response repository | [`TokenBender/glm47-aider-fixed26-responses`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/main/evals/sft-v5-experimental-1340-3ep-fixed26-20260723) |
+| Checkpoint repository | [`TokenBender/glm47-aider-sft-v5-1340-modal-3ep@43110cf`](https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep/tree/43110cf15fa9cd87373b726638bf80c8f08858ce) |
+| Response repository | [`TokenBender/glm47-aider-fixed26-responses@53a7e4f`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/53a7e4f41b72bdbe7c67db4408bca6796d33ceb3/evals/sft-v5-experimental-1340-3ep-fixed26-20260723) |
 
 ## Training configuration
 

@@ -1,0 +1,45 @@
+{
+  "checkpoint": {
+    "adapter_sha256": "bdd808bf98d26b467af7fec1a20d7ed6502bac0ffd50eae9cb6a1e702613daaa",
+    "files": 29,
+    "repo": "TokenBender/glm47-aider-sft-v5-1340-modal-3ep",
+    "revision": "43110cf15fa9cd87373b726638bf80c8f08858ce",
+    "roundtrip_verified": [
+      "MANIFEST.json",
+      "checkpoint/adapter_config.json",
+      "checkpoint/adapter_model.bin"
+    ],
+    "status": "passed-already-present"
+  },
+  "kind": "glm47-aider-sft-v5-preservation-receipt",
+  "provenance_correction": {
+    "correct_value": "0bb26d2d0b281ad0be623d650c21f9a83667ca32",
+    "evidence": [
+      "Training was launched from work/modal-sft-v5-7a81e71.",
+      "Commit 0bb26d2 was created at 2026-07-23T21:04:46Z.",
+      "The detached Modal launch began at 2026-07-23T21:05Z.",
+      "The sft_training_gate.json was manually authored after training."
+    ],
+    "field": "source_commit",
+    "integrity_note": "The original gate and completed evaluation receipt are retained unchanged. Adapter and data hashes remain the evaluation binding.",
+    "kind": "glm47-aider-source-provenance-correction",
+    "recorded_value": "7a81e7112c8f550d7173ee1d35ee2aac9e01d9b1",
+    "run_id": "glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z",
+    "schema_version": 1,
+    "status": "corrected-with-original-retained"
+  },
+  "responses": {
+    "archive_sha256": "b065d5ea35c349231817a135c1aaf2fcce1eeb78fa263f432282826d28ab1b12",
+    "eval_id": "sft-v5-experimental-1340-3ep-fixed26-20260723",
+    "hidden_tests_oracles_republished": false,
+    "history_files": 26,
+    "repo": "TokenBender/glm47-aider-fixed26-responses",
+    "result_files": 26,
+    "revision": "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3",
+    "roundtrip": "passed",
+    "status": "passed-already-present"
+  },
+  "schema_version": 1,
+  "status": "passed",
+  "training_source_commit": "0bb26d2d0b281ad0be623d650c21f9a83667ca32"
+}
