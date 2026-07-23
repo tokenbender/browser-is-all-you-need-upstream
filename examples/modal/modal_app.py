@@ -251,6 +251,7 @@ def _stage_env(
     sft_num_epoch: str = "",
     sft_save_interval: str = "",
     sft_data_dir: str = "",
+    sft_seq_length: str = "",
     aider_data_dir: str = "",
     adapter_sha256: str = "",
     lora_rank: str = "",
@@ -283,6 +284,8 @@ def _stage_env(
         # Data max is 2270 tokens (600-set token audit), so 3072 removes ~25% of
         # the wasted seq buffer vs 4096 without truncating any row (3072 % TP4 == 0).
         env["MILES_SEQ_LENGTH"] = "3072"
+        if sft_seq_length:
+            env["MILES_SEQ_LENGTH"] = sft_seq_length
         # Batch 20 divides 600 evenly (0 rows dropped) and maximizes optimizer steps
         # (30/epoch). A larger batch would cut steps and recreate the undertraining.
         env["MILES_GLOBAL_BATCH_SIZE"] = "20"
@@ -385,6 +388,7 @@ def run_stage(
     sft_num_epoch: str = "",
     sft_save_interval: str = "",
     sft_data_dir: str = "",
+    sft_seq_length: str = "",
     aider_data_dir: str = "",
     adapter_sha256: str = "",
     lora_rank: str = "",
@@ -404,6 +408,7 @@ def run_stage(
         sft_num_epoch=sft_num_epoch,
         sft_save_interval=sft_save_interval,
         sft_data_dir=sft_data_dir,
+        sft_seq_length=sft_seq_length,
         aider_data_dir=aider_data_dir,
         adapter_sha256=adapter_sha256,
         lora_rank=lora_rank,
@@ -469,14 +474,24 @@ def sft(
     num_epoch: str = "",
     save_interval: str = "",
     data_dir: str = "",
+    seq_length: str = "",
 ) -> None:
+    source_commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=LOCAL_REPO,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
     print(
         run_stage.remote(
             "sft",
             run_id=run_id,
+            source_commit=source_commit,
             sft_num_epoch=num_epoch,
             sft_save_interval=save_interval,
             sft_data_dir=data_dir,
+            sft_seq_length=seq_length,
         )
     )
 
