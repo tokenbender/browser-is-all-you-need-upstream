@@ -1,8 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "kind": "glm47-aider-sft-wandb-sync-receipt",
   "status": "passed",
-  "synced_at_utc": "2026-07-24T08:18:41Z",
+  "synced_at_utc": "2026-07-24T08:44:49Z",
   "source": {
     "provider": "Modal",
     "volume": "glm47-runs",
@@ -33,6 +33,12 @@
       "event_log_sha256_manifest": "863a9c9b6e29e5d7f8ea19acd611e5f9a4efe87d521fbf3302e3c738d4194470",
       "source_exit_record": true,
       "verified_history_records": 461,
+      "history_repair": {
+        "status": "passed",
+        "plottable_rows": 116,
+        "first_step": 0,
+        "last_step": 115
+      },
       "verified_train_step": 114,
       "verified_train_loss": 0.14130575446569066
     },
@@ -45,6 +51,12 @@
       "event_log_sha256_manifest": "c3681b23d1cfa14ffa8cef9f2da8ba3ccd58078fe1a1bb7dac6b68a6ffea0ebe",
       "source_exit_record": true,
       "verified_history_records": 797,
+      "history_repair": {
+        "status": "passed",
+        "plottable_rows": 200,
+        "first_step": 0,
+        "last_step": 199
+      },
       "verified_train_step": 198,
       "verified_train_loss": 0.10817895246888087
     },
@@ -57,6 +69,12 @@
       "event_log_sha256_manifest": "7fa38743ec2542391a16657057fb17e96b7ca6de02aa3e6485460a218db3a9ed",
       "source_exit_record": true,
       "verified_history_records": 277,
+      "history_repair": {
+        "status": "passed",
+        "plottable_rows": 71,
+        "first_step": 0,
+        "last_step": 70
+      },
       "verified_train_step": 68,
       "verified_train_loss": 0.25012058492385647
     },
@@ -68,7 +86,13 @@
       "event_log_bytes": 824412,
       "event_log_sha256_manifest": "ef10d4aac572c0c5fd5de2b46b47e5691c39a21e2aa9db2d5b3ade4bb3e658d3",
       "source_exit_record": true,
-      "verified_history_records": 2
+      "verified_history_records": 2,
+      "history_repair": {
+        "status": "passed",
+        "plottable_rows": 1,
+        "first_step": 0,
+        "last_step": 0
+      }
     },
     {
       "run_id": "glm47-aider-ast17-sft1425-20260723-132229",
@@ -79,6 +103,10 @@
       "event_log_sha256_manifest": "e79db14dec524aa2553d64114c9989163f7b5636cd35c4299338895d192b4666",
       "source_exit_record": false,
       "verified_history_records": 0,
+      "history_repair": {
+        "status": "source-log-incomplete",
+        "plottable_rows": 0
+      },
       "provenance_note": "Source logs contain no training history or exit record. The W&B cloud finished state records replay completion, not a successful training run."
     },
     {
@@ -89,7 +117,13 @@
       "event_log_bytes": 963226,
       "event_log_sha256_manifest": "20fbfd9e2e27699f3890c24c4f9f991fb249d552138492b96fa07c906a017f40",
       "source_exit_record": true,
-      "verified_history_records": 1
+      "verified_history_records": 1,
+      "history_repair": {
+        "status": "passed",
+        "plottable_rows": 1,
+        "first_step": 0,
+        "last_step": 0
+      }
     },
     {
       "run_id": "glm47-aider-ast17-sft1425-20260723-141256",
@@ -100,6 +134,12 @@
       "event_log_sha256_manifest": "e281b0a0fb81b8ef18e61e9c2efe7234d6eb18b71a2efe0de5ac605dc404dc36",
       "source_exit_record": true,
       "verified_history_records": 277,
+      "history_repair": {
+        "status": "passed",
+        "plottable_rows": 70,
+        "first_step": 0,
+        "last_step": 69
+      },
       "verified_train_step": 69,
       "verified_train_loss": 0.25395317719284116
     }
@@ -111,6 +151,9 @@
       "finished": 16,
       "crashed": 1
     },
+    "replayed_runs_with_source_history": 6,
+    "replayed_runs_with_verified_plottable_history": 6,
+    "verified_plottable_history_rows": 459,
     "source_log_incomplete_runs": 1,
     "original_run_ids_retained": true,
     "training_or_evaluation_started": false

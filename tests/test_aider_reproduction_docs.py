@@ -58,6 +58,34 @@ def test_all_aider_sft_runs_are_preserved_under_ahm_rimer() -> None:
     assert receipt["scope"]["replayed_from_event_logs"] == 7
     assert receipt["verification"]["verified_target_runs"] == 17
     assert receipt["verification"]["source_log_incomplete_runs"] == 1
+    assert receipt["verification"]["replayed_runs_with_source_history"] == 6
+    assert (
+        receipt["verification"]["replayed_runs_with_verified_plottable_history"]
+        == 6
+    )
+    assert receipt["verification"]["verified_plottable_history_rows"] == 459
+    repaired = [
+        entry
+        for entry in receipt["replayed"]
+        if entry["verified_history_records"] > 0
+    ]
+    assert sum(entry["history_repair"]["plottable_rows"] for entry in repaired) == 459
+    assert all(entry["history_repair"]["status"] == "passed" for entry in repaired)
+    assert all(
+        entry["history_repair"]["last_step"] + 1
+        == entry["history_repair"]["plottable_rows"]
+        for entry in repaired
+    )
+    incomplete = [
+        entry
+        for entry in receipt["replayed"]
+        if entry["verified_history_records"] == 0
+    ]
+    assert len(incomplete) == 1
+    assert incomplete[0]["history_repair"] == {
+        "status": "source-log-incomplete",
+        "plottable_rows": 0,
+    }
     assert all(
         entry["target_url"].startswith("https://wandb.ai/ahm-rimer/")
         for entry in receipt["replayed"]

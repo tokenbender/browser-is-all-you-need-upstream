@@ -314,6 +314,9 @@ All 17 Aider SFT training attempts, including failed and unpromoted engineering
 runs, are now preserved under the `ahm-rimer` W&B entity. The authenticated
 inventory and replay provenance are recorded in
 [`docs/receipts/glm47-aider-sft-wandb-sync.json`](docs/receipts/glm47-aider-sft-wandb-sync.json).
+For the six event-log replays that contain source metrics, the receipt verifies
+459 reconstructed, plottable history rows; the one source-log-incomplete
+attempt remains explicitly marked with zero history.
 
 | Stage | Training data | pass@1 | multi-turn-with-error-feedback@2 | Well formed | Total tokens | Evidence |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
