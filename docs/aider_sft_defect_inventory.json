@@ -58,7 +58,7 @@
     },
     "v4_3ep_wandb": {
       "kind": "wandb_run",
-      "url": "https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z"
+      "url": "https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z"
     }
   },
   "dataset_history": [

@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at_utc": "2026-07-24T06:18:52Z",
+  "updated_at_utc": "2026-07-24T08:18:41Z",
+  "wandb_sync_receipt": "docs/receipts/glm47-aider-sft-wandb-sync.json",
   "model": {
     "repo": "zai-org/GLM-4.7-Flash",
     "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
@@ -201,7 +202,7 @@
         "data_manifest_sha256": "daa813de6bc7339353742f382921de6e3a1ce63f85d9a95942b09b3276844c4d",
         "train_jsonl_sha256": "8c4af0ce677e5745f59e74c9f3a6ac11aae72ca11ee4fe837ddafcd1e1b10dcb",
         "hf": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/c0db40db76fb16014103d131335fb15a2c0cfd19/datasets/sft-v4-holistic-790",
-        "wandb": "https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z"
+        "wandb": "https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z"
       },
       "checkpoint": "glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z/checkpoints/sft_lora_r16/iter_0000116/adapter",
       "adapter_sha256": "4f37ab9de995c377627f53f9e5f16849a125df2a11b621914e47dcf166a2c45c",
@@ -236,7 +237,7 @@
         "data_manifest_sha256": "0906e1abcec775ca52362679fe39d83af9ac1744c984faf1125f4de0c7b2e130",
         "train_jsonl_sha256": "a01a07c9d4e2706683814a3d5afc2bcd47172ff92b08f15e2c673729f185bd66",
         "hf": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/f21122d33f99e552aee0557699b5e3e71b6e12e5/datasets/sft-v5-experimental-1340",
-        "wandb": "https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z"
+        "wandb": "https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z"
       },
       "checkpoint": "glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z/checkpoints/sft_lora_r16/iter_0000200/adapter",
       "checkpoint_hf": "https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep/tree/43110cf15fa9cd87373b726638bf80c8f08858ce",

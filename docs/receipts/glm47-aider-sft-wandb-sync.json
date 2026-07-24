@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "kind": "glm47-aider-sft-wandb-sync-receipt",
+  "status": "passed",
+  "synced_at_utc": "2026-07-24T08:18:41Z",
+  "source": {
+    "provider": "Modal",
+    "volume": "glm47-runs",
+    "preservation": "original W&B event logs"
+  },
+  "target_entity": "ahm-rimer",
+  "scope": {
+    "verified_sft_training_attempts": 17,
+    "already_present": 10,
+    "replayed_from_event_logs": 7,
+    "profiling_runs_already_present_but_not_counted_as_training": [
+      "v5-fastclose-profile-20260720-2305",
+      "glm47-aider-complement-530-profile-20260721"
+    ],
+    "excluded_rl_runs_that_reference_sft_seeds": [
+      "glm47-aider-ast17-rl-smoke-sft20-20260723-135050",
+      "glm47-aider-ast17-rl-smoke-sft20-nograph-20260723-141236",
+      "glm47-aider-ast17-rl-smoke-sft20-nograph-tmp-20260723-142134"
+    ]
+  },
+  "replayed": [
+    {
+      "run_id": "glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z",
+      "target_project": "glm47-aider-v1-sft",
+      "target_url": "https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z",
+      "event_log_files": 3,
+      "event_log_bytes": 4278713,
+      "event_log_sha256_manifest": "863a9c9b6e29e5d7f8ea19acd611e5f9a4efe87d521fbf3302e3c738d4194470",
+      "source_exit_record": true,
+      "verified_history_records": 461,
+      "verified_train_step": 114,
+      "verified_train_loss": 0.14130575446569066
+    },
+    {
+      "run_id": "glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z",
+      "target_project": "glm47-aider-v1-sft",
+      "target_url": "https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z",
+      "event_log_files": 3,
+      "event_log_bytes": 6535766,
+      "event_log_sha256_manifest": "c3681b23d1cfa14ffa8cef9f2da8ba3ccd58078fe1a1bb7dac6b68a6ffea0ebe",
+      "source_exit_record": true,
+      "verified_history_records": 797,
+      "verified_train_step": 198,
+      "verified_train_loss": 0.10817895246888087
+    },
+    {
+      "run_id": "glm47-aider-expansion-sft-20260723T074257Z",
+      "target_project": "aider-sft-explansion-v1",
+      "target_url": "https://wandb.ai/ahm-rimer/aider-sft-explansion-v1/runs/glm47-aider-expansion-sft-20260723T074257Z",
+      "event_log_files": 3,
+      "event_log_bytes": 2871944,
+      "event_log_sha256_manifest": "7fa38743ec2542391a16657057fb17e96b7ca6de02aa3e6485460a218db3a9ed",
+      "source_exit_record": true,
+      "verified_history_records": 277,
+      "verified_train_step": 68,
+      "verified_train_loss": 0.25012058492385647
+    },
+    {
+      "run_id": "glm47-aider-ast17-sft20-20260723-130115",
+      "target_project": "glm47-pie-cpp-posttraining",
+      "target_url": "https://wandb.ai/ahm-rimer/glm47-pie-cpp-posttraining/runs/glm47-aider-ast17-sft20-20260723-130115",
+      "event_log_files": 3,
+      "event_log_bytes": 824412,
+      "event_log_sha256_manifest": "ef10d4aac572c0c5fd5de2b46b47e5691c39a21e2aa9db2d5b3ade4bb3e658d3",
+      "source_exit_record": true,
+      "verified_history_records": 2
+    },
+    {
+      "run_id": "glm47-aider-ast17-sft1425-20260723-132229",
+      "target_project": "glm47-pie-cpp-posttraining",
+      "target_url": "https://wandb.ai/ahm-rimer/glm47-pie-cpp-posttraining/runs/glm47-aider-ast17-sft1425-20260723-132229",
+      "event_log_files": 2,
+      "event_log_bytes": 98304,
+      "event_log_sha256_manifest": "e79db14dec524aa2553d64114c9989163f7b5636cd35c4299338895d192b4666",
+      "source_exit_record": false,
+      "verified_history_records": 0,
+      "provenance_note": "Source logs contain no training history or exit record. The W&B cloud finished state records replay completion, not a successful training run."
+    },
+    {
+      "run_id": "glm47-aider-ast17-sft20-20260723-132625",
+      "target_project": "glm47-pie-cpp-posttraining",
+      "target_url": "https://wandb.ai/ahm-rimer/glm47-pie-cpp-posttraining/runs/glm47-aider-ast17-sft20-20260723-132625",
+      "event_log_files": 3,
+      "event_log_bytes": 963226,
+      "event_log_sha256_manifest": "20fbfd9e2e27699f3890c24c4f9f991fb249d552138492b96fa07c906a017f40",
+      "source_exit_record": true,
+      "verified_history_records": 1
+    },
+    {
+      "run_id": "glm47-aider-ast17-sft1425-20260723-141256",
+      "target_project": "glm47-pie-cpp-posttraining",
+      "target_url": "https://wandb.ai/ahm-rimer/glm47-pie-cpp-posttraining/runs/glm47-aider-ast17-sft1425-20260723-141256",
+      "event_log_files": 3,
+      "event_log_bytes": 3837810,
+      "event_log_sha256_manifest": "e281b0a0fb81b8ef18e61e9c2efe7234d6eb18b71a2efe0de5ac605dc404dc36",
+      "source_exit_record": true,
+      "verified_history_records": 277,
+      "verified_train_step": 69,
+      "verified_train_loss": 0.25395317719284116
+    }
+  ],
+  "verification": {
+    "authenticated_wandb_api": "passed",
+    "verified_target_runs": 17,
+    "cloud_states": {
+      "finished": 16,
+      "crashed": 1
+    },
+    "source_log_incomplete_runs": 1,
+    "original_run_ids_retained": true,
+    "training_or_evaluation_started": false
+  }
+}

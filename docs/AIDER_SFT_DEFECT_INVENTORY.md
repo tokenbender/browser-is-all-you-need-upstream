@@ -389,7 +389,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** SFT v3 and both v4 schedules drop tail rows; v4 consumes 780 of 790 each epoch.
 
-**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Consume the final ten rows without reducing the packaged dataset.
 
@@ -399,7 +399,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** Current receipts do not expose the row identities consumed at each optimizer step.
 
-**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Log deterministic row IDs and packed-sample membership.
 
@@ -441,7 +441,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** The v4 one-epoch and three-epoch runs live under different W&B entities.
 
-**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Use one controlled entity/project and record immutable run URLs.
 
@@ -461,7 +461,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** The three-epoch run produced three local W&B resume directories under one run ID.
 
-**Evidence.** [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37)
+**Evidence.** [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37)
 
 **Remediation.** Record resume lineage and a single canonical history.
 
@@ -471,7 +471,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** The three-epoch shutdown logged transport or EOF errors despite successful HTTP upload responses.
 
-**Evidence.** [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37)
+**Evidence.** [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37)
 
 **Remediation.** Add an explicit post-run sync and remote artifact verification gate.
 
@@ -481,7 +481,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** W&B contains no validation metrics for the v4 SFT runs.
 
-**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Publish validation loss and executable validation tables.
 
@@ -501,7 +501,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** The current project account cannot access the W&B entity that owns the three-epoch run.
 
-**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Mirror or transfer the run to the controlled project while preserving the original URL and run ID.
 
@@ -513,7 +513,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** No disjoint validation split is reported for SFT training.
 
-**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Create immutable train, validation, and fixed-26 holdout boundaries.
 
@@ -523,7 +523,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** W&B reports training loss but no validation loss or executable validation score.
 
-**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Log validation loss and first-turn executable metrics at fixed intervals.
 
@@ -533,7 +533,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** There is no evidence-based early stopping criterion.
 
-**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Predeclare a validation-based checkpoint selection rule.
 
@@ -543,7 +543,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** Intermediate checkpoints from the three-epoch run were not all evaluated on fixed-26.
 
-**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [v4_3ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723)
+**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [v4_3ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723)
 
 **Remediation.** Evaluate each saved epoch or selected interval under one harness.
 
@@ -583,7 +583,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** V4 performs only 39 optimizer steps per epoch.
 
-**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Interpret epoch count jointly with optimizer updates and tokens seen.
 
@@ -593,7 +593,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** Falling training loss did not produce a monotonic fixed-26 improvement, so undertraining is not established as the primary cause.
 
-**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [v4_1ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/4b888cd8ae024f1e90003b2b45a3c097603d66bb/evals/sft-v4-holistic-790-fixed26-20260723), [v4_3ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723)
+**Evidence.** [v4_1ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-lium-20260723T142220Z), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z), [v4_1ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/4b888cd8ae024f1e90003b2b45a3c097603d66bb/evals/sft-v4-holistic-790-fixed26-20260723), [v4_3ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723)
 
 **Remediation.** Treat data-target alignment, validation, and checkpoint selection as competing diagnoses.
 
@@ -603,7 +603,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Finding.** The three-epoch run reports a mean wait ratio of 54.67%, but the waiting source is not attributed in the run receipt.
 
-**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
+**Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [v4_3ep_wandb](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z)
 
 **Remediation.** Break wait time down by data loading, synchronization, checkpointing, and tracking.
 

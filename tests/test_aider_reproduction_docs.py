@@ -10,6 +10,7 @@ FINAL_RECEIPT = Path("docs/receipts/glm47-aider-rl-v2-fixed26-run-receipt.json")
 DATA_PUBLICATION = Path(
     "docs/receipts/glm47-aider-gated-data-publication.json"
 )
+WANDB_SYNC = Path("docs/receipts/glm47-aider-sft-wandb-sync.json")
 README = Path("README.md")
 
 
@@ -43,6 +44,29 @@ def test_aider_progress_ledger_has_the_promoted_lineage_only() -> None:
         "sft-v5",
         "rl-v2",
     ]
+
+
+def test_all_aider_sft_runs_are_preserved_under_ahm_rimer() -> None:
+    ledger = json.loads(LEDGER.read_text(encoding="utf-8"))
+    receipt = json.loads(WANDB_SYNC.read_text(encoding="utf-8"))
+
+    assert ledger["wandb_sync_receipt"] == WANDB_SYNC.as_posix()
+    assert receipt["status"] == "passed"
+    assert receipt["target_entity"] == "ahm-rimer"
+    assert receipt["scope"]["verified_sft_training_attempts"] == 17
+    assert receipt["scope"]["already_present"] == 10
+    assert receipt["scope"]["replayed_from_event_logs"] == 7
+    assert receipt["verification"]["verified_target_runs"] == 17
+    assert receipt["verification"]["source_log_incomplete_runs"] == 1
+    assert all(
+        entry["target_url"].startswith("https://wandb.ai/ahm-rimer/")
+        for entry in receipt["replayed"]
+    )
+    for stage in ledger["stages"]:
+        if not stage["id"].startswith("sft-"):
+            continue
+        url = stage.get("wandb") or stage["training"]["wandb"]
+        assert url.startswith("https://wandb.ai/ahm-rimer/")
 
 
 def test_aider_catalog_maps_every_preserved_dataset_and_eval() -> None:
