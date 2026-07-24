@@ -192,7 +192,10 @@ def merge_aider_adapter_files(
     timeout=3_600,
     volumes={ASSETS_DIR: assets, RUNS_DIR: runs},
 )
-def validate_aider_path(adapter_path: str = AIDER_SFT_ADAPTER) -> dict[str, object]:
+def validate_aider_path(
+    adapter_path: str = AIDER_SFT_ADAPTER,
+    adapter_sha256: str = AIDER_SFT_ADAPTER_SHA256,
+) -> dict[str, object]:
     """CPU-only proof that data, sandbox, and exact warm-start bytes are usable."""
 
     import json
@@ -219,9 +222,9 @@ def validate_aider_path(adapter_path: str = AIDER_SFT_ADAPTER) -> dict[str, obje
     )
     _run(
         "python3 scripts/prepare_grpo_adapter.py --include-native "
-        "--expected-native-shards 4 --expected-source-tensors 9741 "
+        "--expected-native-shards 8 --expected-source-tensors 9741 "
         "--expected-stripped-tensors 207 "
-        f"--expected-source-sha256 {AIDER_SFT_ADAPTER_SHA256} "
+        f"--expected-source-sha256 {adapter_sha256} "
         f"{adapter_path} {hybrid_dir}",
         env=env,
     )
@@ -323,7 +326,7 @@ def _stage_env(
                 ),
                 "MILES_EXPECTED_SOURCE_TENSORS": "9741",
                 "MILES_EXPECTED_STRIPPED_TENSORS": "207",
-                "MILES_EXPECTED_NATIVE_SHARDS": "4",
+                "MILES_EXPECTED_NATIVE_SHARDS": "8",
                 "GLM47_SYNC_METRICS_DIR": f"{RUNS_DIR}/{run_id}/sync_metrics",
                 "MILES_SEQ_LENGTH": "6144",
                 "MILES_ROLLOUT_MAX_RESPONSE_LEN": "4096",
@@ -345,10 +348,13 @@ def _stage_env(
                 "MILES_USE_KL_LOSS": "1",
                 "MILES_SAVE_INTERVAL": "1",
                 "MILES_EVAL_INTERVAL": "1",
-                # ~5 epochs over the 169-task difficulty-filtered set:
-                # 26 updates x 32 prompts = 832 slots = 4.92 passes.
+                # Default to ~5 passes over the selected corpus:
+                # full 253: 40 x 32 = 1,280 slots = 5.06 passes;
+                # filtered 169: 26 x 32 = 832 slots = 4.92 passes.
                 "MILES_NUM_ROLLOUT": num_rollout or (
-                    "1" if stage == "aider_profile" else "26"
+                    "1"
+                    if stage == "aider_profile"
+                    else ("26" if aider_data_dir else "40")
                 ),
                 "MILES_WANDB_PROJECT": "glm47-aider-polyglot-cpp-grpo",
                 "MILES_WANDB_GROUP": run_id,
@@ -513,7 +519,12 @@ def _local_source_commit() -> str:
 
 @app.local_entrypoint()
 def aider_profile(
-    run_id: str = "", adapter_path: str = AIDER_SFT_ADAPTER, data_dir: str = ""
+    run_id: str = "",
+    adapter_path: str = AIDER_SFT_ADAPTER,
+    data_dir: str = "",
+    adapter_sha256: str = "",
+    lora_rank: str = "",
+    lora_alpha: str = "",
 ) -> None:
     print(
         run_stage.remote(
@@ -522,6 +533,9 @@ def aider_profile(
             adapter_path=adapter_path,
             source_commit=_local_source_commit(),
             aider_data_dir=data_dir,
+            adapter_sha256=adapter_sha256,
+            lora_rank=lora_rank,
+            lora_alpha=lora_alpha,
         )
     )
 

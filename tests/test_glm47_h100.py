@@ -499,11 +499,14 @@ def test_modal_aider_profile_binds_objective_adapter_and_safe_reward() -> None:
     assert '"MILES_ROLLOUT_SKIP_SPECIAL_TOKENS": "1"' in text
     assert '"MILES_KL_LOSS_COEF": "0.02"' in text
     assert '"MILES_NO_REF": "0"' in text
+    assert '"MILES_EXPECTED_NATIVE_SHARDS": "8"' in text
     assert '"MILES_NUM_ROLLOUT": num_rollout or (' in text
+    assert 'else ("26" if aider_data_dir else "40")' in text
     assert "def aider_preflight(" in text
     assert "def merge_aider(" in text
     assert "def aider_profile(" in text
     assert "def aider_grpo(" in text
+    assert "adapter_sha256=adapter_sha256" in text
     assert 'env["MILES_LORA_RANK"] = lora_rank' in text
     assert 'env["MILES_LORA_ALPHA"] = lora_alpha' in text
     assert "num_rollout=num_rollout" in text
