@@ -601,7 +601,7 @@ def test_asset_downloader_pins_the_aider_catalog_revisions() -> None:
     responses = module["ASSETS"]["aider-responses"]
 
     assert data["repo_id"] == "TokenBender/glm47-aider-posttraining-data"
-    assert data["default_revision"] == "27b7f1f43a123fe958104a5ba896f2ed3348ff43"
+    assert data["default_revision"] == "d52fbe24f5b629e732b4ba96bd7820f30da9e97d"
     assert responses["default_revision"] == "68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9"
     assert data["verify_upload_manifest"] is True
     assert responses["repo_id"] == "TokenBender/glm47-aider-fixed26-responses"

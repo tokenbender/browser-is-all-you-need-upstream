@@ -1,0 +1,16 @@
+{
+  "before_revision": "0f0d5f4fdde88bcc592ddea6a3ac6873f8be73ec",
+  "dataset_id": "sft-v6-audited-2000",
+  "entry_files": 29,
+  "gated": "manual",
+  "kind": "aider-cpp-sft-v6-2000-hf-publication",
+  "private": true,
+  "repo_id": "TokenBender/glm47-aider-posttraining-data",
+  "revision": "d52fbe24f5b629e732b4ba96bd7820f30da9e97d",
+  "roundtrip": "passed",
+  "roundtrip_files": 144,
+  "schema_version": 1,
+  "status": "passed",
+  "train_sha256": "debe8081a7f780afa23942e7a0ab06358aeaaba6f6006557eb5cff93779d9995",
+  "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/d52fbe24f5b629e732b4ba96bd7820f30da9e97d/datasets/sft-v6-audited-2000"
+}

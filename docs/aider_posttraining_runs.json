@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at_utc": "2026-07-24T08:18:41Z",
+  "updated_at_utc": "2026-07-24T11:57:48Z",
   "wandb_sync_receipt": "docs/receipts/glm47-aider-sft-wandb-sync.json",
   "model": {
     "repo": "zai-org/GLM-4.7-Flash",
@@ -9,12 +9,12 @@
   "artifact_catalogs": {
     "training_and_audit_data": {
       "repo": "TokenBender/glm47-aider-posttraining-data",
-      "revision": "27b7f1f43a123fe958104a5ba896f2ed3348ff43",
-      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/27b7f1f43a123fe958104a5ba896f2ed3348ff43",
+      "revision": "d52fbe24f5b629e732b4ba96bd7820f30da9e97d",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/d52fbe24f5b629e732b4ba96bd7820f30da9e97d",
       "access": "private-manual-gated",
-      "entries": 21,
+      "entries": 22,
       "roundtrip": "passed",
-      "upload_manifest_sha256": "ad89de4cdd991122bef23895a9686a0d63a5bc283afe2f8ab9038719f74edbd6"
+      "upload_manifest_sha256": "60b1e8f45e18daa778d9d5abcf493e6f88f770d7b2c089628635008ec91974de"
     },
     "fixed26_responses": {
       "repo": "TokenBender/glm47-aider-fixed26-responses",
@@ -43,6 +43,7 @@
     "sft-v3-complement-530": "datasets/sft-v3-complement-530",
     "sft-v4-holistic-790": "datasets/sft-v4-holistic-790",
     "sft-v5-experimental-1340": "datasets/sft-v5-experimental-1340",
+    "sft-v6-audited-2000": "datasets/sft-v6-audited-2000",
     "pass1-skills-600": "datasets/pass1-skills-600",
     "reverify-audit": "datasets/reverify-audit",
     "regression-audit": "datasets/regression-audit",

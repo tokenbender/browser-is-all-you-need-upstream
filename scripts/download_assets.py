@@ -59,7 +59,7 @@ ASSETS = {
         "repo_id": "TokenBender/glm47-aider-posttraining-data",
         "repo_type": "dataset",
         "revision_env": "GLM47_AIDER_DATA_REVISION",
-        "default_revision": "27b7f1f43a123fe958104a5ba896f2ed3348ff43",
+        "default_revision": "d52fbe24f5b629e732b4ba96bd7820f30da9e97d",
         "destination": "aider-data",
         "verify_checksums": False,
         "verify_upload_manifest": True,
@@ -148,9 +148,9 @@ def _verify_aider_catalog(root: Path, name: str) -> None:
         if (
             catalog.get("kind") != "glm47-aider-posttraining-data-catalog"
             or not isinstance(datasets, list)
-            or len(datasets) != 21
+            or len(datasets) != 22
         ):
-            raise RuntimeError("Aider data catalog does not bind exactly 21 entries")
+            raise RuntimeError("Aider data catalog does not bind exactly 22 entries")
         trainable = {
             entry["dataset_id"] for entry in datasets if entry.get("trainable") is True
         }
@@ -158,6 +158,7 @@ def _verify_aider_catalog(root: Path, name: str) -> None:
             "sft-v3-complement-530",
             "sft-v4-holistic-790",
             "sft-v5-experimental-1340",
+            "sft-v6-audited-2000",
             "rl-v2-169",
         }:
             raise RuntimeError(f"Unexpected trainable Aider datasets: {trainable}")

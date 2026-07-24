@@ -1,17 +1,17 @@
 {
   "data": {
-    "bytes": 55599240,
-    "files": 115,
+    "bytes": 86792775,
+    "files": 144,
     "gated": "manual",
     "private": true,
     "pruned_paths": [],
     "repo": "TokenBender/glm47-aider-posttraining-data",
-    "repository_files": 117,
-    "revision": "27b7f1f43a123fe958104a5ba896f2ed3348ff43",
+    "repository_files": 146,
+    "revision": "d52fbe24f5b629e732b4ba96bd7820f30da9e97d",
     "roundtrip": "passed",
-    "upload_manifest_sha256": "ad89de4cdd991122bef23895a9686a0d63a5bc283afe2f8ab9038719f74edbd6"
+    "upload_manifest_sha256": "60b1e8f45e18daa778d9d5abcf493e6f88f770d7b2c089628635008ec91974de"
   },
-  "data_entries": 21,
+  "data_entries": 22,
   "evaluation_entries": 16,
   "evaluations": {
     "bytes": 3482883,

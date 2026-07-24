@@ -115,6 +115,7 @@ def test_aider_catalog_maps_every_preserved_dataset_and_eval() -> None:
         "sft-v3-complement-530",
         "sft-v4-holistic-790",
         "sft-v5-experimental-1340",
+        "sft-v6-audited-2000",
         "pass1-skills-600",
         "reverify-audit",
         "regression-audit",
@@ -143,7 +144,7 @@ def test_aider_catalog_maps_every_preserved_dataset_and_eval() -> None:
     }
 
     assert publication["status"] == "passed"
-    assert publication["data_entries"] == len(ledger["dataset_catalog_paths"]) == 21
+    assert publication["data_entries"] == len(ledger["dataset_catalog_paths"]) == 22
     assert publication["evaluation_entries"] == len(
         ledger["evaluation_catalog_paths"]
     ) == 16

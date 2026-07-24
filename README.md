@@ -295,11 +295,23 @@ Verify their schema, measured counts, and the 790-row non-shrink invariant with
 `python3 scripts/verify_aider_sft_defect_inventory.py`.
 All project-tracked Aider dataset lineages are preserved in the private,
 manual-approval
-[`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/27b7f1f43a123fe958104a5ba896f2ed3348ff43)
+[`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/d52fbe24f5b629e732b4ba96bd7820f30da9e97d)
 catalog. Evaluator-only histories and result JSONs are separately preserved in
 [`glm47-aider-fixed26-responses`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9).
 Both repositories are private, manually gated, and pinned here to revisions
 that passed a file-by-file authenticated round trip.
+
+SFT v6 is now an audited, exact 2,000-row train-ready corpus. It retains 949
+quality-cleared target-distinct rows, adds 73 independently executable direct
+rows, and adds 978 current-replay cross-family compositions. It has 2,000
+unique task IDs, normalized prompts, normalized answers, and normalized
+message pairs; zero unresolved review rows; zero fixed-26 task-ID overlap; and
+a maximum exact tokenizer length of 4,013/4,096. It is not in the result table
+because no v6 checkpoint or fixed-26 evaluation exists yet. The gated
+[dataset](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/d52fbe24f5b629e732b4ba96bd7820f30da9e97d/datasets/sft-v6-audited-2000)
+and [reproduction record](docs/AIDER_SFT_V6_2000_REPRODUCE.md) include the
+builder, all immutable inputs, row-level receipts, rejection ledger, audits,
+and checksums.
 
 Approved identities can download and reverify those exact snapshots with:
 
@@ -346,7 +358,7 @@ before RL v2.
 #### Dataset and checkpoint identity
 
 Large datasets and checkpoints are not stored in Git. The gated data catalog
-contains 19 named dataset, candidate, rejection, and audit entries. Each entry
+contains 22 named dataset, candidate, rejection, and audit entries. Each entry
 has a machine-readable `trainable` flag, status, split semantics, file hashes,
 and exclusions; rejected and audit corpora are preserved without being
 silently presented as positive training data. A reproduction must use the
@@ -374,6 +386,7 @@ extracted asset path.
 | SFT v2 | Train JSONL SHA-256 `13219cae85551714d4280b60600bb7ef5336dffda54698340ba40f3405ccd51b` | `glm47-runs:/glm47-aider-1211-sft-20260718T192250Z/checkpoints/sft_lora_r16/iter_0000036/adapter` |
 | SFT v3 | Train JSONL SHA-256 `805aa59bbc936ee20687a293ef47d2fb9bcaee12419c6539ecd6180dfab02089` | `glm47-runs:/glm47-aider-complement-530-sft-20260721/checkpoints/sft_lora_r16/iter_0000025/adapter` |
 | SFT v5 | Manifest SHA-256 `0906e1abcec775ca52362679fe39d83af9ac1744c984faf1125f4de0c7b2e130`; train JSONL SHA-256 `a01a07c9d4e2706683814a3d5afc2bcd47172ff92b08f15e2c673729f185bd66` | `iter_0000200`; adapter SHA-256 `bdd808bf98d26b467af7fec1a20d7ed6502bac0ffd50eae9cb6a1e702613daaa`; [gated checkpoint](https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep/tree/43110cf15fa9cd87373b726638bf80c8f08858ce) |
+| SFT v6 | Manifest SHA-256 `04b51b576e34ba90355cee0268297a0ee9093da239fd98db346dd023ef8d8c32`; train JSONL SHA-256 `debe8081a7f780afa23942e7a0ab06358aeaaba6f6006557eb5cff93779d9995` | Not trained; model benefit requires held-out evaluation |
 | RL v2 | Manifest SHA-256 `a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157`; train JSONL SHA-256 `b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2` | Merged start adapter SHA-256 `dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91`; final adapter SHA-256 `046a1018b605aa29f8b8c4f2677f47ce55489105f6766155f4c009798f48abe2` |
 
 The same data revision also maps, without omission, the heuristic-32,
