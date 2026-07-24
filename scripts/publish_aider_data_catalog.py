@@ -625,18 +625,18 @@ def build_data_stage(workspace: Path, downloads: Path, stage: Path) -> list[dict
         add_dataset(
             stage,
             DatasetSpec(
-                "rl-shadow-replay-253",
+                "rl-full-replay-253",
                 "GRPO prompt and monitor projection",
                 "prepared-not-promoted",
                 "253 train + 32 monitor",
-                "Projection of gated answer-free shadow corpus",
+                "Projection of gated answer-free Aider C++ RL corpus",
             ),
             primary={
                 "manifest.json": replay / "manifest.json",
                 "grpo/train.jsonl": replay / "grpo/train.jsonl",
                 "eval/train_monitor.jsonl": replay / "eval/train_monitor.jsonl",
             },
-            exclusions=("shadow/ task fixtures and grader tests",),
+            exclusions=("rl_tasks/ task fixtures and grader tests",),
         )
     )
 
@@ -649,12 +649,12 @@ def build_data_stage(workspace: Path, downloads: Path, stage: Path) -> list[dict
         rl2 / "grpo/train.jsonl",
         "b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2",
     )
-    difficulty = artifacts / "aider-shadow-difficulty-20260722"
+    difficulty = artifacts / "aider-rl-tasks-difficulty-20260722"
     entries.append(
         add_dataset(
             stage,
             DatasetSpec(
-                "rl-shadow-difficulty-20260722",
+                "rl-difficulty-20260722",
                 "Difficulty filter and selection audit",
                 "audit-only-filter",
                 "253 assessed; 169 kept; 84 dropped",
@@ -677,11 +677,11 @@ def build_data_stage(workspace: Path, downloads: Path, stage: Path) -> list[dict
         add_dataset(
             stage,
             DatasetSpec(
-                "rl-v2-shadow-169",
+                "rl-v2-169",
                 "Actual repaired two-epoch GRPO input",
                 "historical-trained",
                 "169 train + 22 monitor",
-                "Difficulty-filtered subset of 253-task shadow corpus",
+                "Difficulty-filtered subset of 253-task Aider C++ RL corpus",
                 trainable=True,
                 split_semantics=(
                     "monitor IDs overlap training tasks; monitor is non-gradient "
@@ -693,7 +693,7 @@ def build_data_stage(workspace: Path, downloads: Path, stage: Path) -> list[dict
                 "grpo/train.jsonl": rl2_train,
                 "eval/train_monitor.jsonl": rl2 / "eval/train_monitor.jsonl",
             },
-            exclusions=("shadow/ task fixtures and grader tests",),
+            exclusions=("rl_tasks/ task fixtures and grader tests",),
         )
     )
 
@@ -705,11 +705,11 @@ def build_data_stage(workspace: Path, downloads: Path, stage: Path) -> list[dict
         add_dataset(
             stage,
             DatasetSpec(
-                "rl-shadow-253-july21",
+                "rl-full-253-july21",
                 "Earlier GRPO input preserved with the July 21 run",
                 "historical-trained-not-promoted",
                 "253 train + 32 monitor",
-                "Pre-filter full shadow projection",
+                "Pre-filter full Aider C++ RL projection",
                 split_semantics=(
                     "monitor IDs overlap training tasks; monitor is non-gradient "
                     "training telemetry, not a held-out validation split"
@@ -724,7 +724,7 @@ def build_data_stage(workspace: Path, downloads: Path, stage: Path) -> list[dict
                     old_rl_tar, f"{old_prefix}/eval/train_monitor.jsonl"
                 ),
             },
-            exclusions=("shadow/ task fixtures and grader tests",),
+            exclusions=("rl_tasks/ task fixtures and grader tests",),
         )
     )
 
@@ -736,10 +736,10 @@ def build_data_stage(workspace: Path, downloads: Path, stage: Path) -> list[dict
             "revision": "09bc0276a0ff8ab84a8db81880ca7f739057e654",
         },
         {
-            "dataset_id": "aider-shadow-rubrics-v1",
+            "dataset_id": "aider-cpp-rl-runtime-v1",
             "status": "existing-gated-runtime-oracle-restricted",
-            "repo": "TokenBender/glm47-aider-polyglot-cpp-shadow",
-            "revision": "d8f86f752685d5ddc6cece2a08ea8851b395ee83",
+            "repo": "TokenBender/glm47-aider-cpp-rl-tasks",
+            "revision": "155587aa7200979fe8f35ea08f4ffcb6bce67201",
             "boundary": (
                 "Contains rubrics and hidden executable tests; approve only RL "
                 "runtime/service identities, not ordinary corpus consumers."

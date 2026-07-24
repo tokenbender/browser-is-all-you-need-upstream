@@ -47,19 +47,19 @@ ASSETS = {
         "destination": "adapters/grpo",
         "verify_checksums": True,
     },
-    "aider-shadow": {
-        "repo_id": "TokenBender/glm47-aider-polyglot-cpp-shadow",
+    "aider-rl-tasks": {
+        "repo_id": "TokenBender/glm47-aider-cpp-rl-tasks",
         "repo_type": "dataset",
-        "revision_env": "GLM47_AIDER_SHADOW_REVISION",
-        "default_revision": "d8f86f752685d5ddc6cece2a08ea8851b395ee83",
-        "destination": "aider-shadow",
+        "revision_env": "GLM47_AIDER_RL_TASKS_REVISION",
+        "default_revision": "155587aa7200979fe8f35ea08f4ffcb6bce67201",
+        "destination": "aider-rl-tasks",
         "verify_checksums": True,
     },
     "aider-data": {
         "repo_id": "TokenBender/glm47-aider-posttraining-data",
         "repo_type": "dataset",
         "revision_env": "GLM47_AIDER_DATA_REVISION",
-        "default_revision": "0f0f69346eaeeb13401e57863efd33cc501e0922",
+        "default_revision": "27b7f1f43a123fe958104a5ba896f2ed3348ff43",
         "destination": "aider-data",
         "verify_checksums": False,
         "verify_upload_manifest": True,
@@ -68,7 +68,7 @@ ASSETS = {
         "repo_id": "TokenBender/glm47-aider-fixed26-responses",
         "repo_type": "dataset",
         "revision_env": "GLM47_AIDER_RESPONSES_REVISION",
-        "default_revision": "d817c418b29eae23a97a83c70c896b56296b330c",
+        "default_revision": "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3",
         "destination": "aider-responses",
         "verify_checksums": False,
         "verify_upload_manifest": True,
@@ -148,20 +148,25 @@ def _verify_aider_catalog(root: Path, name: str) -> None:
         if (
             catalog.get("kind") != "glm47-aider-posttraining-data-catalog"
             or not isinstance(datasets, list)
-            or len(datasets) != 19
+            or len(datasets) != 21
         ):
-            raise RuntimeError("Aider data catalog does not bind exactly 19 entries")
+            raise RuntimeError("Aider data catalog does not bind exactly 21 entries")
         trainable = {
             entry["dataset_id"] for entry in datasets if entry.get("trainable") is True
         }
-        if trainable != {"sft-v3-complement-530", "rl-v2-shadow-169"}:
+        if trainable != {
+            "sft-v3-complement-530",
+            "sft-v4-holistic-790",
+            "sft-v5-experimental-1340",
+            "rl-v2-169",
+        }:
             raise RuntimeError(f"Unexpected trainable Aider datasets: {trainable}")
     elif name == "aider-responses":
         evaluations = catalog.get("evals")
         if (
             catalog.get("kind") != "glm47-aider-fixed26-response-catalog"
             or not isinstance(evaluations, list)
-            or len(evaluations) != 13
+            or len(evaluations) != 16
             or catalog.get("policy", {}).get("training_use_prohibited") is not True
         ):
             raise RuntimeError("Aider response catalog policy or entry count mismatch")
@@ -195,25 +200,25 @@ def _extract_task_archive(root: Path) -> Path:
     return destination
 
 
-def _extract_aider_shadow_archive(root: Path) -> Path:
+def _extract_aider_rl_archive(root: Path) -> Path:
     artifact_manifest = json.loads(
         (root / "artifact_manifest.json").read_text(encoding="utf-8")
     )
-    if artifact_manifest.get("kind") != "glm47-aider-shadow-rubrics-archive":
-        raise RuntimeError("unexpected Aider shadow artifact kind")
+    if artifact_manifest.get("kind") != "glm47-aider-cpp-rl-runtime-archive":
+        raise RuntimeError("unexpected Aider C++ RL artifact kind")
     if artifact_manifest.get("counts", {}).get("tasks") != 253:
-        raise RuntimeError("Aider shadow artifact does not bind exactly 253 tasks")
+        raise RuntimeError("Aider C++ RL artifact does not bind exactly 253 tasks")
     archive_name = str(artifact_manifest.get("archive") or "")
     archive_root = str(artifact_manifest.get("archive_root") or "")
-    if archive_name != "aider-shadow-rubrics.tar.gz":
-        raise RuntimeError(f"unexpected Aider shadow archive name: {archive_name!r}")
-    if archive_root != "aider_polyglot_cpp_shadow":
-        raise RuntimeError(f"unexpected Aider shadow archive root: {archive_root!r}")
+    if archive_name != "aider-cpp-rl-runtime.tar.gz":
+        raise RuntimeError(f"unexpected Aider C++ RL archive name: {archive_name!r}")
+    if archive_root != "aider_cpp_rl_tasks":
+        raise RuntimeError(f"unexpected Aider C++ RL archive root: {archive_root!r}")
 
     archive = root / archive_name
     destination = root / "tasks"
     if not archive.is_file():
-        raise FileNotFoundError(f"Missing Aider shadow archive: {archive}")
+        raise FileNotFoundError(f"Missing Aider C++ RL archive: {archive}")
     if destination.exists():
         shutil.rmtree(destination)
     destination.mkdir(parents=True)
@@ -223,33 +228,33 @@ def _extract_aider_shadow_archive(root: Path) -> Path:
         for member in handle.getmembers():
             if not (member.isdir() or member.isfile()):
                 raise RuntimeError(
-                    f"Aider shadow archive contains an unsupported entry: {member.name}"
+                    f"Aider C++ RL archive contains an unsupported entry: {member.name}"
                 )
             target = (destination / member.name).resolve()
             if target != destination_root and destination_root not in target.parents:
-                raise RuntimeError(f"Aider shadow archive escapes destination: {member.name}")
+                raise RuntimeError(f"Aider C++ RL archive escapes destination: {member.name}")
         handle.extractall(destination, filter="data")
 
     extracted = destination / archive_root
     source_manifest = json.loads((extracted / "manifest.json").read_text(encoding="utf-8"))
-    if source_manifest.get("kind") != "aider-polyglot-cpp-shadow-rubrics":
-        raise RuntimeError("unexpected extracted Aider shadow manifest kind")
+    if source_manifest.get("kind") != "aider-cpp-rl-rubrics":
+        raise RuntimeError("unexpected extracted Aider C++ RL manifest kind")
     if source_manifest.get("counts", {}).get("tasks") != 253:
-        raise RuntimeError("extracted Aider shadow manifest does not bind 253 tasks")
+        raise RuntimeError("extracted Aider C++ RL manifest does not bind 253 tasks")
     actual = sum(1 for path in extracted.rglob(".rubric.json") if path.is_file())
     if actual != 253:
-        raise RuntimeError(f"Extracted Aider shadow task count mismatch: {actual} != 253")
+        raise RuntimeError(f"Extracted Aider C++ RL task count mismatch: {actual} != 253")
     actual_files = sum(1 for path in extracted.rglob("*") if path.is_file())
     expected_files = artifact_manifest.get("counts", {}).get("files")
     if actual_files != expected_files:
         raise RuntimeError(
-            f"Extracted Aider shadow file count mismatch: {actual_files} != {expected_files}"
+            f"Extracted Aider C++ RL file count mismatch: {actual_files} != {expected_files}"
         )
     extracted_manifest_sha256 = hashlib.sha256(
         (extracted / "manifest.json").read_bytes()
     ).hexdigest()
     if extracted_manifest_sha256 != artifact_manifest.get("source_manifest_sha256"):
-        raise RuntimeError("extracted Aider shadow manifest checksum mismatch")
+        raise RuntimeError("extracted Aider C++ RL manifest checksum mismatch")
     return extracted
 
 
@@ -257,7 +262,7 @@ def _download(name: str, output_root: Path, verify: bool) -> Path:
     asset = ASSETS[name]
     destination = output_root / asset["destination"]
     revision = os.environ.get(asset["revision_env"], asset["default_revision"])
-    if name in {"aider-shadow", "aider-data", "aider-responses"}:
+    if name in {"aider-rl-tasks", "aider-data", "aider-responses"}:
         resolved = HfApi().dataset_info(asset["repo_id"], revision=revision).sha
         if resolved != revision:
             raise RuntimeError(f"{name} revision mismatch: {resolved} != {revision}")
@@ -273,8 +278,8 @@ def _download(name: str, output_root: Path, verify: bool) -> Path:
         _verify_upload_manifest(destination)
     if name == "data":
         _extract_task_archive(destination)
-    elif name == "aider-shadow":
-        _extract_aider_shadow_archive(destination)
+    elif name == "aider-rl-tasks":
+        _extract_aider_rl_archive(destination)
     elif name in {"aider-data", "aider-responses"}:
         _verify_aider_catalog(destination, name)
     print(f"{name}: {destination}")

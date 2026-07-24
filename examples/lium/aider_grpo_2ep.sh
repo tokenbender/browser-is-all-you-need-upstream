@@ -7,15 +7,15 @@ runs_root="${GLM47_REPRO_RUNS_ROOT:-/workspace/runs}"
 run_id="${GLM47_REPRO_RUN_ID:-glm47-aider-grpo169-merge1211-530-r32-2ep-fixed-repro-$(date -u +%Y%m%dT%H%M%SZ)}"
 run_root="${runs_root}/${run_id}"
 
-expected_manifest_sha256="a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157"
-expected_train_sha256="b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2"
+expected_manifest_sha256="65b50a6532abc87f78cf43e673b07625c4056a62ecfdacc9a49f5849e6318105"
+expected_train_sha256="bb7472bb551d95e180d391351567372c62fd72bee33a0ca4cf8186d294f2c882"
 expected_adapter_sha256="${GLM47_REPRO_PARENT_ADAPTER_SHA256:-dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91}"
 iter10_adapter_sha256="046a1018b605aa29f8b8c4f2677f47ce55489105f6766155f4c009798f48abe2"
 iter10_native_manifest_sha256="5839772926ea3a58f9182783242731cc168bc6d5da1867375efa4c19e81b9005"
-expected_shadow_manifest_sha256="002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00"
-data_root="${assets_root}/prepared-aider-169"
+expected_rl_manifest_sha256="b37653def2cdad8c2e927af30c4de6e979c3af3ef0ea66a66671d5e7ff18d1ee"
+data_root="${GLM47_REPRO_DATA_ROOT:-${assets_root}/aider-data/datasets/rl-v2-169/data}"
 adapter_root="${GLM47_REPRO_PARENT_ADAPTER_ROOT:-${assets_root}/merged-1211-530-r32}"
-aider_tasks_root="${GLM47_AIDER_TASKS_DIR:-${assets_root}/aider-shadow/tasks/aider_polyglot_cpp_shadow}"
+aider_tasks_root="${GLM47_AIDER_TASKS_DIR:-${assets_root}/aider-rl-tasks/tasks/aider_cpp_rl_tasks}"
 
 verify_sha256() {
   local expected="$1"
@@ -39,7 +39,7 @@ verify_sha256() {
 verify_sha256 "${expected_manifest_sha256}" "${data_root}/manifest.json"
 verify_sha256 "${expected_train_sha256}" "${data_root}/grpo/train.jsonl"
 verify_sha256 "${expected_adapter_sha256}" "${adapter_root}/adapter_model.bin"
-verify_sha256 "${expected_shadow_manifest_sha256}" "${aider_tasks_root}/manifest.json"
+verify_sha256 "${expected_rl_manifest_sha256}" "${aider_tasks_root}/manifest.json"
 
 native_manifest_path="${GLM47_REPRO_PARENT_NATIVE_MANIFEST_PATH:-}"
 native_manifest_sha256="${GLM47_REPRO_PARENT_NATIVE_MANIFEST_SHA256:-}"
@@ -92,10 +92,10 @@ export MILES_CUSTOM_RM_PATH=glm47_posttraining.integrations.miles_aider_polyglot
 export MILES_DATA_BUILD_MODULE=glm47_posttraining.integrations.miles_aider_polyglot
 export MILES_EVAL_INTERVAL=1
 export MILES_EVAL_MAX_RESPONSE_LEN=4096
-export MILES_EVAL_NAME=aider_shadow_train_monitor
+export MILES_EVAL_NAME=aider_cpp_rl_train_monitor
 export MILES_EVAL_N_SAMPLES_PER_PROMPT=1
 export MILES_EVAL_PROMPT_DATA="${data_root}/eval/train_monitor.jsonl"
-export MILES_EXPECTED_DATASET_KIND=aider-polyglot-cpp-shadow-grpo
+export MILES_EXPECTED_DATASET_KIND=aider-cpp-rl-grpo
 export MILES_EXPECTED_NATIVE_SHARDS="${MILES_EXPECTED_NATIVE_SHARDS:-8}"
 export MILES_EXPECTED_SOURCE_ADAPTER_SHA256="${expected_adapter_sha256}"
 export MILES_EXPECTED_SOURCE_TENSORS="${MILES_EXPECTED_SOURCE_TENSORS:-9741}"

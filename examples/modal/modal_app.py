@@ -27,8 +27,8 @@ REMOTE_REPO = "/workspace/glm47-h100-posttraining"
 MODELS_DIR = "/root/models"
 ASSETS_DIR = "/workspace/assets"
 RUNS_DIR = "/workspace/runs"
-AIDER_TASKS_DIR = f"{ASSETS_DIR}/aider-shadow/tasks/aider_polyglot_cpp_shadow"
-AIDER_DATASET_KIND = "aider-polyglot-cpp-shadow-grpo"
+AIDER_TASKS_DIR = f"{ASSETS_DIR}/aider-rl-tasks/tasks/aider_cpp_rl_tasks"
+AIDER_DATASET_KIND = "aider-cpp-rl-grpo"
 AIDER_SFT_ADAPTER = (
     f"{RUNS_DIR}/glm47-aider-complement-530-sft-20260721/checkpoints/"
     "sft_lora_r16/iter_0000025/adapter"
@@ -138,7 +138,7 @@ def prepare_assets() -> None:
 
     _run(f"python3 scripts/download_assets.py data --output-root {ASSETS_DIR}")
     _run(f"python3 scripts/download_assets.py sft --output-root {ASSETS_DIR}")
-    _run(f"python3 scripts/download_assets.py aider-shadow --output-root {ASSETS_DIR}")
+    _run(f"python3 scripts/download_assets.py aider-rl-tasks --output-root {ASSETS_DIR}")
     models.commit()
     assets.commit()
 
@@ -151,15 +151,28 @@ def prepare_assets() -> None:
     volumes={ASSETS_DIR: assets},
     secrets=[hf_secret],
 )
-def prepare_aider_shadow_asset() -> dict[str, object]:
-    """Download and verify only the externally versioned Aider corpus."""
+def prepare_aider_rl_assets() -> dict[str, object]:
+    """Download and verify the canonical Aider RL runtime and data catalog."""
     import json
 
-    _run(f"python3 scripts/download_assets.py aider-shadow --output-root {ASSETS_DIR}")
-    manifest_path = Path(ASSETS_DIR, "aider-shadow", "artifact_manifest.json")
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    _run(f"python3 scripts/download_assets.py aider-rl-tasks --output-root {ASSETS_DIR}")
+    _run(f"python3 scripts/download_assets.py aider-data --output-root {ASSETS_DIR}")
+    runtime_manifest = json.loads(
+        Path(ASSETS_DIR, "aider-rl-tasks", "artifact_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    data_catalog = json.loads(
+        Path(ASSETS_DIR, "aider-data", "CATALOG.json").read_text(encoding="utf-8")
+    )
     assets.commit()
-    return manifest
+    return {
+        "runtime_manifest": runtime_manifest,
+        "data_catalog": {
+            "kind": data_catalog["kind"],
+            "datasets": len(data_catalog["datasets"]),
+        },
+    }
 
 
 @app.function(
@@ -201,7 +214,7 @@ def validate_aider_path(
     import json
     import shutil
 
-    data_dir = Path("/tmp/aider-shadow-preflight")
+    data_dir = Path("/tmp/aider-rl-tasks-preflight")
     hybrid_dir = Path("/tmp/aider-hybrid-preflight")
     shutil.rmtree(data_dir, ignore_errors=True)
     shutil.rmtree(hybrid_dir, ignore_errors=True)
@@ -316,7 +329,7 @@ def _stage_env(
                     "glm47_posttraining.integrations.miles_aider_polyglot"
                 ),
                 "MILES_EXPECTED_DATASET_KIND": AIDER_DATASET_KIND,
-                "MILES_EVAL_NAME": "aider_shadow_train_monitor",
+                "MILES_EVAL_NAME": "aider_cpp_rl_train_monitor",
                 "MILES_EVAL_PROMPT_DATA": (
                     f"{RUNS_DIR}/{run_id}/data/eval/train_monitor.jsonl"
                 ),
@@ -363,9 +376,9 @@ def _stage_env(
                 "WANDB_RUN_GROUP": run_id,
                 "WANDB_JOB_TYPE": "grpo-profile" if stage == "aider_profile" else "grpo",
                 "WANDB_TAGS": (
-                    "aider-shadow,modal,8xh100,grpo,profile"
+                    "aider-rl-tasks,modal,8xh100,grpo,profile"
                     if stage == "aider_profile"
-                    else "aider-shadow,modal,8xh100,grpo,full"
+                    else "aider-rl-tasks,modal,8xh100,grpo,full"
                 ),
                 "GLM47_TIMING_STATUS": "profile" if stage == "aider_profile" else "full",
             }

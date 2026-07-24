@@ -1,4 +1,4 @@
-"""Miles bridge for shadow-task GRPO and official Aider Polyglot C++ evaluation."""
+"""Miles bridge for Aider C++ RL task GRPO and official Aider Polyglot C++ evaluation."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from glm47_posttraining.aider_polyglot.harness import (
     build_aider_sandbox_image,
     run_aider_tests,
     run_sandbox_preflight,
-    run_shadow_tests,
+    run_aider_rl_tests,
 )
 from glm47_posttraining.aider_polyglot.parser import parse_whole_file_response
 from glm47_posttraining.aider_polyglot.reward import AiderRewardBreakdown, compute_aider_reward
@@ -77,14 +77,14 @@ def _score_sample(sample: Any) -> dict[str, Any]:
         exercise_dir = _resolve_exercise_dir(task_path, task.exercise_dir)
 
         harness_runner = (
-            run_shadow_tests if task.harness_kind == "shadow_cpp17" else run_aider_tests
+            run_aider_rl_tests if task.harness_kind == "aider_cpp17" else run_aider_tests
         )
 
         def runner(path: Path, files: dict[str, str]):
             kwargs: dict[str, Any] = {
                 "image": os.environ.get(SANDBOX_IMAGE_ENV, DEFAULT_AIDER_DOCKER_IMAGE)
             }
-            if task.harness_kind == "shadow_cpp17":
+            if task.harness_kind == "aider_cpp17":
                 kwargs["expected_test_sha256"] = task.hidden_test_sha256
             return harness_runner(path, files, **kwargs)
 
@@ -403,7 +403,7 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     build = subparsers.add_parser("build-data")
-    build.add_argument("--tasks-dir", required=True, help="checked-in Aider shadow rubric tree")
+    build.add_argument("--tasks-dir", required=True, help="checked-in Aider C++ RL rubric tree")
     build.add_argument("--out", required=True)
     build.add_argument("--train-limit", type=int)
     build.add_argument("--eval-limit", type=int, help="training-task monitor size")
@@ -439,7 +439,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
     if args.filter_train_oracle_full_marks:
         raise ValueError(
-            "the packaged shadow corpus is already restricted to terminal oracle passes"
+            "the packaged Aider C++ RL corpus is already restricted to terminal oracle passes"
         )
     train_task_ids = None
     monitor_task_ids = None

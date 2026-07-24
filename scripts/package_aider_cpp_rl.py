@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a deterministic, checksum-bound archive of the Aider shadow corpus."""
+"""Build a deterministic, checksum-bound archive of the Aider-style C++ RL tasks."""
 
 from __future__ import annotations
 
@@ -11,17 +11,17 @@ import tarfile
 from pathlib import Path
 
 from glm47_posttraining.aider_polyglot.dataset import (
-    EXPECTED_SHADOW_TASKS,
+    EXPECTED_RL_TASKS,
     SOURCE_MANIFEST_KIND,
     _load_verified_rubric,
     _source_tree_sha256,
     _validate_source_manifest,
-    discover_shadow_exercises,
+    discover_rl_exercises,
 )
 
 
-ARCHIVE_NAME = "aider-shadow-rubrics.tar.gz"
-ARCHIVE_ROOT = "aider_polyglot_cpp_shadow"
+ARCHIVE_NAME = "aider-cpp-rl-runtime.tar.gz"
+ARCHIVE_ROOT = "aider_cpp_rl_tasks"
 
 
 def sha256_path(path: Path) -> str:
@@ -78,7 +78,7 @@ def package(source: Path, output: Path) -> dict[str, object]:
     source = source.resolve()
     output = output.resolve()
     manifest_path, source_manifest = _validate_source_manifest(source)
-    exercises = discover_shadow_exercises(source)
+    exercises = discover_rl_exercises(source)
     for exercise in exercises:
         _load_verified_rubric(exercise)
 
@@ -89,7 +89,7 @@ def package(source: Path, output: Path) -> dict[str, object]:
     source_manifest_target.write_bytes(manifest_path.read_bytes())
 
     artifact_manifest = {
-        "kind": "glm47-aider-shadow-rubrics-archive",
+        "kind": "glm47-aider-cpp-rl-runtime-archive",
         "schema_version": 1,
         "archive": ARCHIVE_NAME,
         "archive_root": ARCHIVE_ROOT,
@@ -103,7 +103,7 @@ def package(source: Path, output: Path) -> dict[str, object]:
         },
         "contract": source_manifest["contract"],
     }
-    if artifact_manifest["counts"]["tasks"] != EXPECTED_SHADOW_TASKS:
+    if artifact_manifest["counts"]["tasks"] != EXPECTED_RL_TASKS:
         raise RuntimeError("archive does not contain exactly 253 tasks")
     artifact_manifest_path = output / "artifact_manifest.json"
     artifact_manifest_path.write_text(
@@ -128,7 +128,7 @@ def main() -> int:
     parser.add_argument(
         "--source",
         type=Path,
-        default=Path("rubrics/aider_polyglot_cpp_shadow"),
+        default=Path("rubrics/aider_cpp_rl_tasks"),
     )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()

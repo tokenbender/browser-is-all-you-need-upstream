@@ -31,7 +31,7 @@ def _fixture(tmp_path: Path) -> dict[str, Path | str]:
     data_manifest.write_text(
         json.dumps(
             {
-                "kind": "aider-polyglot-cpp-shadow-grpo",
+                "kind": "aider-cpp-rl-grpo",
                 "counts": {"train": 253},
                 "source_tree_sha256": "a" * 64,
                 "split_contract": {"official_26": "external fixed evaluation only"},

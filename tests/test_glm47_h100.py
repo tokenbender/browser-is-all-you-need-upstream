@@ -481,12 +481,13 @@ def test_modal_reproduction_pins_model_image_and_machine_shape() -> None:
 def test_modal_aider_profile_binds_objective_adapter_and_safe_reward() -> None:
     text = GLM47_H100_MODAL_RUNNER.read_text(encoding="utf-8")
     assert '"bubblewrap"' in text
-    assert 'AIDER_DATASET_KIND = "aider-polyglot-cpp-shadow-grpo"' in text
-    assert 'AIDER_TASKS_DIR = f"{ASSETS_DIR}/aider-shadow/tasks/aider_polyglot_cpp_shadow"' in text
+    assert 'AIDER_DATASET_KIND = "aider-cpp-rl-grpo"' in text
+    assert 'AIDER_TASKS_DIR = f"{ASSETS_DIR}/aider-rl-tasks/tasks/aider_cpp_rl_tasks"' in text
     assert '"rubrics"' in text
-    assert 'scripts/download_assets.py aider-shadow' in text
+    assert 'scripts/download_assets.py aider-rl-tasks' in text
     assert 'secrets=[hf_secret]' in text
-    assert "def prepare_aider_shadow_asset(" in text
+    assert "def prepare_aider_rl_assets(" in text
+    assert "scripts/download_assets.py aider-data" in text
     assert 'volumes={ASSETS_DIR: assets, RUNS_DIR: runs}' in text
     assert "glm47-aider-complement-530-sft-20260721" in text
     assert "glm47-aider-1211-sft-20260718T192250Z" in text
@@ -536,8 +537,8 @@ def test_aider_fixed_26_eval_requires_phase_specific_training_gate() -> None:
 def test_lium_aider_reproduction_pins_inputs_and_fixed_schedule() -> None:
     text = GLM47_AIDER_LIUM_GRPO_RUNNER.read_text(encoding="utf-8")
     for value in (
-        "a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157",
-        "b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2",
+        "65b50a6532abc87f78cf43e673b07625c4056a62ecfdacc9a49f5849e6318105",
+        "bb7472bb551d95e180d391351567372c62fd72bee33a0ca4cf8186d294f2c882",
         "dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91",
         'MILES_NUM_ROLLOUT="${MILES_NUM_ROLLOUT:-11}"',
         "MILES_LORA_RANK=32",
@@ -553,8 +554,8 @@ def test_lium_aider_reproduction_pins_inputs_and_fixed_schedule() -> None:
         "GLM47_REPRO_PARENT_NATIVE_MANIFEST_PATH",
         "MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256",
         "the pinned RL iter10 adapter requires explicit continuation provenance",
-        "002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00",
-        "aider-shadow/tasks/aider_polyglot_cpp_shadow",
+        "b37653def2cdad8c2e927af30c4de6e979c3af3ef0ea66a66671d5e7ff18d1ee",
+        "aider-rl-tasks/tasks/aider_cpp_rl_tasks",
     ):
         assert value in text
     assert "verify_sha256" in text
@@ -585,13 +586,13 @@ def test_asset_downloader_pins_the_base_model_revision() -> None:
     assert model["verify_checksums"] is False
 
 
-def test_asset_downloader_pins_the_aider_shadow_revision() -> None:
+def test_asset_downloader_pins_the_aider_rl_revision() -> None:
     module = runpy.run_path("scripts/download_assets.py")
-    shadow = module["ASSETS"]["aider-shadow"]
-    assert shadow["repo_id"] == "TokenBender/glm47-aider-polyglot-cpp-shadow"
-    assert shadow["default_revision"] == "d8f86f752685d5ddc6cece2a08ea8851b395ee83"
-    assert shadow["destination"] == "aider-shadow"
-    assert shadow["verify_checksums"] is True
+    rl = module["ASSETS"]["aider-rl-tasks"]
+    assert rl["repo_id"] == "TokenBender/glm47-aider-cpp-rl-tasks"
+    assert rl["default_revision"] == "155587aa7200979fe8f35ea08f4ffcb6bce67201"
+    assert rl["destination"] == "aider-rl-tasks"
+    assert rl["verify_checksums"] is True
 
 
 def test_asset_downloader_pins_the_aider_catalog_revisions() -> None:
@@ -600,13 +601,10 @@ def test_asset_downloader_pins_the_aider_catalog_revisions() -> None:
     responses = module["ASSETS"]["aider-responses"]
 
     assert data["repo_id"] == "TokenBender/glm47-aider-posttraining-data"
-    assert data["default_revision"] == "0f0f69346eaeeb13401e57863efd33cc501e0922"
+    assert data["default_revision"] == "27b7f1f43a123fe958104a5ba896f2ed3348ff43"
+    assert responses["default_revision"] == "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3"
     assert data["verify_upload_manifest"] is True
     assert responses["repo_id"] == "TokenBender/glm47-aider-fixed26-responses"
-    assert (
-        responses["default_revision"]
-        == "d817c418b29eae23a97a83c70c896b56296b330c"
-    )
     assert responses["verify_upload_manifest"] is True
 
 
@@ -707,14 +705,14 @@ def test_data_asset_extracts_verified_task_bundle(tmp_path) -> None:
     assert (destination / "validation" / "two.json").is_file()
 
 
-def test_aider_shadow_asset_extracts_verified_archive(tmp_path) -> None:
+def test_aider_rl_asset_extracts_verified_archive(tmp_path) -> None:
     import hashlib
     import json
 
     module = runpy.run_path("scripts/download_assets.py")
-    extract = module["_extract_aider_shadow_archive"]
-    root = tmp_path / "aider-shadow"
-    source = tmp_path / "aider_polyglot_cpp_shadow"
+    extract = module["_extract_aider_rl_archive"]
+    root = tmp_path / "aider-rl-tasks"
+    source = tmp_path / "aider_cpp_rl_tasks"
     practice = source / "cpp" / "exercises" / "practice"
     practice.mkdir(parents=True)
     for index in range(253):
@@ -722,18 +720,18 @@ def test_aider_shadow_asset_extracts_verified_archive(tmp_path) -> None:
         task.mkdir()
         (task / ".rubric.json").write_text("{}")
     source_manifest = {
-        "kind": "aider-polyglot-cpp-shadow-rubrics",
+        "kind": "aider-cpp-rl-rubrics",
         "counts": {"tasks": 253},
     }
     manifest_bytes = (json.dumps(source_manifest) + "\n").encode()
     (source / "manifest.json").write_bytes(manifest_bytes)
     root.mkdir()
-    with tarfile.open(root / "aider-shadow-rubrics.tar.gz", "w:gz") as handle:
-        handle.add(source, arcname="aider_polyglot_cpp_shadow")
+    with tarfile.open(root / "aider-cpp-rl-runtime.tar.gz", "w:gz") as handle:
+        handle.add(source, arcname="aider_cpp_rl_tasks")
     artifact_manifest = {
-        "kind": "glm47-aider-shadow-rubrics-archive",
-        "archive": "aider-shadow-rubrics.tar.gz",
-        "archive_root": "aider_polyglot_cpp_shadow",
+        "kind": "glm47-aider-cpp-rl-runtime-archive",
+        "archive": "aider-cpp-rl-runtime.tar.gz",
+        "archive_root": "aider_cpp_rl_tasks",
         "source_manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
         "counts": {"tasks": 253, "files": 254},
     }
@@ -741,7 +739,7 @@ def test_aider_shadow_asset_extracts_verified_archive(tmp_path) -> None:
 
     destination = extract(root)
 
-    assert destination.name == "aider_polyglot_cpp_shadow"
+    assert destination.name == "aider_cpp_rl_tasks"
     assert sum(1 for path in destination.rglob(".rubric.json")) == 253
 
 

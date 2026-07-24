@@ -1,4 +1,4 @@
-"""Build answer-free GRPO data from the checked-in Aider C++ shadow tasks."""
+"""Build answer-free GRPO data from the checked-in Aider-style C++ RL tasks."""
 
 from __future__ import annotations
 
@@ -12,13 +12,13 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Iterable, Literal
 
-from .schema import AiderPolyglotTask, AiderShadowRubric
+from .schema import AiderPolyglotTask, AiderRlRubric
 
 
-EXPECTED_SHADOW_TASKS = 253
-DATASET_KIND = "aider-polyglot-cpp-shadow-grpo"
-SOURCE_MANIFEST_KIND = "aider-polyglot-cpp-shadow-rubrics"
-TASK_ID_PREFIX = "aider-shadow-cpp/"
+EXPECTED_RL_TASKS = 253
+DATASET_KIND = "aider-cpp-rl-grpo"
+SOURCE_MANIFEST_KIND = "aider-cpp-rl-rubrics"
+TASK_ID_PREFIX = "aider-cpp-rl/"
 
 
 def sha256_path(path: Path) -> str:
@@ -136,7 +136,7 @@ def build_aider_messages(exercise_dir: Path, editable_files: list[str]) -> list[
     ]
 
 
-def discover_shadow_exercises(tasks_root: str | Path) -> list[Path]:
+def discover_rl_exercises(tasks_root: str | Path) -> list[Path]:
     root = Path(tasks_root).resolve()
     candidates = [root / "cpp" / "exercises" / "practice", root / "exercises" / "practice", root]
     practice = next(
@@ -148,13 +148,13 @@ def discover_shadow_exercises(tasks_root: str | Path) -> list[Path]:
         None,
     )
     if practice is None:
-        raise ValueError(f"cannot find Aider C++ shadow exercises under {root}")
+        raise ValueError(f"cannot find Aider C++ RL exercises under {root}")
     exercises = sorted(
         path for path in practice.iterdir() if path.is_dir() and (path / ".rubric.json").is_file()
     )
-    if len(exercises) != EXPECTED_SHADOW_TASKS:
+    if len(exercises) != EXPECTED_RL_TASKS:
         raise ValueError(
-            f"expected {EXPECTED_SHADOW_TASKS} Aider C++ shadow exercises, found {len(exercises)}"
+            f"expected {EXPECTED_RL_TASKS} Aider C++ RL exercises, found {len(exercises)}"
         )
     return exercises
 
@@ -167,30 +167,30 @@ def _validate_source_manifest(tasks_root: Path) -> tuple[Path, dict[str, object]
             break
     manifest_path = next((path for path in candidates if path.is_file()), None)
     if manifest_path is None:
-        raise FileNotFoundError(f"missing shadow rubric manifest beneath {tasks_root}")
+        raise FileNotFoundError(f"missing Aider C++ RL rubric manifest beneath {tasks_root}")
     if manifest_path.is_symlink():
-        raise ValueError(f"shadow rubric manifest must not be a symlink: {manifest_path}")
+        raise ValueError(f"Aider C++ RL rubric manifest must not be a symlink: {manifest_path}")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("kind") != SOURCE_MANIFEST_KIND:
-        raise ValueError(f"unexpected shadow manifest kind: {manifest.get('kind')!r}")
+        raise ValueError(f"unexpected Aider C++ RL manifest kind: {manifest.get('kind')!r}")
     counts = manifest.get("counts")
-    if not isinstance(counts, dict) or counts.get("tasks") != EXPECTED_SHADOW_TASKS:
-        raise ValueError("shadow manifest does not bind exactly 253 tasks")
+    if not isinstance(counts, dict) or counts.get("tasks") != EXPECTED_RL_TASKS:
+        raise ValueError("Aider C++ RL manifest does not bind exactly 253 tasks")
     contract = manifest.get("contract")
     if not isinstance(contract, dict) or contract.get("official_task_id_overlap") != []:
-        raise ValueError("shadow manifest does not prove zero official task-ID overlap")
+        raise ValueError("Aider C++ RL manifest does not prove zero official task-ID overlap")
     if contract.get("reference_answers_packaged") is not False:
-        raise ValueError("shadow manifest must exclude reference answers")
+        raise ValueError("Aider C++ RL manifest must exclude reference answers")
     return manifest_path, manifest
 
 
 def _assert_regular_file(path: Path, root: Path) -> None:
     if not path.is_file() or path.is_symlink() or path.resolve().parent != root.resolve():
-        raise ValueError(f"unsafe or missing shadow task file: {path}")
+        raise ValueError(f"unsafe or missing Aider-style C++ RL task file: {path}")
 
 
-def _load_verified_rubric(exercise: Path) -> AiderShadowRubric:
-    rubric = AiderShadowRubric.read_json(exercise / ".rubric.json")
+def _load_verified_rubric(exercise: Path) -> AiderRlRubric:
+    rubric = AiderRlRubric.read_json(exercise / ".rubric.json")
     if rubric.task_id != exercise.name:
         raise ValueError(f"task ID and directory disagree: {rubric.task_id} != {exercise.name}")
     if rubric.hidden_test_file in rubric.editable_files:
@@ -249,12 +249,12 @@ def write_jsonl(path: Path, rows: Iterable[dict[str, object]]) -> Path:
 
 def _materialize_task(
     exercise: Path,
-    rubric: AiderShadowRubric,
+    rubric: AiderRlRubric,
     output: Path,
     *,
     split: Literal["train", "validation"] = "train",
 ) -> tuple[AiderPolyglotTask, Path]:
-    destination = output / "shadow" / exercise.name
+    destination = output / "rl_tasks" / exercise.name
     grader = destination / ".grader"
     grader.mkdir(parents=True)
     for name in rubric.editable_files:
@@ -265,11 +265,11 @@ def _materialize_task(
 
     prompt = build_aider_messages(exercise, rubric.editable_files)
     task = AiderPolyglotTask(
-        task_id=f"aider-shadow-cpp/{exercise.name}",
+        task_id=f"aider-cpp-rl/{exercise.name}",
         exercise=exercise.name,
         split=split,
-        harness_kind="shadow_cpp17",
-        exercise_dir=f"shadow/{exercise.name}",
+        harness_kind="aider_cpp17",
+        exercise_dir=f"rl_tasks/{exercise.name}",
         editable_files=rubric.editable_files,
         prompt=prompt,
         source_revision=rubric.hidden_test_sha256,
@@ -348,11 +348,11 @@ def _normalize_requested_task_ids(values: Sequence[str], *, role: str) -> list[s
 
 
 def _select_requested_rubrics(
-    rubrics: list[tuple[Path, AiderShadowRubric]],
+    rubrics: list[tuple[Path, AiderRlRubric]],
     requested: Sequence[str],
     *,
     role: str,
-) -> list[tuple[Path, AiderShadowRubric]]:
+) -> list[tuple[Path, AiderRlRubric]]:
     normalized = _normalize_requested_task_ids(requested, role=role)
     by_id = {rubric.task_id: (exercise, rubric) for exercise, rubric in rubrics}
     missing = sorted(set(normalized) - set(by_id))
@@ -369,7 +369,7 @@ def build_aider_polyglot_datasets(
     monitor_limit: int = 32,
     train_task_ids: Sequence[str] | None = None,
     monitor_task_ids: Sequence[str] | None = None,
-    profile: str = "aider-polyglot-cpp-shadow",
+    profile: str = "aider-cpp-rl",
     run_id: str | None = None,
     sort_by_size: bool = False,
     force: bool = False,
@@ -380,15 +380,15 @@ def build_aider_polyglot_datasets(
     output = Path(output_dir).resolve()
     _safe_output(source, output)
     manifest_path, source_manifest = _validate_source_manifest(source)
-    exercises = discover_shadow_exercises(source)
+    exercises = discover_rl_exercises(source)
     rubrics = [(exercise, _load_verified_rubric(exercise)) for exercise in exercises]
 
     task_ids = [rubric.task_id for _, rubric in rubrics]
     hidden_hashes = [rubric.hidden_test_sha256 for _, rubric in rubrics]
     if len(task_ids) != len(set(task_ids)):
-        raise ValueError("shadow task IDs must be unique")
+        raise ValueError("Aider-style C++ RL task IDs must be unique")
     if len(hidden_hashes) != len(set(hidden_hashes)):
-        raise ValueError("shadow hidden-test hashes must be unique")
+        raise ValueError("Aider-style C++ RL hidden-test hashes must be unique")
     explicit_split = train_task_ids is not None or monitor_task_ids is not None
     if explicit_split and (train_task_ids is None or monitor_task_ids is None):
         raise ValueError("explicit task selection requires both train and monitor task IDs")
@@ -455,9 +455,9 @@ def build_aider_polyglot_datasets(
             "source_tree_sha256": _source_tree_sha256(exercises),
             "split_contract": {
                 "train": (
-                    "explicit independently authored executable shadow-task optimization split"
+                    "explicit independently authored executable Aider C++ RL task optimization split"
                     if explicit_split
-                    else "253 independently authored executable shadow tasks"
+                    else "253 independently authored executable Aider-style C++ RL tasks"
                 ),
                 "monitor": (
                     "explicit gradient-held-out monitor; not a generalization benchmark"
@@ -469,7 +469,7 @@ def build_aider_polyglot_datasets(
                 "reference_answers_packaged": False,
             },
             "counts": {
-                "available_shadow": len(rubrics),
+                "available_rl_tasks": len(rubrics),
                 "train": len(train_rows),
                 "monitor": len(monitor_rows),
             },

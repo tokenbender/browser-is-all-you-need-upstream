@@ -125,8 +125,8 @@ def create_gate(
     output: Path,
 ) -> dict[str, Any]:
     data_manifest = json.loads(data_manifest_path.read_text(encoding="utf-8"))
-    if data_manifest.get("kind") != "aider-polyglot-cpp-shadow-grpo":
-        raise RuntimeError("training data is not the Aider shadow GRPO corpus")
+    if data_manifest.get("kind") != "aider-cpp-rl-grpo":
+        raise RuntimeError("training data is not the Aider C++ RL GRPO corpus")
     if data_manifest.get("counts", {}).get("train") != expected_train_count:
         raise RuntimeError(
             f"Aider GRPO gate requires {expected_train_count} train tasks, "

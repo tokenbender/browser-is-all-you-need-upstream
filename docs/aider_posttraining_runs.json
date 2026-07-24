@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at_utc": "2026-07-23T22:51:55Z",
+  "updated_at_utc": "2026-07-24T05:31:47Z",
   "model": {
     "repo": "zai-org/GLM-4.7-Flash",
     "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
@@ -8,12 +8,12 @@
   "artifact_catalogs": {
     "training_and_audit_data": {
       "repo": "TokenBender/glm47-aider-posttraining-data",
-      "revision": "f21122d33f99e552aee0557699b5e3e71b6e12e5",
-      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/f21122d33f99e552aee0557699b5e3e71b6e12e5",
+      "revision": "27b7f1f43a123fe958104a5ba896f2ed3348ff43",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/27b7f1f43a123fe958104a5ba896f2ed3348ff43",
       "access": "private-manual-gated",
       "entries": 21,
       "roundtrip": "passed",
-      "upload_manifest_sha256": "3a9cc97e739569479412823ba96e200aef5fea39948867aa626a38177a2f6f5d"
+      "upload_manifest_sha256": "ad89de4cdd991122bef23895a9686a0d63a5bc283afe2f8ab9038719f74edbd6"
     },
     "fixed26_responses": {
       "repo": "TokenBender/glm47-aider-fixed26-responses",
@@ -45,10 +45,10 @@
     "pass1-skills-600": "datasets/pass1-skills-600",
     "reverify-audit": "datasets/reverify-audit",
     "regression-audit": "datasets/regression-audit",
-    "rl-shadow-replay-253": "datasets/rl-shadow-replay-253",
-    "rl-shadow-difficulty-20260722": "datasets/rl-shadow-difficulty-20260722",
-    "rl-v2-shadow-169": "datasets/rl-v2-shadow-169",
-    "rl-shadow-253-july21": "datasets/rl-shadow-253-july21"
+    "rl-full-replay-253": "datasets/rl-full-replay-253",
+    "rl-difficulty-20260722": "datasets/rl-difficulty-20260722",
+    "rl-v2-169": "datasets/rl-v2-169",
+    "rl-full-253-july21": "datasets/rl-full-253-july21"
   },
   "evaluation_catalog_paths": {
     "base": "evals/base-fixed26-20260711",
@@ -84,16 +84,16 @@
       "status": "framework-validity-only"
     }
   ],
-  "shadow_rl_corpus": {
+  "aider_cpp_rl_corpus": {
     "package": "v1",
     "access": "gated-manual-approval",
-    "repo": "TokenBender/glm47-aider-polyglot-cpp-shadow",
-    "revision": "d8f86f752685d5ddc6cece2a08ea8851b395ee83",
-    "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-polyglot-cpp-shadow/tree/d8f86f752685d5ddc6cece2a08ea8851b395ee83",
+    "repo": "TokenBender/glm47-aider-cpp-rl-tasks",
+    "revision": "155587aa7200979fe8f35ea08f4ffcb6bce67201",
+    "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-cpp-rl-tasks/tree/155587aa7200979fe8f35ea08f4ffcb6bce67201",
     "tasks": 253,
     "files": 1519,
-    "archive_sha256": "e89d0f6b5ee78796a5519f1ab6130cc119837bedca456c1fa4b835a19e026714",
-    "source_manifest_sha256": "002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00",
+    "archive_sha256": "97d70ca9e6ab3ef76141169b188e1049524bdbfa651b2420dbbd5c78968c7c59",
+    "source_manifest_sha256": "b37653def2cdad8c2e927af30c4de6e979c3af3ef0ea66a66671d5e7ff18d1ee",
     "source_tree_sha256": "a8bb8030f7ec287eee4f5c19146374d6722ec5af310cad632ed5938e7280f686",
     "access_tier": "runtime-oracle",
     "contains_rubrics": true,
@@ -268,7 +268,7 @@
         "approximate_epochs": 2.08,
         "dataset_manifest_sha256": "a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157",
         "train_jsonl_sha256": "b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2",
-        "hf": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/rl-v2-shadow-169",
+        "hf": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/27b7f1f43a123fe958104a5ba896f2ed3348ff43/datasets/rl-v2-169",
         "split_semantics": "The 22 monitor task IDs overlap the 169 training IDs; this is training telemetry, not a held-out validation split.",
         "source_adapter_sha256": "dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91",
         "wandb_mode": "offline",

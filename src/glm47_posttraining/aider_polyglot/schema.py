@@ -19,7 +19,7 @@ class AiderChatMessage(BaseModel):
 
 
 class AiderPolyglotTask(BaseModel):
-    """One relocatable shadow-training or official-evaluation C++ task."""
+    """One relocatable Aider C++ RL training or official-evaluation C++ task."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -28,7 +28,7 @@ class AiderPolyglotTask(BaseModel):
     exercise: str
     language: Literal["cpp"] = "cpp"
     split: Literal["train", "validation"]
-    harness_kind: Literal["shadow_cpp17", "official_cmake"]
+    harness_kind: Literal["aider_cpp17", "official_cmake"]
     exercise_dir: str
     editable_files: list[str]
     prompt: list[AiderChatMessage]
@@ -114,8 +114,8 @@ class AiderTestResult(BaseModel):
         return json.dumps(self.model_dump(), indent=2, sort_keys=True)
 
 
-class AiderShadowRubric(BaseModel):
-    """Checked-in, answer-free contract for one shadow training exercise."""
+class AiderRlRubric(BaseModel):
+    """Checked-in, answer-free contract for one Aider C++ RL training exercise."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -155,5 +155,5 @@ class AiderShadowRubric(BaseModel):
         return lowered
 
     @classmethod
-    def read_json(cls, path: str | Path) -> "AiderShadowRubric":
+    def read_json(cls, path: str | Path) -> "AiderRlRubric":
         return cls.model_validate_json(Path(path).read_text(encoding="utf-8"))

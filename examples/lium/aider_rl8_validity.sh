@@ -7,7 +7,7 @@ runs_root="${GLM47_REPRO_RUNS_ROOT:-/workspace/runs}"
 run_id="${GLM47_REPRO_RUN_ID:-glm47-aider-rl8-validity-$(date -u +%Y%m%dT%H%M%SZ)}"
 run_root="${runs_root}/${run_id}"
 source_adapter="${GLM47_REPRO_SOURCE_ADAPTER:-${assets_root}/sft-v3-r16-clean}"
-task_root="${GLM47_AIDER_TASKS_DIR:-${assets_root}/aider-shadow/tasks/aider_polyglot_cpp_shadow}"
+task_root="${GLM47_AIDER_TASKS_DIR:-${assets_root}/aider-rl-tasks/tasks/aider_cpp_rl_tasks}"
 task_split="${repo_root}/examples/lium/aider_rl8_task_split.json"
 data_root="${run_root}/data"
 reconstructed_adapter="${run_root}/inputs/sft-v3-r16-ep8"
@@ -16,7 +16,7 @@ preservation_root="${runs_root}/${run_id}-preservation"
 expected_adapter_sha256="f1ea45bc327dc6e28d0287aea75c6b691e99d2ec2f7fdb7f07bbbf5ccd6cf36a"
 expected_config_sha256="0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e"
 expected_task_split_sha256="6f28255e9a2db2890f59cd06bc1cea5f58fb0f83126b0a72a7465e479015479a"
-expected_shadow_manifest_sha256="002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00"
+expected_rl_manifest_sha256="b37653def2cdad8c2e927af30c4de6e979c3af3ef0ea66a66671d5e7ff18d1ee"
 
 verify_sha256() {
   local expected="$1"
@@ -40,7 +40,7 @@ fi
 verify_sha256 "${expected_adapter_sha256}" "${source_adapter}/adapter_model.bin"
 verify_sha256 "${expected_config_sha256}" "${source_adapter}/adapter_config.json"
 verify_sha256 "${expected_task_split_sha256}" "${task_split}"
-verify_sha256 "${expected_shadow_manifest_sha256}" "${task_root}/manifest.json"
+verify_sha256 "${expected_rl_manifest_sha256}" "${task_root}/manifest.json"
 
 mkdir -p "${run_root}/inputs" "${run_root}/runtime_state/tmp"
 cp "${task_split}" "${run_root}/task_split.json"
@@ -78,7 +78,7 @@ data_root = Path(os.environ["DATA_ROOT"])
 split_path = Path(os.environ["TASK_SPLIT"])
 manifest = json.loads((data_root / "manifest.json").read_text(encoding="utf-8"))
 split = json.loads(split_path.read_text(encoding="utf-8"))
-if manifest.get("counts") != {"available_shadow": 253, "train": 6, "monitor": 2}:
+if manifest.get("counts") != {"available_rl_tasks": 253, "train": 6, "monitor": 2}:
     raise SystemExit(f"unexpected RL8 dataset counts: {manifest.get('counts')}")
 selection = manifest.get("selection", {})
 if selection.get("train_task_ids") != split.get("train_task_ids"):
@@ -227,7 +227,7 @@ export MILES_EVAL_MAX_RESPONSE_LEN=4096
 export MILES_EVAL_NAME=aider_rl8_gradient_holdout
 export MILES_EVAL_N_SAMPLES_PER_PROMPT=8
 export MILES_EVAL_PROMPT_DATA="${data_root}/eval/train_monitor.jsonl"
-export MILES_EXPECTED_DATASET_KIND=aider-polyglot-cpp-shadow-grpo
+export MILES_EXPECTED_DATASET_KIND=aider-cpp-rl-grpo
 export MILES_EXPECTED_NATIVE_SHARDS=8
 export MILES_EXPECTED_SOURCE_ADAPTER_SHA256="${expected_adapter_sha256}"
 export MILES_EXPECTED_SOURCE_TENSORS=9741

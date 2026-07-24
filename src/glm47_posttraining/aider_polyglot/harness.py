@@ -55,10 +55,10 @@ class CandidatePolicyError(ValueError):
     """Generated source attempts to bypass or inspect the hidden verifier."""
 
 
-def _shadow_ordinal_total(grader_source: str) -> int | None:
+def _rl_ordinal_total(grader_source: str) -> int | None:
     """Return N when the grader short-circuits with clean sequential ordinals 1..N.
 
-    Most shadow graders are a single ``main()`` of ``if (!check) return k;`` lines
+    Most Aider C++ RL graders are a single ``main()`` of ``if (!check) return k;`` lines
     with a distinct 1-based ``k`` per check, so the renamed grader's return value
     (surfaced as the candidate process exit code) is the index of the first failing
     check. That lets us score partial progress without running checks against known-
@@ -163,7 +163,7 @@ def run_aider_tests(
         return AiderTestResult(status="compile_failed", logs=logs)
 
 
-def run_shadow_tests(
+def run_aider_rl_tests(
     exercise_dir: str | Path,
     files: Mapping[str, str],
     *,
@@ -176,18 +176,18 @@ def run_shadow_tests(
 
     source = Path(exercise_dir)
     if not source.is_dir():
-        raise FileNotFoundError(f"shadow task directory not found: {source}")
+        raise FileNotFoundError(f"Aider-style C++ RL task directory not found: {source}")
     grader_path = source / ".grader" / "test.cpp"
     if not grader_path.is_file():
-        raise FileNotFoundError(f"shadow executable oracle not found: {source}")
+        raise FileNotFoundError(f"Aider C++ RL executable oracle not found: {source}")
     grader_bytes = grader_path.read_bytes()
     if expected_test_sha256:
         observed = hashlib.sha256(grader_bytes).hexdigest()
         if observed != expected_test_sha256:
-            raise ValueError(f"shadow executable oracle hash mismatch: {source}")
-    ordinal_total = _shadow_ordinal_total(grader_bytes.decode("utf-8", errors="replace"))
+            raise ValueError(f"Aider C++ RL executable oracle hash mismatch: {source}")
+    ordinal_total = _rl_ordinal_total(grader_bytes.decode("utf-8", errors="replace"))
 
-    with TemporaryDirectory(prefix=f"aider_shadow_{source.name}_") as scratch_value:
+    with TemporaryDirectory(prefix=f"aider_rl_{source.name}_") as scratch_value:
         scratch = Path(scratch_value)
         shutil.copytree(source, scratch, dirs_exist_ok=True)
         for name, contents in files.items():
@@ -196,7 +196,7 @@ def run_shadow_tests(
             _validate_candidate_source(name, contents)
             target = scratch / name
             if target.parent != scratch:
-                raise ValueError(f"candidate path escapes shadow task root: {name}")
+                raise ValueError(f"candidate path escapes Aider-style C++ RL task root: {name}")
             target.write_text(contents, encoding="utf-8")
 
         sources = sorted(path.name for path in scratch.iterdir() if path.suffix in {".cpp", ".cc"})

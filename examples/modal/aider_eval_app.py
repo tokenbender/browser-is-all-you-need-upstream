@@ -26,7 +26,7 @@ SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 EXPECTED_SOURCE_TENSORS = 9_741
 EXPECTED_LAYER_47_TENSORS = 207
 EXPECTED_SERVING_TENSORS = 9_534
-EVAL_TAG = os.environ.get("GLM47_EVAL_TAG", "shadow-grpo")
+EVAL_TAG = os.environ.get("GLM47_EVAL_TAG", "rl-grpo")
 EXPECTED_TRAINING_GATE_KIND = os.environ.get(
     "GLM47_TRAINING_GATE_KIND", "glm47-aider-grpo-training-gate"
 )

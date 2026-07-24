@@ -1,34 +1,29 @@
 {
   "data": {
-    "bytes": 44457519,
-    "files": 99,
+    "bytes": 55599240,
+    "files": 115,
     "gated": "manual",
     "private": true,
-    "pruned_paths": [
-      "datasets/sft-v1-source-401/README.md",
-      "datasets/sft-v1-source-401/data/sft/source-401.jsonl",
-      "datasets/sft-v1-source-401/data/source/train-401-dsa.zip",
-      "datasets/sft-v1-source-401/manifest.json"
-    ],
+    "pruned_paths": [],
     "repo": "TokenBender/glm47-aider-posttraining-data",
-    "repository_files": 100,
-    "revision": "0f0f69346eaeeb13401e57863efd33cc501e0922",
+    "repository_files": 117,
+    "revision": "27b7f1f43a123fe958104a5ba896f2ed3348ff43",
     "roundtrip": "passed",
-    "upload_manifest_sha256": "dad0bfeb61448e2c3ac2e83eb97d1aa6cdce33c705e1a170468d71b39ff35be5"
+    "upload_manifest_sha256": "ad89de4cdd991122bef23895a9686a0d63a5bc283afe2f8ab9038719f74edbd6"
   },
-  "data_entries": 19,
-  "evaluation_entries": 13,
+  "data_entries": 21,
+  "evaluation_entries": 16,
   "evaluations": {
-    "bytes": 2748838,
-    "files": 41,
+    "bytes": 3481552,
+    "files": 50,
     "gated": "manual",
     "private": true,
     "pruned_paths": [],
     "repo": "TokenBender/glm47-aider-fixed26-responses",
-    "repository_files": 42,
-    "revision": "d817c418b29eae23a97a83c70c896b56296b330c",
+    "repository_files": 52,
+    "revision": "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3",
     "roundtrip": "passed",
-    "upload_manifest_sha256": "882ec0a81681b99810741479d1edf8b5c9bfb2341cb7d8af45e476aaf9a05df7"
+    "upload_manifest_sha256": "d446d6005dd4975467221f22ff5732226cc37e2760a47bad8f31cf82e6c1bb2e"
   },
   "hidden_tests_oracles_republished": false,
   "kind": "glm47-aider-gated-data-publication-receipt",

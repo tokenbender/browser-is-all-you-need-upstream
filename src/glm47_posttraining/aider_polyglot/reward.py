@@ -1,4 +1,4 @@
-"""Pass@1-aligned reward for Aider-style shadow tasks and official evaluation."""
+"""Pass@1-aligned reward for Aider-style C++ RL tasks and official evaluation."""
 
 from __future__ import annotations
 

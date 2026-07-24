@@ -65,7 +65,7 @@ eight H100 80 GB GPUs, full NVLink connectivity, 1 TiB of host memory, and
 | Local storage | 10 TB installed on the experiment node | 250 GB practical clean-run footprint |
 | Training image | `radixark/miles:latest-cu12@sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e52a932fcefb7031402aeff37` plus this repository's `Dockerfile`; Modal builds it directly through `examples/modal/modal_app.py` | 53.3 GB base image |
 | Gated training and evaluation data | [`TokenBender/glm47-pie-cpp-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-pie-cpp-posttraining-data/tree/09bc0276a0ff8ab84a8db81880ca7f739057e654) | 60 MB download; about 107 MB extracted |
-| Gated Aider shadow RL corpus v1 | [`TokenBender/glm47-aider-polyglot-cpp-shadow`](https://huggingface.co/datasets/TokenBender/glm47-aider-polyglot-cpp-shadow/tree/d8f86f752685d5ddc6cece2a08ea8851b395ee83), revision `d8f86f752685d5ddc6cece2a08ea8851b395ee83` | 253 tasks; 1,519 files; 294 KiB archive |
+| Gated Aider-style C++ RL tasks v1 | [`TokenBender/glm47-aider-cpp-rl-tasks`](https://huggingface.co/datasets/TokenBender/glm47-aider-cpp-rl-tasks/tree/155587aa7200979fe8f35ea08f4ffcb6bce67201), revision `155587aa7200979fe8f35ea08f4ffcb6bce67201` | 253 tasks; 1,519 files; 294 KiB archive |
 | SFT adapter | [`TokenBender/glm47-flash-pie-cpp-lora-r16-sft-h100`](https://huggingface.co/TokenBender/glm47-flash-pie-cpp-lora-r16-sft-h100/tree/f1ac8df367080cc040f7cf769db219ee58f20f63) | 772 MB |
 | Converted TP4/PP1/EP8 base checkpoint | Created by `scripts/convert_checkpoint.sh` | Reserve 65 GB |
 | LoRA checkpoint and run evidence | Adapter, native shards, logs, samples, and metrics | Reserve 2 GB per saved run |
@@ -85,7 +85,7 @@ hf auth login
 python3 scripts/download_assets.py model --output-root /root/models
 python3 scripts/download_assets.py data
 python3 scripts/download_assets.py sft
-python3 scripts/download_assets.py aider-shadow
+python3 scripts/download_assets.py aider-rl-tasks
 ```
 
 The base model is frozen to its Hugging Face commit. The two datasets require
@@ -97,7 +97,7 @@ write:
 /root/models/GLM-4.7-Flash
 .glm47-posttraining/assets/data
 .glm47-posttraining/assets/adapters/sft
-.glm47-posttraining/assets/aider-shadow/tasks/aider_polyglot_cpp_shadow
+.glm47-posttraining/assets/aider-rl-tasks/tasks/aider_cpp_rl_tasks
 ```
 
 These revisions are pinned in `scripts/download_assets.py`; environment
@@ -293,7 +293,7 @@ Verify their schema, measured counts, and the 790-row non-shrink invariant with
 `python3 scripts/verify_aider_sft_defect_inventory.py`.
 All project-tracked Aider dataset lineages are preserved in the private,
 manual-approval
-[`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/f21122d33f99e552aee0557699b5e3e71b6e12e5)
+[`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/27b7f1f43a123fe958104a5ba896f2ed3348ff43)
 catalog. Evaluator-only histories and result JSONs are separately preserved in
 [`glm47-aider-fixed26-responses`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/53a7e4f41b72bdbe7c67db4408bca6796d33ceb3).
 Both repositories are private, manually gated, and pinned here to revisions
@@ -316,7 +316,7 @@ python3 scripts/download_assets.py aider-responses --output-root /workspace/asse
 | SFT v3 | 530 packaged / 520 consumed | 0/26 | **7/26** | 26/26 | 1,611,304 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v3-complement-530) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/sft-v3-fixed26-20260721) · [W&B](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-complement-530-sft-20260721) |
 | SFT v4 | 790 packaged / 780 consumed per epoch; 3 epochs | 0/26 | 6/26 | 26/26 | See receipt | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/c0db40db76fb16014103d131335fb15a2c0cfd19/datasets/sft-v4-holistic-790) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723) · [W&B](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z) |
 | SFT v5 | 1,340 packaged and consumed per epoch; 3 epochs / 4,020 exposures | **2/26** | 5/26 | 26/26 | 1,680,607 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/f21122d33f99e552aee0557699b5e3e71b6e12e5/datasets/sft-v5-experimental-1340) · [checkpoint](https://huggingface.co/TokenBender/glm47-aider-sft-v5-1340-modal-3ep/tree/43110cf15fa9cd87373b726638bf80c8f08858ce) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/53a7e4f41b72bdbe7c67db4408bca6796d33ceb3/evals/sft-v5-experimental-1340-3ep-fixed26-20260723) · [W&B](https://wandb.ai/sparmar27feb2003-nit-kurukshetra/glm47-pie-cpp-posttraining/runs/glm47-aider-sft-v5-1340-modal-3ep-20260723T210506Z) · [reproduce](docs/AIDER_SFT_V5_1340_REPRODUCE.md) |
-| RL v2 | 169 train + 22 monitor; 11 updates, about 2.08 epochs | 1/26 | 6/26 | 26/26 | 1,650,420 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/rl-v2-shadow-169) · [response receipt](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/rl-v2-iter10-fixed26-20260722) |
+| RL v2 | 169 train + 22 monitor; 11 updates, about 2.08 epochs | 1/26 | 6/26 | 26/26 | 1,650,420 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/27b7f1f43a123fe958104a5ba896f2ed3348ff43/datasets/rl-v2-169) · [response receipt](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/rl-v2-iter10-fixed26-20260722) |
 
 SFT v3 remains the strongest completed result by the second assisted attempt:
 7/26 versus the base model's 4/26, a 75% relative increase. SFT v5 is the
@@ -341,15 +341,15 @@ and exclusions; rejected and audit corpora are preserved without being
 silently presented as positive training data. A reproduction must use the
 exact catalog revision and match these identities before launching.
 
-The 253-task RL shadow runtime-oracle is package `v1` at
-[`d8f86f752685d5ddc6cece2a08ea8851b395ee83`](https://huggingface.co/datasets/TokenBender/glm47-aider-polyglot-cpp-shadow/tree/d8f86f752685d5ddc6cece2a08ea8851b395ee83).
+The 253-task Aider-style C++ RL runtime package is package `v1` at
+[`155587aa7200979fe8f35ea08f4ffcb6bce67201`](https://huggingface.co/datasets/TokenBender/glm47-aider-cpp-rl-tasks/tree/155587aa7200979fe8f35ea08f4ffcb6bce67201).
 Its deterministic archive SHA-256 is
-`e89d0f6b5ee78796a5519f1ab6130cc119837bedca456c1fa4b835a19e026714`,
+`97d70ca9e6ab3ef76141169b188e1049524bdbfa651b2420dbbd5c78968c7c59`,
 its source-manifest SHA-256 is
-`002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00`,
+`b37653def2cdad8c2e927af30c4de6e979c3af3ef0ea66a66671d5e7ff18d1ee`,
 and its canonical source-tree SHA-256 is
 `a8bb8030f7ec287eee4f5c19146374d6722ec5af310cad632ed5938e7280f686`.
-`scripts/download_assets.py aider-shadow` verifies the published checksums,
+`scripts/download_assets.py aider-rl-tasks` verifies the published checksums,
 rejects unsafe archive members, and requires all 253 tasks before extraction is
 accepted. The archive contains private rubrics and hidden executable tests, so
 its approval boundary is narrower than the ordinary training-data catalog:
@@ -385,7 +385,7 @@ The data root contract is:
 
 After the catalog download above, the SFT v3 and RL v2 data roots are,
 respectively, `/workspace/assets/aider-data/datasets/sft-v3-complement-530/data`
-and `/workspace/assets/aider-data/datasets/rl-v2-shadow-169/data`.
+and `/workspace/assets/aider-data/datasets/rl-v2-169/data`.
 
 #### Reproduce SFT v1-v3
 
@@ -423,9 +423,9 @@ KL coefficient `0.02`, temperature `0.7`, skipped special tokens, and stop IDs
 Place the verified inputs at:
 
 ```text
-/workspace/assets/prepared-aider-169
+/workspace/assets/aider-data/datasets/rl-v2-169/data
 /workspace/assets/merged-1211-530-r32
-/workspace/assets/aider-shadow/tasks/aider_polyglot_cpp_shadow
+/workspace/assets/aider-rl-tasks/tasks/aider_cpp_rl_tasks
 /workspace/models/GLM-4.7-Flash
 /workspace/models/GLM-4.7-Flash_torch_dist_tp4_pp1_ep8
 ```
@@ -437,8 +437,11 @@ export GLM47_REPRO_RUN_ID=glm47-aider-grpo169-r32-2ep-repro-$(date -u +%Y%m%dT%H
 bash examples/lium/aider_grpo_2ep.sh
 ```
 
-The script refuses to start when the RL manifest, train JSONL, or merged source
-adapter does not match the recorded SHA-256 values.
+The script refuses to start when the canonical RL manifest, train JSONL, or
+merged source adapter does not match its pinned SHA-256. The canonical
+terminology migration changes only identifiers and paths in the 169-row
+dataset: all prompts, problem IDs, splits, and other training metadata match
+the recorded run input exactly.
 
 #### Reproduce the fixed-26 evaluation
 
@@ -477,23 +480,23 @@ merged receipt only after all 26 unique task identities are present.
 The repository versions the code, exact configuration, hashes, progress
 ledger, publication receipt, and final RL receipt. Training/audit data and
 fixed-26 response evidence are in separate private, manually gated Hugging
-Face dataset repositories. Twelve evaluations have all 26 chat histories and
+Face dataset repositories. Fifteen evaluations have all 26 chat histories and
 26 result JSONs; the official RL v2 iter-10 entry is receipt-only because its
 raw transcripts did not survive. Benchmark trees and hidden tests were not
-copied into the response repository. The runtime-oracle shadow corpus remains
+copied into the response repository. The Aider-style C++ RL runtime package remains
 separately gated at the pinned revision above. The base model is public at its
 pinned revision. The recorded RL v2 W&B directory was offline and must be
 synced separately if a web run is required.
 
-#### Modal shadow-data alternative
+#### Modal Aider-style C++ RL data
 
-The Modal path trains on up to 253 shadow tasks backed by controlled rubrics
+The Modal path trains on up to 253 Aider-style C++ RL tasks backed by controlled rubrics
 and hidden executable tests. The official fixed 26 remain external and
 evaluation-only. Prepare the pinned runtime-oracle corpus once per
 `glm47-assets` volume:
 
 ```bash
-modal run examples/modal/modal_app.py::prepare_aider_shadow_asset
+modal run examples/modal/modal_app.py::prepare_aider_rl_assets
 ```
 
 That command verifies the immutable Hugging Face revision and published
@@ -506,7 +509,7 @@ modal run examples/modal/modal_app.py::aider_grpo \
   --run-id glm47-aider-sftv3-r16-one-update-YYYYMMDD \
   --adapter-path /workspace/runs/glm47-aider-complement-530-sft-20260721/checkpoints/sft_lora_r16/iter_0000025/adapter \
   --adapter-sha256 f1ea45bc327dc6e28d0287aea75c6b691e99d2ec2f7fdb7f07bbbf5ccd6cf36a \
-  --data-dir /workspace/assets/prepared-aider-169 \
+  --data-dir /workspace/assets/aider-data/datasets/rl-v2-169/data \
   --lora-rank 16 \
   --lora-alpha 32 \
   --num-rollout 1
@@ -517,7 +520,7 @@ prepared dataset. In that case omit `--data-dir`; the builder performs the
 full per-task rubric and hidden-test validation once while materializing it.
 
 For the fixed-26 Modal evaluator, pass the expected task count and LoRA rank
-when they differ from the shadow defaults:
+when they differ from the Aider C++ RL defaults:
 
 ```bash
 GLM47_EXPECTED_TRAINING_TASK_COUNT=169 \
@@ -545,7 +548,7 @@ docs/AIDER_SFT_DEFECT_INVENTORY.md  human-readable SFT defect report
 docs/receipts/                     immutable measured evaluation receipts
 scripts/convert_checkpoint.sh      TP4/PP1/EP8 conversion
 scripts/download_assets.py         verified Hugging Face asset download
-scripts/package_aider_shadow.py    deterministic Aider shadow archive builder
+scripts/package_aider_cpp_rl.py    deterministic Aider C++ RL archive builder
 scripts/publish_aider_data_catalog.py  gated data/evaluation publication
 scripts/verify_aider_sft_defect_inventory.py  SFT defect and size-invariant check
 scripts/evaluate.py                held-out generation and scoring

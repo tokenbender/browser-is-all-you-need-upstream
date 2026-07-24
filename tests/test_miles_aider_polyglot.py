@@ -13,10 +13,10 @@ import glm47_posttraining.aider_polyglot.harness as harness_module
 import glm47_posttraining.integrations.miles_aider_polyglot as integration_module
 from glm47_posttraining.aider_polyglot.dataset import (
     DATASET_KIND,
-    EXPECTED_SHADOW_TASKS,
+    EXPECTED_RL_TASKS,
     build_aider_polyglot_datasets,
 )
-from glm47_posttraining.aider_polyglot.harness import run_aider_tests, run_shadow_tests
+from glm47_posttraining.aider_polyglot.harness import run_aider_tests, run_aider_rl_tests
 from glm47_posttraining.aider_polyglot.parser import AiderResponseError, parse_whole_file_response
 from glm47_posttraining.aider_polyglot.reward import compute_aider_reward
 from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask, AiderTestResult
@@ -25,11 +25,11 @@ from glm47_posttraining.cpp_perf.sandbox import SandboxInfrastructureError
 
 def _task() -> AiderPolyglotTask:
     return AiderPolyglotTask(
-        task_id="aider-shadow-cpp/example",
+        task_id="aider-cpp-rl/example",
         exercise="example",
         split="train",
-        harness_kind="shadow_cpp17",
-        exercise_dir="shadow/example",
+        harness_kind="aider_cpp17",
+        exercise_dir="rl_tasks/example",
         editable_files=["example.cpp", "example.h"],
         prompt=[{"role": "user", "content": "solve"}],
         source_revision="abc123",
@@ -43,10 +43,10 @@ def _response(label: str = "example.cpp", *, prefix: str = "") -> str:
     return f"{prefix}{label}\n```cpp\nint answer() {{ return 42; }}\n```\n"
 
 
-def _make_shadow_tree(tmp_path: Path) -> Path:
+def _make_rl_tree(tmp_path: Path) -> Path:
     root = tmp_path / "rubrics"
     practice = root / "cpp" / "exercises" / "practice"
-    for index in range(EXPECTED_SHADOW_TASKS):
+    for index in range(EXPECTED_RL_TASKS):
         slug = f"exercise-{index:03d}"
         exercise = practice / slug
         (exercise / ".docs").mkdir(parents=True)
@@ -80,8 +80,8 @@ def _make_shadow_tree(tmp_path: Path) -> Path:
         }
         (exercise / ".rubric.json").write_text(json.dumps(rubric), encoding="utf-8")
     manifest = {
-        "kind": "aider-polyglot-cpp-shadow-rubrics",
-        "counts": {"tasks": EXPECTED_SHADOW_TASKS},
+        "kind": "aider-cpp-rl-rubrics",
+        "counts": {"tasks": EXPECTED_RL_TASKS},
         "contract": {
             "official_task_id_overlap": [],
             "reference_answers_packaged": False,
@@ -216,8 +216,8 @@ def test_harness_parses_build_triggered_catch_success(tmp_path: Path, monkeypatc
     assert (result.status, result.tests_passed, result.tests_total) == ("passed", 5, 5)
 
 
-def test_shadow_harness_compiles_hidden_test_before_candidate(tmp_path: Path, monkeypatch) -> None:
-    exercise = tmp_path / "shadow-example"
+def test_rl_harness_compiles_hidden_test_before_candidate(tmp_path: Path, monkeypatch) -> None:
+    exercise = tmp_path / "rl-example"
     (exercise / ".grader").mkdir(parents=True)
     (exercise / "example.cpp").write_text("int answer(){return 0;}\n", encoding="utf-8")
     hidden = "int answer(); int main(){return answer() == 42 ? 0 : 1;}\n"
@@ -238,7 +238,7 @@ def test_shadow_harness_compiles_hidden_test_before_candidate(tmp_path: Path, mo
 
     monkeypatch.setattr(harness_module, "_run_stage", stage)
     monkeypatch.setattr(harness_module.secrets, "token_hex", lambda _size: "abc")
-    result = run_shadow_tests(
+    result = run_aider_rl_tests(
         exercise,
         {"example.cpp": "int answer(){return 42;}\n"},
         expected_test_sha256=hashlib.sha256(hidden.encode()).hexdigest(),
@@ -250,8 +250,8 @@ def test_shadow_harness_compiles_hidden_test_before_candidate(tmp_path: Path, mo
     assert commands[1].endswith(".grader/candidate_test")
 
 
-def _run_ordinal_shadow(tmp_path: Path, monkeypatch, candidate_returncode: int):
-    exercise = tmp_path / "shadow-ordinal"
+def _run_ordinal_rl(tmp_path: Path, monkeypatch, candidate_returncode: int):
+    exercise = tmp_path / "rl-ordinal"
     (exercise / ".grader").mkdir(parents=True)
     (exercise / "example.cpp").write_text("int answer(){return 0;}\n", encoding="utf-8")
     hidden = (
@@ -277,16 +277,16 @@ def _run_ordinal_shadow(tmp_path: Path, monkeypatch, candidate_returncode: int):
     )
     monkeypatch.setattr(harness_module, "_run_stage", lambda *a, **k: next(results))
     monkeypatch.setattr(harness_module.secrets, "token_hex", lambda _size: "abc")
-    return run_shadow_tests(
+    return run_aider_rl_tests(
         exercise,
         {"example.cpp": "int answer(){return 5;}\n"},
         expected_test_sha256=hashlib.sha256(hidden.encode()).hexdigest(),
     )
 
 
-def test_shadow_harness_awards_partial_credit_for_ordinal_grader(tmp_path, monkeypatch) -> None:
+def test_rl_harness_awards_partial_credit_for_ordinal_grader(tmp_path, monkeypatch) -> None:
     # Exit code 3 means checks 1 and 2 passed before check 3 failed: 2 of 5.
-    result = _run_ordinal_shadow(tmp_path, monkeypatch, candidate_returncode=3)
+    result = _run_ordinal_rl(tmp_path, monkeypatch, candidate_returncode=3)
     assert result.status == "tests_failed"
     assert result.tests_passed == 2
     assert result.tests_total == 5
@@ -294,22 +294,22 @@ def test_shadow_harness_awards_partial_credit_for_ordinal_grader(tmp_path, monke
     assert not result.all_tests_pass
 
 
-def test_shadow_harness_full_pass_uses_ordinal_total(tmp_path, monkeypatch) -> None:
-    result = _run_ordinal_shadow(tmp_path, monkeypatch, candidate_returncode=0)
+def test_rl_harness_full_pass_uses_ordinal_total(tmp_path, monkeypatch) -> None:
+    result = _run_ordinal_rl(tmp_path, monkeypatch, candidate_returncode=0)
     assert result.all_tests_pass
     assert result.tests_passed == 5 and result.tests_total == 5
 
 
-def test_shadow_harness_crash_exit_scores_zero(tmp_path, monkeypatch) -> None:
+def test_rl_harness_crash_exit_scores_zero(tmp_path, monkeypatch) -> None:
     # A crash signal (139) is outside [1, N]; award no partial credit but keep N.
-    result = _run_ordinal_shadow(tmp_path, monkeypatch, candidate_returncode=139)
+    result = _run_ordinal_rl(tmp_path, monkeypatch, candidate_returncode=139)
     assert result.status == "tests_failed"
     assert result.tests_passed == 0
     assert result.tests_total == 5
 
 
-def test_shadow_harness_non_ordinal_grader_stays_binary(tmp_path, monkeypatch) -> None:
-    exercise = tmp_path / "shadow-binary"
+def test_rl_harness_non_ordinal_grader_stays_binary(tmp_path, monkeypatch) -> None:
+    exercise = tmp_path / "rl-binary"
     (exercise / ".grader").mkdir(parents=True)
     (exercise / "example.cpp").write_text("int answer(){return 0;}\n", encoding="utf-8")
     # Macro-style grader always returns 1 on failure: no sequential ordinals to read.
@@ -327,7 +327,7 @@ def test_shadow_harness_non_ordinal_grader_stays_binary(tmp_path, monkeypatch) -
     )
     monkeypatch.setattr(harness_module, "_run_stage", lambda *a, **k: next(results))
     monkeypatch.setattr(harness_module.secrets, "token_hex", lambda _size: "abc")
-    result = run_shadow_tests(
+    result = run_aider_rl_tests(
         exercise,
         {"example.cpp": "int answer(){return 1;}\n"},
         expected_test_sha256=hashlib.sha256(hidden.encode()).hexdigest(),
@@ -337,14 +337,14 @@ def test_shadow_harness_non_ordinal_grader_stays_binary(tmp_path, monkeypatch) -
     assert result.tests_total == 1
 
 
-def test_shadow_harness_rejects_early_exit_bypass(tmp_path: Path) -> None:
-    exercise = tmp_path / "shadow-example"
+def test_rl_harness_rejects_early_exit_bypass(tmp_path: Path) -> None:
+    exercise = tmp_path / "rl-example"
     (exercise / ".grader").mkdir(parents=True)
     (exercise / "example.cpp").write_text("int answer(){return 0;}\n", encoding="utf-8")
     hidden = "int answer(); int main(){return answer() == 42 ? 0 : 1;}\n"
     (exercise / ".grader" / "test.cpp").write_text(hidden, encoding="utf-8")
     with pytest.raises(harness_module.CandidatePolicyError):
-        run_shadow_tests(
+        run_aider_rl_tests(
             exercise,
             {"example.cpp": "struct Escape { Escape(){ _Exit(0); } } escape;\n"},
             expected_test_sha256=hashlib.sha256(hidden.encode()).hexdigest(),
@@ -413,7 +413,7 @@ def test_run_stage_treats_outer_timeout_as_infrastructure(tmp_path: Path, monkey
 
 
 def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path: Path) -> None:
-    source = _make_shadow_tree(tmp_path)
+    source = _make_rl_tree(tmp_path)
     paths = build_aider_polyglot_datasets(
         source, tmp_path / "prepared", profile="unit", train_limit=3, monitor_limit=2
     )
@@ -424,7 +424,7 @@ def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path:
     assert len(train_rows) == 3
     assert len(monitor_rows) == 2
     assert manifest["kind"] == DATASET_KIND
-    assert manifest["counts"] == {"available_shadow": 253, "monitor": 2, "train": 3}
+    assert manifest["counts"] == {"available_rl_tasks": 253, "monitor": 2, "train": 3}
     assert manifest["split_contract"]["official_26"] == "external fixed evaluation only"
     first = AiderPolyglotTask.read_json(
         paths["manifest"].parent / train_rows[0]["metadata"]["task_path"]
@@ -452,7 +452,7 @@ def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path:
 
 
 def test_dataset_builder_validates_source_before_replacing_output(tmp_path: Path) -> None:
-    source = _make_shadow_tree(tmp_path)
+    source = _make_rl_tree(tmp_path)
     output = tmp_path / "prepared"
     output.mkdir()
     sentinel = output / "sentinel"
@@ -465,12 +465,12 @@ def test_dataset_builder_validates_source_before_replacing_output(tmp_path: Path
 
 
 def test_dataset_builder_materializes_exact_gradient_holdout_split(tmp_path: Path) -> None:
-    source = _make_shadow_tree(tmp_path)
+    source = _make_rl_tree(tmp_path)
     train_ids = [
-        "aider-shadow-cpp/exercise-005",
-        "aider-shadow-cpp/exercise-011",
+        "aider-cpp-rl/exercise-005",
+        "aider-cpp-rl/exercise-011",
     ]
-    monitor_ids = ["aider-shadow-cpp/exercise-017"]
+    monitor_ids = ["aider-cpp-rl/exercise-017"]
     paths = build_aider_polyglot_datasets(
         source,
         tmp_path / "prepared",
@@ -486,7 +486,7 @@ def test_dataset_builder_materializes_exact_gradient_holdout_split(tmp_path: Pat
     assert [row["task_id"] for row in monitor_rows] == monitor_ids
     assert {row["split"] for row in train_rows} == {"train"}
     assert {row["split"] for row in monitor_rows} == {"validation"}
-    assert manifest["counts"] == {"available_shadow": 253, "monitor": 1, "train": 2}
+    assert manifest["counts"] == {"available_rl_tasks": 253, "monitor": 1, "train": 2}
     assert manifest["selection"] == {
         "mode": "explicit_gradient_holdout",
         "train_task_ids": train_ids,
@@ -497,27 +497,27 @@ def test_dataset_builder_materializes_exact_gradient_holdout_split(tmp_path: Pat
 
 
 def test_dataset_builder_rejects_overlapping_explicit_split(tmp_path: Path) -> None:
-    source = _make_shadow_tree(tmp_path)
+    source = _make_rl_tree(tmp_path)
     with pytest.raises(ValueError, match="overlap"):
         build_aider_polyglot_datasets(
             source,
             tmp_path / "prepared",
             train_task_ids=["exercise-001"],
-            monitor_task_ids=["aider-shadow-cpp/exercise-001"],
+            monitor_task_ids=["aider-cpp-rl/exercise-001"],
         )
 
 
-def test_miles_reward_hook_uses_shadow_task_and_returns_metrics(
+def test_miles_reward_hook_uses_rl_task_and_returns_metrics(
     tmp_path: Path, monkeypatch
 ) -> None:
     data = tmp_path / "data"
-    exercise = data / "shadow" / "example"
+    exercise = data / "rl_tasks" / "example"
     (exercise / ".grader").mkdir(parents=True)
     task_path = _task().write_json(data / "tasks" / "train" / "example.json")
     monkeypatch.setenv("GLM47_DATA_DIR", str(data))
     monkeypatch.setattr(
         integration_module,
-        "run_shadow_tests",
+        "run_aider_rl_tests",
         lambda *args, **kwargs: AiderTestResult(
             status="passed", tests_passed=1, tests_total=1, candidate_returncode=0
         ),
@@ -548,13 +548,13 @@ def test_miles_reward_hook_aborts_batch_on_sandbox_infrastructure_error(
     tmp_path: Path, monkeypatch
 ) -> None:
     data = tmp_path / "data"
-    exercise = data / "shadow" / "example"
+    exercise = data / "rl_tasks" / "example"
     (exercise / ".grader").mkdir(parents=True)
     task_path = _task().write_json(data / "tasks" / "train" / "example.json")
     monkeypatch.setenv("GLM47_DATA_DIR", str(data))
     monkeypatch.setattr(
         integration_module,
-        "run_shadow_tests",
+        "run_aider_rl_tests",
         lambda *_args, **_kwargs: (_ for _ in ()).throw(
             SandboxInfrastructureError("docker unavailable")
         ),
@@ -605,7 +605,7 @@ def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypat
             samples.append(
                 SimpleNamespace(
                     reward=_signal_record(
-                        f"aider-shadow-cpp/task-{group_index}", score, tests_passed
+                        f"aider-cpp-rl/task-{group_index}", score, tests_passed
                     )
                 )
             )
@@ -625,7 +625,7 @@ def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypat
 
     constant = [
         [
-            SimpleNamespace(reward=_signal_record(f"aider-shadow-cpp/task-{group_index}", 0.1, 1))
+            SimpleNamespace(reward=_signal_record(f"aider-cpp-rl/task-{group_index}", 0.1, 1))
             for _ in range(8)
         ]
         for group_index in range(6)
@@ -643,7 +643,7 @@ def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypat
 def test_pre_optimizer_signal_gate_rejects_infrastructure_reward(monkeypatch) -> None:
     monkeypatch.setenv("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", "1")
     monkeypatch.setenv("GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", "1")
-    bad = _signal_record("aider-shadow-cpp/task", 0.0, 0)
+    bad = _signal_record("aider-cpp-rl/task", 0.0, 0)
     bad["infrastructure_error"] = True
     with pytest.raises(integration_module.AiderRewardInfrastructureError, match="invalid reward"):
         integration_module.validate_aider_rollout_batch(

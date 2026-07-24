@@ -35,6 +35,8 @@ def test_aider_progress_ledger_has_the_promoted_lineage_only() -> None:
         "sft-v1",
         "sft-v2",
         "sft-v3",
+        "sft-v4",
+        "sft-v5",
         "rl-v2",
     ]
 
@@ -55,13 +57,15 @@ def test_aider_catalog_maps_every_preserved_dataset_and_eval() -> None:
         "combined-v5-500",
         "combined-v5-build-workbench",
         "sft-v3-complement-530",
+        "sft-v4-holistic-790",
+        "sft-v5-experimental-1340",
         "pass1-skills-600",
         "reverify-audit",
         "regression-audit",
-        "rl-shadow-replay-253",
-        "rl-shadow-difficulty-20260722",
-        "rl-v2-shadow-169",
-        "rl-shadow-253-july21",
+        "rl-full-replay-253",
+        "rl-difficulty-20260722",
+        "rl-v2-169",
+        "rl-full-253-july21",
     }
     expected_evaluations = {
         "base",
@@ -72,6 +76,9 @@ def test_aider_catalog_maps_every_preserved_dataset_and_eval() -> None:
         "raw-concat-v1",
         "combined-v5",
         "sft-v3",
+        "sft-v4-1ep",
+        "sft-v4-3ep",
+        "sft-v5-3ep",
         "pass1-skills-600",
         "rl-july21-iter2",
         "merged-sft",
@@ -80,10 +87,10 @@ def test_aider_catalog_maps_every_preserved_dataset_and_eval() -> None:
     }
 
     assert publication["status"] == "passed"
-    assert publication["data_entries"] == len(ledger["dataset_catalog_paths"]) == 19
+    assert publication["data_entries"] == len(ledger["dataset_catalog_paths"]) == 21
     assert publication["evaluation_entries"] == len(
         ledger["evaluation_catalog_paths"]
-    ) == 13
+    ) == 16
     assert set(ledger["dataset_catalog_paths"]) == expected_datasets
     assert set(ledger["evaluation_catalog_paths"]) == expected_evaluations
     assert publication["data"]["private"] is True
@@ -114,13 +121,13 @@ def test_aider_catalog_maps_every_preserved_dataset_and_eval() -> None:
     )
 
 
-def test_shadow_corpus_is_labeled_as_runtime_oracle() -> None:
+def test_rl_corpus_is_labeled_as_runtime_oracle() -> None:
     ledger = json.loads(LEDGER.read_text(encoding="utf-8"))
-    shadow = ledger["shadow_rl_corpus"]
+    rl = ledger["aider_cpp_rl_corpus"]
 
-    assert shadow["access_tier"] == "runtime-oracle"
-    assert shadow["contains_rubrics"] is True
-    assert shadow["contains_hidden_executable_tests"] is True
+    assert rl["access_tier"] == "runtime-oracle"
+    assert rl["contains_rubrics"] is True
+    assert rl["contains_hidden_executable_tests"] is True
 
 
 def test_readme_local_links_exist() -> None:

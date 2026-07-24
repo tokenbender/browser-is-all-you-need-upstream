@@ -757,7 +757,7 @@ set -e
 cleanup
 TRAINING_GATE_STATUS="not_requested"
 GATE_STATUS=0
-if [ "${RAY_STATUS}" -eq 0 ] && [ "${EXPECTED_DATASET_KIND}" = "aider-polyglot-cpp-shadow-grpo" ]; then
+if [ "${RAY_STATUS}" -eq 0 ] && [ "${EXPECTED_DATASET_KIND}" = "aider-cpp-rl-grpo" ]; then
   TRAINING_GATE_STATUS="failed"
   set +e
   PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}" "${PYTHON_BIN}" \
