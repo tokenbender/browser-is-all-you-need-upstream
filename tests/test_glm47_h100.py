@@ -602,7 +602,7 @@ def test_asset_downloader_pins_the_aider_catalog_revisions() -> None:
 
     assert data["repo_id"] == "TokenBender/glm47-aider-posttraining-data"
     assert data["default_revision"] == "27b7f1f43a123fe958104a5ba896f2ed3348ff43"
-    assert responses["default_revision"] == "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3"
+    assert responses["default_revision"] == "68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9"
     assert data["verify_upload_manifest"] is True
     assert responses["repo_id"] == "TokenBender/glm47-aider-fixed26-responses"
     assert responses["verify_upload_manifest"] is True
@@ -640,6 +640,34 @@ def test_asset_downloader_verifies_gated_upload_manifest(tmp_path) -> None:
     (tmp_path / "payload.txt").write_bytes(b"tampered\n")
     with pytest.raises(RuntimeError, match="Size mismatch|Checksum mismatch"):
         verify(tmp_path)
+
+
+def test_asset_downloader_enforces_feedback_metric_contract(tmp_path) -> None:
+    import json
+
+    module = runpy.run_path("scripts/download_assets.py")
+    verify = module["_verify_aider_catalog"]
+    entry = {
+        "schema_version": 2,
+        "pass_at_1": 1,
+        "multi_turn_with_error_feedback_at_2": 6,
+    }
+    catalog = {
+        "schema_version": 2,
+        "kind": "glm47-aider-fixed26-response-catalog",
+        "evals": [entry.copy() for _ in range(16)],
+        "policy": {"training_use_prohibited": True},
+    }
+    (tmp_path / "CATALOG.json").write_text(json.dumps(catalog))
+
+    verify(tmp_path, "aider-responses")
+
+    catalog["evals"][0]["pass_at_2"] = catalog["evals"][0].pop(
+        "multi_turn_with_error_feedback_at_2"
+    )
+    (tmp_path / "CATALOG.json").write_text(json.dumps(catalog))
+    with pytest.raises(RuntimeError, match="metric contract mismatch"):
+        verify(tmp_path, "aider-responses")
 
 
 def test_h100_runtime_preflight_accepts_aligned_versions() -> None:

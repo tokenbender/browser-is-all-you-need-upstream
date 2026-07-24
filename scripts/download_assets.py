@@ -68,7 +68,7 @@ ASSETS = {
         "repo_id": "TokenBender/glm47-aider-fixed26-responses",
         "repo_type": "dataset",
         "revision_env": "GLM47_AIDER_RESPONSES_REVISION",
-        "default_revision": "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3",
+        "default_revision": "68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9",
         "destination": "aider-responses",
         "verify_checksums": False,
         "verify_upload_manifest": True,
@@ -165,11 +165,21 @@ def _verify_aider_catalog(root: Path, name: str) -> None:
         evaluations = catalog.get("evals")
         if (
             catalog.get("kind") != "glm47-aider-fixed26-response-catalog"
+            or catalog.get("schema_version") != 2
             or not isinstance(evaluations, list)
             or len(evaluations) != 16
             or catalog.get("policy", {}).get("training_use_prohibited") is not True
+            or any(
+                entry.get("schema_version") != 2
+                or "pass_at_1" not in entry
+                or "multi_turn_with_error_feedback_at_2" not in entry
+                or "pass_at_2" in entry
+                for entry in evaluations
+            )
         ):
-            raise RuntimeError("Aider response catalog policy or entry count mismatch")
+            raise RuntimeError(
+                "Aider response catalog policy, count, or metric contract mismatch"
+            )
 
 
 def _extract_task_archive(root: Path) -> Path:

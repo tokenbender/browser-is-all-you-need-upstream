@@ -310,8 +310,12 @@ def validate_output(output_dir: Path, selected_tasks: list[str]) -> dict[str, ob
         ),
         "unique_testcases": len(set(testcases)),
         "testcases": testcases,
-        "pass_at_1": sum(bool(p["tests_outcomes"][0]) for _, p in rows),
-        "pass_at_k": sum(any(p["tests_outcomes"]) for _, p in rows),
+        "pass_at_1": sum(
+            bool(p["tests_outcomes"][0]) for _, p in rows
+        ),
+        "multi_turn_with_error_feedback_at_2": sum(
+            any(p["tests_outcomes"]) for _, p in rows
+        ),
         "well_formed_tasks": sum(int(p.get("num_malformed_responses", 0)) == 0 for _, p in rows),
         "malformed_responses": sum(int(p.get("num_malformed_responses", 0)) for _, p in rows),
         "error_outputs": sum(int(p.get("num_error_outputs", 0)) for _, p in rows),
@@ -428,7 +432,8 @@ def main() -> None:
 
     fields = (
         "terminal_tasks", "terminal_attempts", "maximum_attempts",
-        "short_circuited_after_first_pass", "pass_at_1", "pass_at_k",
+        "short_circuited_after_first_pass",
+        "pass_at_1", "multi_turn_with_error_feedback_at_2",
         "well_formed_tasks", "malformed_responses", "error_outputs",
         "context_exhaustions", "test_timeouts", "prompt_tokens", "completion_tokens",
     )

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at_utc": "2026-07-24T05:31:47Z",
+  "updated_at_utc": "2026-07-24T06:18:52Z",
   "model": {
     "repo": "zai-org/GLM-4.7-Flash",
     "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
@@ -17,14 +17,14 @@
     },
     "fixed26_responses": {
       "repo": "TokenBender/glm47-aider-fixed26-responses",
-      "revision": "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3",
-      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/53a7e4f41b72bdbe7c67db4408bca6796d33ceb3",
+      "revision": "68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9",
+      "url": "https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9",
       "access": "private-manual-gated-evaluator-only",
       "entries": 16,
       "complete_response_corpora": 15,
       "receipt_only_entries": 1,
       "roundtrip": "passed",
-      "upload_manifest_sha256": "d446d6005dd4975467221f22ff5732226cc37e2760a47bad8f31cf82e6c1bb2e"
+      "upload_manifest_sha256": "5b4e21018ca4ec2f17fad1e6aa8e14a155548769319bd6b1b548f0b8192ae96e"
     }
   },
   "dataset_catalog_paths": {
@@ -117,7 +117,7 @@
       "training_rows_packaged": 0,
       "training_rows_consumed": 0,
       "pass_at_1": 0,
-      "pass_at_2": 4,
+      "multi_turn_with_error_feedback_at_2": 4,
       "well_formed_tasks": 26,
       "prompt_tokens": 1628446,
       "completion_tokens": 583973,
@@ -135,7 +135,7 @@
         "hf": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v1-321"
       },
       "pass_at_1": 1,
-      "pass_at_2": 5,
+      "multi_turn_with_error_feedback_at_2": 5,
       "well_formed_tasks": 26,
       "prompt_tokens": 1184779,
       "completion_tokens": 547508,
@@ -153,7 +153,7 @@
         "hf": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v2-1211"
       },
       "pass_at_1": 1,
-      "pass_at_2": 6,
+      "multi_turn_with_error_feedback_at_2": 6,
       "well_formed_tasks": 25,
       "malformed_responses": 2,
       "prompt_tokens": 986263,
@@ -173,7 +173,7 @@
         "hf": "https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v3-complement-530"
       },
       "pass_at_1": 0,
-      "pass_at_2": 7,
+      "multi_turn_with_error_feedback_at_2": 7,
       "well_formed_tasks": 26,
       "prompt_tokens": 983419,
       "completion_tokens": 627885,
@@ -206,7 +206,7 @@
       "checkpoint": "glm47-aider-sft-v4-holistic-790-modal-3ep-20260723T164628Z/checkpoints/sft_lora_r16/iter_0000116/adapter",
       "adapter_sha256": "4f37ab9de995c377627f53f9e5f16849a125df2a11b621914e47dcf166a2c45c",
       "pass_at_1": 0,
-      "pass_at_2": 6,
+      "multi_turn_with_error_feedback_at_2": 6,
       "well_formed_tasks": 26,
       "malformed_responses": 0,
       "error_outputs": 6,
@@ -243,7 +243,7 @@
       "checkpoint_hf_revision": "43110cf15fa9cd87373b726638bf80c8f08858ce",
       "adapter_sha256": "bdd808bf98d26b467af7fec1a20d7ed6502bac0ffd50eae9cb6a1e702613daaa",
       "pass_at_1": 2,
-      "pass_at_2": 5,
+      "multi_turn_with_error_feedback_at_2": 5,
       "well_formed_tasks": 26,
       "malformed_responses": 0,
       "error_outputs": 2,
@@ -277,7 +277,7 @@
       "checkpoint": "/workspace/runs/glm47-aider-grpo169-merge1211-530-r32-2ep-fixed-20260722-lium-r3/checkpoints/grpo_lora_r16/iter_0000010/adapter",
       "adapter_sha256": "046a1018b605aa29f8b8c4f2677f47ce55489105f6766155f4c009798f48abe2",
       "pass_at_1": 1,
-      "pass_at_2": 6,
+      "multi_turn_with_error_feedback_at_2": 6,
       "well_formed_tasks": 26,
       "prompt_tokens": 981534,
       "completion_tokens": 668886,

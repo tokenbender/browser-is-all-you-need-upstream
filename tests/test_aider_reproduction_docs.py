@@ -24,7 +24,11 @@ def test_aider_progress_ledger_matches_final_rl_receipt() -> None:
         "training_data_manifest_sha256"
     ]
     assert rl["pass_at_1"] == receipt["validation"]["pass_at_1"] == 1
-    assert rl["pass_at_2"] == receipt["validation"]["pass_at_k"] == 6
+    assert (
+        rl["multi_turn_with_error_feedback_at_2"]
+        == receipt["validation"]["pass_at_k"]
+        == 6
+    )
     assert rl["well_formed_tasks"] == receipt["validation"]["well_formed_tasks"] == 26
 
 

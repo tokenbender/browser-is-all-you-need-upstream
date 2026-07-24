@@ -278,8 +278,10 @@ to either command to publish the same metrics and sample tables to W&B.
 This lane asks whether targeted supervised data and executable-reward training
 improve GLM-4.7-Flash on repository edits. Every reported score uses the same
 fixed 26-task C++ set, whole-file edit format, temperature `0.7`, top-p `1.0`,
-and at most two attempts. Pass@1 measures the first answer. Pass@2 measures
-whether the task passes after compiler or test feedback. The benchmark is
+and at most two attempts. `pass@1` counts tasks solved by the initial answer.
+`multi-turn-with-error-feedback@2` counts cumulative success after compiler or
+test feedback and a repair attempt. It is not an independent-sampling pass@k
+metric. The benchmark is
 pinned to Aider commit `5dc9490bb35f9729ef2c95d00a19ccd30c26339c` and
 Polyglot commit `7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f`.
 
@@ -295,7 +297,7 @@ All project-tracked Aider dataset lineages are preserved in the private,
 manual-approval
 [`glm47-aider-posttraining-data`](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/27b7f1f43a123fe958104a5ba896f2ed3348ff43)
 catalog. Evaluator-only histories and result JSONs are separately preserved in
-[`glm47-aider-fixed26-responses`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/53a7e4f41b72bdbe7c67db4408bca6796d33ceb3).
+[`glm47-aider-fixed26-responses`](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9).
 Both repositories are private, manually gated, and pinned here to revisions
 that passed a file-by-file authenticated round trip.
 
@@ -308,7 +310,7 @@ python3 scripts/download_assets.py aider-responses --output-root /workspace/asse
 
 #### Progress ledger
 
-| Stage | Training data | Pass@1 | Pass@2 | Well formed | Total tokens | Evidence |
+| Stage | Training data | pass@1 | multi-turn-with-error-feedback@2 | Well formed | Total tokens | Evidence |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | Base | No task-specific training | 0/26 | 4/26 | 26/26 | 2,212,419 | [Model](https://huggingface.co/zai-org/GLM-4.7-Flash/tree/7dd20894a642a0aa287e9827cb1a1f7f91386b67) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/base-fixed26-20260711) |
 | SFT v1 | 401 source / 321 train / 320 consumed | 1/26 | 5/26 | 26/26 | 1,732,287 | [Data](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922/datasets/sft-v1-321) · [responses](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/sft-v1-fixed26-20260718) · [W&B](https://wandb.ai/ahm-rimer/glm47-aider-v1-sft/runs/glm47-aider-v1-sft-20260717T130336Z) |
@@ -321,8 +323,9 @@ python3 scripts/download_assets.py aider-responses --output-root /workspace/asse
 SFT v3 remains the strongest completed result by the second assisted attempt:
 7/26 versus the base model's 4/26, a 75% relative increase. SFT v5 is the
 strongest first-attempt result at 2/26 and preserves valid formatting on all
-26 tasks, but reaches only 5/26 after feedback. The repaired RL run reaches
-1/26 first-attempt and 6/26 after feedback. These results are consistent with
+26 tasks, but reaches only 5/26 on multi-turn-with-error-feedback@2. The
+repaired RL run reaches 1/26 pass@1 and 6/26
+multi-turn-with-error-feedback@2. These results are consistent with
 the working hypothesis that the lane is limited by training duration and
 high-signal data coverage, but the fixed-26 experiments do not prove that
 diagnosis by themselves.

@@ -248,7 +248,7 @@
       "finding": "Raw-715 supplies 81.71% of the 875-row raw-concat mixture that regressed from SFT v2.",
       "evidence_refs": ["master_issue", "data_catalog"],
       "remediation": "Keep raw-715 out of positive mixtures until adjudicated.",
-      "acceptance_test": "Promotion tests show no first-turn or assisted regression versus the declared baseline."
+      "acceptance_test": "Promotion tests show no pass@1 or multi-turn-with-error-feedback@2 regression versus the declared baseline."
     },
     {
       "id": "D012",
@@ -305,7 +305,7 @@
       "category": "dataset",
       "severity": "high",
       "evidence_status": "confirmed",
-      "finding": "The 600-row pass1-skills mixture achieved 0/26 first-turn and 2/26 assisted passes, so its added skill rows did not transfer under that run.",
+      "finding": "The 600-row pass1-skills mixture achieved 0/26 pass@1 and 2/26 multi-turn-with-error-feedback@2, so its added skill rows did not transfer under that run.",
       "evidence_refs": ["master_issue", "data_catalog"],
       "remediation": "Audit the skill labels, target correctness, and mixture weights before reuse.",
       "acceptance_test": "A matched ablation shows positive first-turn transfer before this mixture is promoted."
@@ -545,7 +545,7 @@
       "category": "behavior",
       "severity": "high",
       "evidence_status": "confirmed",
-      "finding": "No completed SFT checkpoint dominates both first-turn and assisted outcomes: v3 leads assisted at 7/26, while v1, v2, and v4 one-epoch share the 1/26 first-turn frontier.",
+      "finding": "No completed SFT checkpoint dominates both pass@1 and multi-turn-with-error-feedback@2: v3 leads the feedback-conditioned metric at 7/26, while v1, v2, and v4 one-epoch share the 1/26 pass@1 frontier.",
       "evidence_refs": ["run_registry", "v3_eval", "v4_1ep_eval", "v4_3ep_eval"],
       "remediation": "Use a predeclared multi-metric promotion rule with retained-task gates.",
       "acceptance_test": "The selected checkpoint satisfies the rule without hiding a regression in the other metric."
@@ -555,7 +555,7 @@
       "category": "evaluation",
       "severity": "high",
       "evidence_status": "confirmed",
-      "finding": "The repository label pass@2 denotes sequential feedback-assisted repair, not two independent samples.",
+      "finding": "Earlier reporting mislabeled sequential feedback-assisted repair as an independent-sampling metric; the canonical name is multi-turn-with-error-feedback@2.",
       "evidence_refs": ["run_registry", "master_issue"],
       "remediation": "Rename the metric assisted-pass-by-attempt-2 in new reports while preserving legacy mapping.",
       "acceptance_test": "No report conflates assisted repair with independent pass@k."

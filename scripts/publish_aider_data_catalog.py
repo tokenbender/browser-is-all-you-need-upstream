@@ -74,7 +74,7 @@ class EvalSpec:
     eval_id: str
     checkpoint: str
     pass_at_1: int | None
-    pass_at_2: int | None
+    multi_turn_with_error_feedback_at_2: int | None
     source_kind: str
     source: str
     receipt: str | None = None
@@ -947,7 +947,7 @@ def validate_response_set(eval_id: str, responses: Mapping[str, bytes]) -> None:
 
 def response_metrics(responses: Mapping[str, bytes]) -> tuple[int, int]:
     pass_at_1 = 0
-    pass_at_2 = 0
+    multi_turn_with_error_feedback_at_2 = 0
     for name, payload in responses.items():
         if not name.endswith("results.json"):
             continue
@@ -960,8 +960,8 @@ def response_metrics(responses: Mapping[str, bytes]) -> tuple[int, int]:
         ):
             raise RuntimeError(f"invalid tests_outcomes in {name}: {outcomes!r}")
         pass_at_1 += int(outcomes[0])
-        pass_at_2 += int(any(outcomes))
-    return pass_at_1, pass_at_2
+        multi_turn_with_error_feedback_at_2 += int(any(outcomes))
+    return pass_at_1, multi_turn_with_error_feedback_at_2
 
 
 def add_eval(
@@ -971,15 +971,15 @@ def add_eval(
     receipt: bytes | None,
 ) -> dict[str, Any]:
     validate_response_set(spec.eval_id, responses)
-    measured_pass_at_1, measured_pass_at_2 = response_metrics(responses)
-    if (measured_pass_at_1, measured_pass_at_2) != (
+    measured_pass_at_1, measured_multi_turn = response_metrics(responses)
+    if (measured_pass_at_1, measured_multi_turn) != (
         spec.pass_at_1,
-        spec.pass_at_2,
+        spec.multi_turn_with_error_feedback_at_2,
     ):
         raise RuntimeError(
-            f"{spec.eval_id}: declared pass@1/pass@2 "
-            f"{spec.pass_at_1}/{spec.pass_at_2} != measured "
-            f"{measured_pass_at_1}/{measured_pass_at_2}"
+            f"{spec.eval_id}: declared pass@1/multi-turn-with-error-feedback@2 "
+            f"{spec.pass_at_1}/{spec.multi_turn_with_error_feedback_at_2} "
+            f"!= measured {measured_pass_at_1}/{measured_multi_turn}"
         )
     root = stage / "evals" / spec.eval_id
     archive = root / "responses.tar.gz"
@@ -997,12 +997,12 @@ def add_eval(
             "size_bytes": (root / "run_receipt.json").stat().st_size,
         }
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "glm47-aider-fixed26-response-corpus",
         "eval_id": spec.eval_id,
         "checkpoint": spec.checkpoint,
         "pass_at_1": measured_pass_at_1,
-        "pass_at_2": measured_pass_at_2,
+        "multi_turn_with_error_feedback_at_2": measured_multi_turn,
         "task_count": BENCHMARK["tasks"],
         "history_files": BENCHMARK["tasks"],
         "result_files": BENCHMARK["tasks"],
@@ -1188,12 +1188,12 @@ def build_eval_stage(workspace: Path, stage: Path) -> list[dict[str, Any]]:
         "0ec95a37a6957d681cf43762ac7b2dfaddaf7dbe8c3dd02ec437fb7289f48c42",
     )
     receipt_only = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "glm47-aider-fixed26-receipt-only",
         "eval_id": "rl-v2-iter10-fixed26-20260722",
         "checkpoint": "RL v2 iter_0000010",
         "pass_at_1": 1,
-        "pass_at_2": 6,
+        "multi_turn_with_error_feedback_at_2": 6,
         "task_count": 26,
         "benchmark": BENCHMARK,
         "status": "receipt-preserved-raw-transcripts-unrecoverable",
@@ -1205,7 +1205,7 @@ def build_eval_stage(workspace: Path, stage: Path) -> list[dict[str, Any]]:
     entries.append(receipt_only)
 
     catalog = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "glm47-aider-fixed26-response-catalog",
         "access": "private-manual-gated-evaluator-only",
         "benchmark": BENCHMARK,

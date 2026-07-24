@@ -194,12 +194,12 @@ def preserve_eval(api: HfApi, results_root: Path, temporary: Path) -> dict[str, 
         raise RuntimeError(f"unexpected measured result: {(measured_p1, measured_p2)}")
 
     entry = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "glm47-aider-fixed26-response-corpus",
         "eval_id": EVAL_ID,
         "checkpoint": f"{TRAIN_RUN_ID}/iter_0000200@{ADAPTER_SHA256}",
         "pass_at_1": measured_p1,
-        "pass_at_2": measured_p2,
+        "multi_turn_with_error_feedback_at_2": measured_p2,
         "task_count": 26,
         "history_files": 26,
         "result_files": 26,
@@ -422,10 +422,17 @@ def main() -> None:
     if args.verify_only:
         _, outcomes = collect_responses(args.results_root.resolve())
         measured = {
-            "pass_at_1": sum(row["tests_outcomes"][0] for row in outcomes),
-            "pass_at_2": sum(any(row["tests_outcomes"]) for row in outcomes),
+            "pass_at_1": sum(
+                row["tests_outcomes"][0] for row in outcomes
+            ),
+            "multi_turn_with_error_feedback_at_2": sum(
+                any(row["tests_outcomes"]) for row in outcomes
+            ),
         }
-        if measured != {"pass_at_1": 2, "pass_at_2": 5}:
+        if measured != {
+            "pass_at_1": 2,
+            "multi_turn_with_error_feedback_at_2": 5,
+        }:
             raise RuntimeError(f"unexpected measured result: {measured}")
         checkpoint_root = args.checkpoint_root.resolve()
         if (

@@ -239,7 +239,7 @@ def render_report(data: dict[str, Any]) -> str:
         "",
         "## Dataset and outcome history",
         "",
-        "| Stage | Unique packaged | Consumed / epoch | Epochs | First-turn | Assisted by attempt 2 |",
+        "| Stage | Unique packaged | Consumed / epoch | Epochs | pass@1 | multi-turn-with-error-feedback@2 |",
         "| --- | ---: | ---: | ---: | ---: | ---: |",
     ]
     for row in data["dataset_history"]:

@@ -14,16 +14,16 @@
   "data_entries": 21,
   "evaluation_entries": 16,
   "evaluations": {
-    "bytes": 3481552,
+    "bytes": 3482883,
     "files": 50,
     "gated": "manual",
     "private": true,
     "pruned_paths": [],
     "repo": "TokenBender/glm47-aider-fixed26-responses",
     "repository_files": 52,
-    "revision": "53a7e4f41b72bdbe7c67db4408bca6796d33ceb3",
+    "revision": "68b5b0fc0fe0dc694b849cff7e4bda39ab50c8a9",
     "roundtrip": "passed",
-    "upload_manifest_sha256": "d446d6005dd4975467221f22ff5732226cc37e2760a47bad8f31cf82e6c1bb2e"
+    "upload_manifest_sha256": "5b4e21018ca4ec2f17fad1e6aa8e14a155548769319bd6b1b548f0b8192ae96e"
   },
   "hidden_tests_oracles_republished": false,
   "kind": "glm47-aider-gated-data-publication-receipt",

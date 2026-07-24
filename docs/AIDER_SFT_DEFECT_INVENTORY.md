@@ -21,7 +21,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 ## Dataset and outcome history
 
-| Stage | Unique packaged | Consumed / epoch | Epochs | First-turn | Assisted by attempt 2 |
+| Stage | Unique packaged | Consumed / epoch | Epochs | pass@1 | multi-turn-with-error-feedback@2 |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | sft-v1 | 321 | 320 | 1 | 1/26 | 5/26 |
 | sft-v2 | 1211 | 1184 | 1 | 1/26 | 6/26 |
@@ -111,7 +111,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 #### B007 — high — confirmed
 
-**Finding.** No completed SFT checkpoint dominates both first-turn and assisted outcomes: v3 leads assisted at 7/26, while v1, v2, and v4 one-epoch share the 1/26 first-turn frontier.
+**Finding.** No completed SFT checkpoint dominates both pass@1 and multi-turn-with-error-feedback@2: v3 leads the feedback-conditioned metric at 7/26, while v1, v2, and v4 one-epoch share the 1/26 pass@1 frontier.
 
 **Evidence.** [run_registry](../docs/aider_posttraining_runs.json), [v3_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/d817c418b29eae23a97a83c70c896b56296b330c/evals/sft-v3-fixed26-20260721), [v4_1ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/4b888cd8ae024f1e90003b2b45a3c097603d66bb/evals/sft-v4-holistic-790-fixed26-20260723), [v4_3ep_eval](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/1401f17c84d146b4cfa91bb67a6e625ea8cba2a9/evals/sft-v4-holistic-790-3ep-fixed26-20260723)
 
@@ -229,7 +229,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 **Remediation.** Keep raw-715 out of positive mixtures until adjudicated.
 
-**Acceptance test.** Promotion tests show no first-turn or assisted regression versus the declared baseline.
+**Acceptance test.** Promotion tests show no pass@1 or multi-turn-with-error-feedback@2 regression versus the declared baseline.
 
 #### D012 — high — confirmed
 
@@ -283,7 +283,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 #### D017 — high — confirmed
 
-**Finding.** The 600-row pass1-skills mixture achieved 0/26 first-turn and 2/26 assisted passes, so its added skill rows did not transfer under that run.
+**Finding.** The 600-row pass1-skills mixture achieved 0/26 pass@1 and 2/26 multi-turn-with-error-feedback@2, so its added skill rows did not transfer under that run.
 
 **Evidence.** [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37), [data_catalog](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/tree/0f0f69346eaeeb13401e57863efd33cc501e0922)
 
@@ -295,7 +295,7 @@ This inventory records defects; it does not claim that they are fixed. A checkpo
 
 #### E001 — high — confirmed
 
-**Finding.** The repository label pass@2 denotes sequential feedback-assisted repair, not two independent samples.
+**Finding.** Earlier reporting mislabeled sequential feedback-assisted repair as an independent-sampling metric; the canonical name is multi-turn-with-error-feedback@2.
 
 **Evidence.** [run_registry](../docs/aider_posttraining_runs.json), [master_issue](https://github.com/tokenbender/browser-is-all-you-need/issues/37)
 

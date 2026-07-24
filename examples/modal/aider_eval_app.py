@@ -506,8 +506,12 @@ def _validate_benchmark_results(
         ),
         "unique_testcases": len(set(testcases)),
         "testcases": sorted(testcases),
-        "pass_at_1": sum(bool(payload["tests_outcomes"][0]) for _, payload in rows),
-        "pass_at_k": sum(any(payload["tests_outcomes"]) for _, payload in rows),
+        "pass_at_1": sum(
+            bool(payload["tests_outcomes"][0]) for _, payload in rows
+        ),
+        "multi_turn_with_error_feedback_at_2": sum(
+            any(payload["tests_outcomes"]) for _, payload in rows
+        ),
         "well_formed_tasks": sum(int(payload.get("num_malformed_responses", 0)) == 0 for _, payload in rows),
         "malformed_responses": sum(int(payload.get("num_malformed_responses", 0)) for _, payload in rows),
         "error_outputs": sum(int(payload.get("num_error_outputs", 0)) for _, payload in rows),
@@ -715,7 +719,7 @@ def _merge_shard_receipts(
         "maximum_attempts",
         "short_circuited_after_first_pass",
         "pass_at_1",
-        "pass_at_k",
+        "multi_turn_with_error_feedback_at_2",
         "well_formed_tasks",
         "malformed_responses",
         "error_outputs",
