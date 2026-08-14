@@ -1,0 +1,424 @@
+{
+  "decision": "PASS",
+  "file_count": 76,
+  "files": [
+    {
+      "path": ".dockerignore",
+      "sha256": "1095819e56f1ef7d06b215f3d20249ae907ee3ca84f19d3b277720a67e4ee54e",
+      "size_bytes": 339
+    },
+    {
+      "path": ".skyignore",
+      "sha256": "d301100c53deeebcff5568ab168c282e5355718a8f29720ea6011ac29506da54",
+      "size_bytes": 440
+    },
+    {
+      "path": "configs/full_v5_charm_grpo/gcp-r1.json",
+      "sha256": "9554a7d06ca875e3da551eb3734a8cead229fa6e4d95b7ba93c377d2a7cbbd8e",
+      "size_bytes": 6403
+    },
+    {
+      "path": "configs/full_v5_charm_grpo/r8-candidate-hybrid45-exact40-r87-canary.json",
+      "sha256": "83624d84f04dd479f415329f65ab6602d6a5d1be8f98dde64a82fe199bbe1b63",
+      "size_bytes": 2162
+    },
+    {
+      "path": "configs/full_v5_charm_grpo/r8-candidate-hybrid45-exact40-r87-selection.json",
+      "sha256": "b340fbd212f7ba8472161448ac8a579abc91178d3d0731e3e546470594ae1788",
+      "size_bytes": 9121
+    },
+    {
+      "path": "configs/full_v5_charm_grpo/r8-r87-promotion-evaluation-split.json",
+      "sha256": "817aa22252acf9c6687313396be7d59b79052585ead9fbb6a2cdae797275e858",
+      "size_bytes": 3307
+    },
+    {
+      "path": "configs/miles/glm4.7-flash.sh",
+      "sha256": "a201143a70de35f6f69f8ae56c32fb176934bf37e93fb4afa6ce967d1fd7daab",
+      "size_bytes": 670
+    },
+    {
+      "path": "dataset/configs/glm47-flash-chat-template.jinja",
+      "sha256": "d63ad536c3c81880043e22ec7fd08db42b4d8fb7c89c7138bc562bfa25281375",
+      "size_bytes": 3120
+    },
+    {
+      "path": "dataset/configs/glm47-flash-tokenizer-manifest.json",
+      "sha256": "53bcc04c0e0acedb8b57abbb03f28c29519b79a245c78784c341554ad33ce1a2",
+      "size_bytes": 1035
+    },
+    {
+      "path": "docker/full-v5-charm-grpo-gcp/Dockerfile",
+      "sha256": "16e1da183143e338c57f12c27efaae0b4fb46945f41950a2d17971be7c82e3c5",
+      "size_bytes": 6088
+    },
+    {
+      "path": "docker/full-v5-charm-grpo-gcp/Verifier.Dockerfile",
+      "sha256": "0f8ec630c598440fda6e0d40e31b0f031f50812fc91e521ebe0d96cce94fc6b5",
+      "size_bytes": 817
+    },
+    {
+      "path": "examples/grpo.sh",
+      "sha256": "916544a0cdea45f0a4e4beda04b83cc1d5cb585e581472f75497189aaa19dc1c",
+      "size_bytes": 8793
+    },
+    {
+      "path": "grpo_h100_full_v5_charm_r8.yaml",
+      "sha256": "062b165bfd68e2e57d6aa177d12870e63cbe498d446c4b6b0f9fedde91b74079",
+      "size_bytes": 2209
+    },
+    {
+      "path": "grpo_h100_full_v5_charm_r8_unadmitted.yaml",
+      "sha256": "affb8cfd2d6f8689ef9edd288b07da395b757b0fe9698571850271744d030226",
+      "size_bytes": 2395
+    },
+    {
+      "path": "scripts/check_runtime.py",
+      "sha256": "8a74fe314e4a1bdfb5ce9ae8e6e4ea4ffc5563f236f4d09778ea1814af9bfef6",
+      "size_bytes": 2669
+    },
+    {
+      "path": "scripts/convert_checkpoint.sh",
+      "sha256": "a328235337927d331f1853253528d5e599855d4e352619aaa1f516fd63dd3db1",
+      "size_bytes": 3761
+    },
+    {
+      "path": "scripts/gcp_full_v5_charm_grpo.py",
+      "sha256": "472f48693a089a0b41563f3448dcbdeedae367938a77677136d923de357b9b7c",
+      "size_bytes": 145455
+    },
+    {
+      "path": "scripts/gcp_full_v5_charm_r8_publish_assets.py",
+      "sha256": "5f620cb65f631c8947ee67f30af767b900896cef0bfa24d3682fbd9077848913",
+      "size_bytes": 19587
+    },
+    {
+      "path": "scripts/gcp_full_v5_charm_r8_skypilot.sh",
+      "sha256": "1dd4a6c198139b1cf1ee3be30167e893e00ac3e7510e685a3b2a6194aca6fc2c",
+      "size_bytes": 1240
+    },
+    {
+      "path": "scripts/gcp_full_v5_charm_r8_skypilot_submit.sh",
+      "sha256": "7593b0e1f2b99d1be9a7c79047c096c5f6f923c96b2dd6fe90b88200579198fd",
+      "size_bytes": 1833
+    },
+    {
+      "path": "scripts/gcp_full_v5_charm_r8_unadmitted_skypilot.sh",
+      "sha256": "ecc232d68d619fd9bc4588d5ba528a420c72cef670d554b8b99ebbd9c790b59d",
+      "size_bytes": 7094
+    },
+    {
+      "path": "scripts/gcp_full_v5_charm_r8_unadmitted_skypilot_submit.sh",
+      "sha256": "bd97a10845ed41412a96bedecaa4c84865fb33729e40c8c63cde31b97cf9da7d",
+      "size_bytes": 2853
+    },
+    {
+      "path": "scripts/gcp_h100_host_setup.sh",
+      "sha256": "2ed79082f355f6bc9672b5dad9522692cfb24bbbb65090b61b05d3875f7dce8a",
+      "size_bytes": 3070
+    },
+    {
+      "path": "scripts/prepare_grpo_adapter.py",
+      "sha256": "349482daf10506e7f9035f7ac81acb720a9f0a34cc72551ff88acbc53a5fc241",
+      "size_bytes": 18990
+    },
+    {
+      "path": "scripts/publish_results.py",
+      "sha256": "a1f917dc5d26833b83cea067eb334770f254dd6dc77c7aa953bd5e5f14a3cd33",
+      "size_bytes": 10552
+    },
+    {
+      "path": "scripts/train_grpo.sh",
+      "sha256": "2d14721891e48036454ba09a785915d0729663f589eaa5d2e6cc9d2d57fc7f4c",
+      "size_bytes": 38371
+    },
+    {
+      "path": "src/glm47_posttraining/__init__.py",
+      "sha256": "0e2543169e6dae651635043ca2950b0b29d2693e4d2d71eef0046f0128b276b8",
+      "size_bytes": 69
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/__init__.py",
+      "sha256": "d3f34e95871bc5cb101651313846a2d89254d5c812a825809af7060ca358802c",
+      "size_bytes": 984
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/ast_evaluator.py",
+      "sha256": "cc870d8dcbf5c877321711d13b085bb1fca62a4fcf145c5e93290b9f8b5f9ba4",
+      "size_bytes": 10645
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_grpo.py",
+      "sha256": "c7b06ac579d5a0352a6a815490d0fb74c796119979fe4323d5cdc8ac8ffb3b21",
+      "size_bytes": 31255
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_grpo_completion.py",
+      "sha256": "ccf6aed89340171b769639ad32e0c13c7c6813ba1b243ac51b9b774cd29a2a44",
+      "size_bytes": 12541
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_r7.py",
+      "sha256": "a0e81ab25f46355a75cf2f24f96f84472846cc2c1f8a9e99f00cc86f08837023",
+      "size_bytes": 37391
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_r7_promotion.py",
+      "sha256": "6137780fabb820d19e8dff319e80e7ba8f5364d7c543dc949b2c7a5017d8f6f7",
+      "size_bytes": 20174
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_r8.py",
+      "sha256": "60bdffa1d9c4cdaa8f5fbfa4f85f1ae924965437d8463773077b4a29b57a7f7e",
+      "size_bytes": 22385
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_r8_checkpoint_selection.py",
+      "sha256": "3271d11048b173f28ea1ac88c2763839bb7a19d6f2fa48bbe3d2bc1eb5579fae",
+      "size_bytes": 8650
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_r8_profile.py",
+      "sha256": "d9b8b2b242beb074669b3e696762cd2660a9292a8d110d03e6c64b31940d4dac",
+      "size_bytes": 23458
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_r8_promotion.py",
+      "sha256": "8c3aacf619bb1d5b9701e2bce2fd3a1eb1c1eb5413dd1dfa4e0b1fcb04887cc0",
+      "size_bytes": 1869
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/charm_r8_reward_replay.py",
+      "sha256": "d061d628f925c8ada25b2d4ed349b4fe7a1373c8a05a373bb0c973b13a47035d",
+      "size_bytes": 11520
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/compiler_guided.py",
+      "sha256": "219737a54e047c8f8495033526f5baef16d833872a56126d4b32a63102f13105",
+      "size_bytes": 14227
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/dataset.py",
+      "sha256": "06220499fa9158eadfa8b016b1fcb8e69a0470e9c74ac47567492aedfcadaf18",
+      "size_bytes": 30581
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/effective_source.py",
+      "sha256": "f133c0e5941fbcf593cdd92a7d5538322b708ee68cade056766d956346b402ce",
+      "size_bytes": 5538
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/full_v5_charm.py",
+      "sha256": "e8e7ee57bbef6efbdd010b25b887e4d5a2e77c0476f84ee1e8024467a9fb804d",
+      "size_bytes": 25088
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/grpo_advantage_contract.py",
+      "sha256": "10bb75fc743e6b57eb36ce8c2741f1b436560174aef53f1101afd5110dc42a41",
+      "size_bytes": 9621
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/harness.py",
+      "sha256": "818eaa23eef16d3b875007c2db85fee4cee31de74b41fc6ce3a42fce75f821cb",
+      "size_bytes": 60074
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/hybrid45.py",
+      "sha256": "1edd42f89c409e4c9d03a9a38c604ab9b247c7a8618920f77e84ff7bc9cb057e",
+      "size_bytes": 16701
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/mef45.py",
+      "sha256": "f51ed704ad7bc194b54f0fa2dcc47f606d88032a5c551febe880a44b8385c7d4",
+      "size_bytes": 8119
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/parser.py",
+      "sha256": "d866175534a1a7b378083defe88389690d98203077616ceeeeae07d9f713474e",
+      "size_bytes": 6878
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/policy45.py",
+      "sha256": "4717468ae5812368f6c084302645fb0a2d73011830553618be80aca6d018f94b",
+      "size_bytes": 16226
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/prompt_preflight.py",
+      "sha256": "efa3338dec38421977bf489c7e57be7c17b4333ec39bd0d6f523f0c2077f6b65",
+      "size_bytes": 11131
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/public_api_manifest.py",
+      "sha256": "b874e776e56a27b4e887bda99d3383a761d677ed0a480898c02732c7498edc67",
+      "size_bytes": 25455
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/reward.py",
+      "sha256": "d940805420b1fdf510da4d31a894807d1abc6408726333bb7e2d2601f0ea1d9d",
+      "size_bytes": 32095
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/rollout_receipts.py",
+      "sha256": "97f297f217ec4e6f7776acb5b6597d6108e1fdbec485c2338e83d28fd3f8b633",
+      "size_bytes": 14333
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/schema.py",
+      "sha256": "94a5b97c7e8f038e089ded6906bbf60699bd96a64bbbf61a69adb31f2f41c7a1",
+      "size_bytes": 18320
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/validator/__init__.py",
+      "sha256": "1541b11684f66701cd75fa8289f871fedc08a33ebc564d0ce57d2cbe3b8eddd4",
+      "size_bytes": 70
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/validator/oracle/__init__.py",
+      "sha256": "ed2cfe08f537dfd834873fce10b1031ca279e8001b198fc6bf535e6c25c1900c",
+      "size_bytes": 919
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/validator/oracle/oracle_cache.py",
+      "sha256": "5fd649466245875b0b550fb7e30a642a2ef5dea1f0fd681ab5d578f2431796b8",
+      "size_bytes": 2266
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/validator/oracle/oracle_receipt.py",
+      "sha256": "a0a588b7e2b91487fc7b456e9e8373d85d0deb1dabfa2553badbfaad68bd793a",
+      "size_bytes": 8796
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/validator/oracle/oracle_report.py",
+      "sha256": "cbfd1065c04bd9a2561e3cdf35025787437cbe68849bd97cb0c81a50a79f0f18",
+      "size_bytes": 2831
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/validator/oracle/oracle_rules.py",
+      "sha256": "20de926a6c7836bc61c02fed447d40dcefd97faaf19f12923d8918843d13d4dd",
+      "size_bytes": 3741
+    },
+    {
+      "path": "src/glm47_posttraining/aider_polyglot/validator/oracle/oracle_runner.py",
+      "sha256": "03c5cbd930afb661b83f414c0d8ad55a35f80705094f3346d56a87c2438dac36",
+      "size_bytes": 18142
+    },
+    {
+      "path": "src/glm47_posttraining/constants.py",
+      "sha256": "79e09c5419ad9ccd4b67664e606bf26f7ce23f8ad29e6722e6c3e5f55d41361d",
+      "size_bytes": 113
+    },
+    {
+      "path": "src/glm47_posttraining/cpp_perf/__init__.py",
+      "sha256": "fb07d8eb8788a244714d379466ac4f49e45f6c860e2003654d0f602dbf566b36",
+      "size_bytes": 581
+    },
+    {
+      "path": "src/glm47_posttraining/cpp_perf/dataset.py",
+      "sha256": "a65cabbd0e95ff7b4c4574c3a47c8493206994b865e261df9045042cf7654e09",
+      "size_bytes": 1558
+    },
+    {
+      "path": "src/glm47_posttraining/cpp_perf/eval.py",
+      "sha256": "8e342eb37271fe23e40ed6ac424fd9ef12b28257eb114d089e5c6a6bc507d1d7",
+      "size_bytes": 9452
+    },
+    {
+      "path": "src/glm47_posttraining/cpp_perf/reward.py",
+      "sha256": "376d049b42da282aa9694ea17a51504035d5fb3622d2d4664bb25a889ce6777e",
+      "size_bytes": 7194
+    },
+    {
+      "path": "src/glm47_posttraining/cpp_perf/sandbox.py",
+      "sha256": "a5004ff15e09df8ae923cbb8b553f4a5af7ad8503a07e8409fd8aae066e39714",
+      "size_bytes": 28058
+    },
+    {
+      "path": "src/glm47_posttraining/cpp_perf/schema.py",
+      "sha256": "0789af73390e7daffc8228d904b955ce39b6fcde22b9ef0f781117e915b14f8f",
+      "size_bytes": 4168
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/__init__.py",
+      "sha256": "ff93e8cd35bd217633404af9985775a078cd1262564fdbc00b1b70879d29f6d1",
+      "size_bytes": 62
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/miles_aider_polyglot.py",
+      "sha256": "c7a6c11cae70af7e491e0f137ab5eda03d01c0b5b0e582828b6b4df63e86cf9b",
+      "size_bytes": 54878
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/miles_charm_compiler_grpo.py",
+      "sha256": "6ce3106f9951f8e5785f35546c0502831651f8d1051b36ae3f97f370db291fa4",
+      "size_bytes": 7098
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/miles_convert_with_glm47_bridge.py",
+      "sha256": "d8a0725974625d06a485a5afc2248e8af863516d69a0926cdbb5fcd4b63463bc",
+      "size_bytes": 2297
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/miles_cpp_perf.py",
+      "sha256": "056d08aa82e4df2da44879d0d30c279fef8fcc28b49cbe8c2ab343b38028a72d",
+      "size_bytes": 26503
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/miles_glm47_bridge.py",
+      "sha256": "6a302dd06a9bf7b2e57804930b60aaeaa96883afd95c68e9ca68e14ee094df6f",
+      "size_bytes": 56603
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/miles_train_with_glm47_bridge.py",
+      "sha256": "1ee7d4ee2d4453739e96622b271e00c27de8f4b3baef0d5e05b011e9a6b3f6af",
+      "size_bytes": 1133
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/scoring.py",
+      "sha256": "995ff8689b3e158f39d609f62299019dacb8039b3d36bed6750203caea57cb54",
+      "size_bytes": 1912
+    },
+    {
+      "path": "src/glm47_posttraining/integrations/wandb_posttraining.py",
+      "sha256": "6bcf160a0f9c47a11c421b1ad75d01fce07d127d6b968029d3919a43d1e8c8fb",
+      "size_bytes": 45708
+    }
+  ],
+  "generated_artifact_excluded_from_its_own_digest": true,
+  "generated_profile_excluded_to_avoid_digest_cycle": true,
+  "schema_version": "glm47-r8-effective-source-manifest-v1",
+  "scope": "r8-skypilot-host-training-and-verifier-effective-bytes",
+  "source_input_roots": [
+    ".dockerignore",
+    ".skyignore",
+    "grpo_h100_full_v5_charm_r8.yaml",
+    "grpo_h100_full_v5_charm_r8_unadmitted.yaml",
+    "docker/full-v5-charm-grpo-gcp/Dockerfile",
+    "docker/full-v5-charm-grpo-gcp/Verifier.Dockerfile",
+    "src/glm47_posttraining/__init__.py",
+    "src/glm47_posttraining/constants.py",
+    "src/glm47_posttraining/aider_polyglot",
+    "src/glm47_posttraining/cpp_perf",
+    "src/glm47_posttraining/integrations",
+    "scripts/train_grpo.sh",
+    "scripts/check_runtime.py",
+    "scripts/prepare_grpo_adapter.py",
+    "scripts/convert_checkpoint.sh",
+    "configs/miles/glm4.7-flash.sh",
+    "scripts/publish_results.py",
+    "scripts/gcp_full_v5_charm_grpo.py",
+    "scripts/gcp_full_v5_charm_r8_skypilot.sh",
+    "scripts/gcp_full_v5_charm_r8_skypilot_submit.sh",
+    "scripts/gcp_full_v5_charm_r8_unadmitted_skypilot.sh",
+    "scripts/gcp_full_v5_charm_r8_publish_assets.py",
+    "scripts/gcp_full_v5_charm_r8_unadmitted_skypilot_submit.sh",
+    "scripts/gcp_h100_host_setup.sh",
+    "examples/grpo.sh",
+    "configs/full_v5_charm_grpo/gcp-r1.json",
+    "configs/full_v5_charm_grpo/r8-candidate-hybrid45-exact40-r87-selection.json",
+    "configs/full_v5_charm_grpo/r8-candidate-hybrid45-exact40-r87-canary.json",
+    "configs/full_v5_charm_grpo/r8-r87-promotion-evaluation-split.json",
+    "dataset/configs/glm47-flash-tokenizer-manifest.json",
+    "dataset/configs/glm47-flash-chat-template.jinja"
+  ],
+  "source_set_sha256": "b0e0f9b9209067c4ad5eae970ce13648842e19e35d043cb035bf01ffffb1ff30"
+}

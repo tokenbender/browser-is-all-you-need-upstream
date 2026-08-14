@@ -18,6 +18,7 @@ GLM47_H100_SFT_RUNNER = Path("examples/sft.sh")
 GLM47_H100_GRPO_RUNNER = Path("examples/grpo.sh")
 GLM47_AIDER_LIUM_GRPO_RUNNER = Path("examples/lium/aider_grpo_2ep.sh")
 GLM47_AIDER_LIUM_EVAL_RUNNER = Path("examples/lium/aider_fixed26_eval.py")
+GLM47_AIDER_SKY_EVAL_TASK = Path("aider_fixed26_r8_checkpoint_eval.yaml")
 GLM47_H100_MODAL_RUNNER = Path("examples/modal/modal_app.py")
 GLM47_AIDER_EVAL_MODAL_RUNNER = Path("examples/modal/aider_eval_app.py")
 GLM47_H100_CONVERTER = Path("scripts/convert_checkpoint.sh")
@@ -47,7 +48,7 @@ def test_grpo_runner_forwards_response_boundary_controls() -> None:
     text = GRPO_RUNNER.read_text(encoding="utf-8")
     assert 'ROLLOUT_SKIP_SPECIAL_TOKENS="${MILES_ROLLOUT_SKIP_SPECIAL_TOKENS:-0}"' in text
     assert 'ROLLOUT_STOP_TOKEN_IDS="${MILES_ROLLOUT_STOP_TOKEN_IDS:-}"' in text
-    assert 'ROLLOUT_ARGS+=(--rollout-skip-special-tokens)' in text
+    assert "ROLLOUT_ARGS+=(--rollout-skip-special-tokens)" in text
     assert 'ROLLOUT_ARGS+=(--rollout-stop-token-ids "${ROLLOUT_STOP_TOKEN_ID_ARGS[@]}")' in text
 
 
@@ -56,10 +57,15 @@ def test_glm47_h100_wrappers_select_fast_8x_h100_defaults() -> None:
         text = script.read_text(encoding="utf-8")
         assert 'MILES_MODEL_ARGS_FILE="${MILES_MODEL_ARGS_FILE:-glm4.7-flash.sh}"' in text
         assert 'MILES_HF_CHECKPOINT="${MILES_HF_CHECKPOINT:-/root/models/GLM-4.7-Flash}"' in text
-        assert 'MILES_REF_LOAD_DIR="${MILES_REF_LOAD_DIR:-${MILES_HF_CHECKPOINT}_torch_dist_tp4_pp1_ep8}"' in text
+        assert (
+            'MILES_REF_LOAD_DIR="${MILES_REF_LOAD_DIR:-${MILES_HF_CHECKPOINT}_torch_dist_tp4_pp1_ep8}"'
+            in text
+        )
         assert 'MILES_GPUS_PER_NODE="${MILES_GPUS_PER_NODE:-8}"' in text
         assert 'MILES_TENSOR_MODEL_PARALLEL_SIZE="${MILES_TENSOR_MODEL_PARALLEL_SIZE:-4}"' in text
-        assert 'MILES_PIPELINE_MODEL_PARALLEL_SIZE="${MILES_PIPELINE_MODEL_PARALLEL_SIZE:-1}"' in text
+        assert (
+            'MILES_PIPELINE_MODEL_PARALLEL_SIZE="${MILES_PIPELINE_MODEL_PARALLEL_SIZE:-1}"' in text
+        )
         assert 'MILES_CONTEXT_PARALLEL_SIZE="${MILES_CONTEXT_PARALLEL_SIZE:-1}"' in text
         assert 'MILES_EXPERT_MODEL_PARALLEL_SIZE="${MILES_EXPERT_MODEL_PARALLEL_SIZE:-8}"' in text
         assert 'MILES_EXPERT_TENSOR_PARALLEL_SIZE="${MILES_EXPERT_TENSOR_PARALLEL_SIZE:-1}"' in text
@@ -77,9 +83,15 @@ def test_glm47_h100_wrappers_select_fast_8x_h100_defaults() -> None:
         assert 'MILES_SGLANG_ENABLE_DP_LM_HEAD="${MILES_SGLANG_ENABLE_DP_LM_HEAD:-1}"' in text
         assert 'MILES_SGLANG_MOE_DENSE_TP_SIZE="${MILES_SGLANG_MOE_DENSE_TP_SIZE:-1}"' in text
         assert 'MILES_SGLANG_SPECULATIVE="${MILES_SGLANG_SPECULATIVE:-0}"' in text
-        assert 'MILES_SGLANG_DISABLE_CUSTOM_ALL_REDUCE="${MILES_SGLANG_DISABLE_CUSTOM_ALL_REDUCE:-0}"' in text
+        assert (
+            'MILES_SGLANG_DISABLE_CUSTOM_ALL_REDUCE="${MILES_SGLANG_DISABLE_CUSTOM_ALL_REDUCE:-0}"'
+            in text
+        )
         assert 'MILES_EXPERTS_SHARED_OUTER_LORAS="${MILES_EXPERTS_SHARED_OUTER_LORAS:-1}"' in text
-        assert 'MILES_TRAIN_MODULE="${MILES_TRAIN_MODULE:-glm47_posttraining.integrations.miles_train_with_glm47_bridge}"' in text
+        assert (
+            'MILES_TRAIN_MODULE="${MILES_TRAIN_MODULE:-glm47_posttraining.integrations.miles_train_with_glm47_bridge}"'
+            in text
+        )
         assert 'GLM47_CPP_SANDBOX_BACKEND="${GLM47_CPP_SANDBOX_BACKEND:-local}"' in text
 
     grpo_text = GLM47_H100_GRPO_RUNNER.read_text(encoding="utf-8")
@@ -94,26 +106,34 @@ def test_glm47_h100_wrappers_select_fast_8x_h100_defaults() -> None:
     assert 'MILES_SAVE_INTERVAL="${MILES_SAVE_INTERVAL:-10}"' in grpo_text
     assert 'MILES_LR="${MILES_LR:-2e-6}"' in grpo_text
     assert 'MILES_NO_REF="${MILES_NO_REF:-1}"' in grpo_text
-    assert 'MILES_SGLANG_MEM_FRACTION_STATIC="${MILES_SGLANG_MEM_FRACTION_STATIC:-0.75}"' in grpo_text
+    assert (
+        'MILES_SGLANG_MEM_FRACTION_STATIC="${MILES_SGLANG_MEM_FRACTION_STATIC:-0.75}"' in grpo_text
+    )
     assert 'MILES_SGLANG_SERVER_CONCURRENCY="${MILES_SGLANG_SERVER_CONCURRENCY:-1024}"' in grpo_text
     assert 'MILES_SGLANG_CUDA_GRAPH_MAX_BS="${MILES_SGLANG_CUDA_GRAPH_MAX_BS:-64}"' in grpo_text
-    assert 'MILES_SGLANG_MAX_RUNNING_REQUESTS="${MILES_SGLANG_MAX_RUNNING_REQUESTS:-256}"' in grpo_text
-    assert 'GLM47_CPP_REWARD_WORKERS="${GLM47_CPP_REWARD_WORKERS:-32}"' in grpo_text
     assert (
-        'MILES_APPLY_CHAT_TEMPLATE_KWARGS="${MILES_APPLY_CHAT_TEMPLATE_KWARGS:-{\\"enable_thinking\\": false}}"'
-        in grpo_text
+        'MILES_SGLANG_MAX_RUNNING_REQUESTS="${MILES_SGLANG_MAX_RUNNING_REQUESTS:-256}"' in grpo_text
     )
+    assert 'GLM47_CPP_REWARD_WORKERS="${GLM47_CPP_REWARD_WORKERS:-32}"' in grpo_text
+    assert 'if [ -z "${MILES_APPLY_CHAT_TEMPLATE_KWARGS:-}" ]; then' in grpo_text
+    assert "export MILES_APPLY_CHAT_TEMPLATE_KWARGS='{\"enable_thinking\": false}'" in grpo_text
 
     sft_text = GLM47_H100_SFT_RUNNER.read_text(encoding="utf-8")
     assert 'MILES_ROLLOUT_BATCH_SIZE="${MILES_ROLLOUT_BATCH_SIZE:-32}"' in sft_text
     assert 'MILES_GLOBAL_BATCH_SIZE="${MILES_GLOBAL_BATCH_SIZE:-32}"' in sft_text
     assert 'MILES_SAVE_INTERVAL="${MILES_SAVE_INTERVAL:-1000}"' in sft_text
     assert 'MILES_NO_REF="${MILES_NO_REF:-1}"' in sft_text
-    assert 'MILES_SGLANG_MEM_FRACTION_STATIC="${MILES_SGLANG_MEM_FRACTION_STATIC:-0.60}"' in sft_text
+    assert (
+        'MILES_SGLANG_MEM_FRACTION_STATIC="${MILES_SGLANG_MEM_FRACTION_STATIC:-0.60}"' in sft_text
+    )
     assert 'MILES_SGLANG_CUDA_GRAPH_MAX_BS="${MILES_SGLANG_CUDA_GRAPH_MAX_BS:-16}"' in sft_text
-    assert 'MILES_SGLANG_MAX_RUNNING_REQUESTS="${MILES_SGLANG_MAX_RUNNING_REQUESTS:-64}"' in sft_text
+    assert (
+        'MILES_SGLANG_MAX_RUNNING_REQUESTS="${MILES_SGLANG_MAX_RUNNING_REQUESTS:-64}"' in sft_text
+    )
     assert 'MILES_LORA_BASE_CPU_BACKUP="${MILES_LORA_BASE_CPU_BACKUP:-0}"' in sft_text
-    assert 'MILES_EXTRA_ARGS="--no-offload-train${MILES_EXTRA_ARGS:+ ${MILES_EXTRA_ARGS}}"' in sft_text
+    assert (
+        'MILES_EXTRA_ARGS="--no-offload-train${MILES_EXTRA_ARGS:+ ${MILES_EXTRA_ARGS}}"' in sft_text
+    )
 
 
 def test_glm47_h100_wandb_lineage_reaches_ray_workers_and_receipts() -> None:
@@ -165,9 +185,12 @@ def test_glm47_h100_converter_matches_runner_layout() -> None:
     assert 'CONVERT_NPROC="${MILES_CONVERT_NPROC:-8}"' in text
     # The bridge maps the grouped expert parameter names emitted by conversion.
     assert 'STRIP_GROUPED_GEMM="${GLM47_STRIP_MOE_GROUPED_GEMM:-0}"' in text
-    assert 'if [ "${STRIP_GROUPED_GEMM}" = "1" ] && [ "${arg}" = "--moe-grouped-gemm" ]; then' in text
-    assert 'convert_hf_to_torch_dist.py' in text
+    assert (
+        'if [ "${STRIP_GROUPED_GEMM}" = "1" ] && [ "${arg}" = "--moe-grouped-gemm" ]; then' in text
+    )
+    assert "convert_hf_to_torch_dist.py" in text
     assert '--expert-model-parallel-size "${EP_SIZE}"' in text
+    assert "export CONVERT_KEEP_PP1=1" in text
     # Register the GLM-4.7 bridge before invoking the Miles converter.
     assert "-m glm47_posttraining.integrations.miles_convert_with_glm47_bridge" in text
     assert 'CONVERT_PYTHONPATH="${REPO_ROOT}/src:${MEGATRON_DIR}:${PYTHONPATH:-}"' in text
@@ -201,16 +224,32 @@ def test_miles_convert_wrapper_pp1_patch(tmp_path, monkeypatch) -> None:
 
     # gate on: override branch neutralized, body still valid python
     monkeypatch.setenv("GLM47_KEEP_PP1", "1")
+    monkeypatch.delenv("CONVERT_KEEP_PP1", raising=False)
     patched = wrapper._load_source(tool)
     assert wrapper.PP_OVERRIDE_MARKER not in patched
     assert "if False:" in patched
     compile(patched, str(tool), "exec")
 
+    # Current pinned Miles has a native PP1 opt-out. Keep its bytes unchanged
+    # and activate the exact environment contract before exec.
+    native_body = (
+        "import os\n"
+        "def get_args(args, world_size):\n"
+        f"    {wrapper.NATIVE_PP1_GUARD}\n"
+        "        args.pipeline_model_parallel_size = world_size\n"
+        "    return args\n"
+    )
+    tool.write_text(native_body, encoding="utf-8")
+    monkeypatch.delenv("CONVERT_KEEP_PP1", raising=False)
+    assert wrapper._load_source(tool) == native_body
+    assert os.environ["CONVERT_KEEP_PP1"] == "1"
+    compile(native_body, str(tool), "exec")
+
     # gate on but marker missing: fail loud instead of converting a lie
     tool.write_text("def get_args():\n    return None\n", encoding="utf-8")
     import pytest as _pytest
 
-    with _pytest.raises(RuntimeError, match="PP-override marker"):
+    with _pytest.raises(RuntimeError, match="native CONVERT_KEEP_PP1 guard"):
         wrapper._load_source(tool)
 
 
@@ -229,7 +268,9 @@ def test_glm47_bridge_patches_mbridge_qk_layernorm_mapping(monkeypatch) -> None:
 
     monkeypatch.setattr(miles_glm47_bridge, "_MBRIDGE_PATCHED", False)
     monkeypatch.setitem(sys.modules, "miles_plugins", types.ModuleType("miles_plugins"))
-    monkeypatch.setitem(sys.modules, "miles_plugins.mbridge", types.ModuleType("miles_plugins.mbridge"))
+    monkeypatch.setitem(
+        sys.modules, "miles_plugins.mbridge", types.ModuleType("miles_plugins.mbridge")
+    )
     monkeypatch.setitem(sys.modules, "mbridge", types.ModuleType("mbridge"))
     monkeypatch.setitem(sys.modules, "mbridge.core", types.ModuleType("mbridge.core"))
     monkeypatch.setitem(sys.modules, "mbridge.core.bridge", fake_bridge_module)
@@ -275,7 +316,9 @@ def test_glm47_bridge_marks_shared_outer_lora_as_ep_replicated(monkeypatch) -> N
     monkeypatch.setattr(miles_glm47_bridge, "_SHARED_OUTER_CKPT_PATCHED", False)
     monkeypatch.setitem(sys.modules, "megatron", types.ModuleType("megatron"))
     monkeypatch.setitem(sys.modules, "megatron.bridge", types.ModuleType("megatron.bridge"))
-    monkeypatch.setitem(sys.modules, "megatron.bridge.peft", types.ModuleType("megatron.bridge.peft"))
+    monkeypatch.setitem(
+        sys.modules, "megatron.bridge.peft", types.ModuleType("megatron.bridge.peft")
+    )
     monkeypatch.setitem(sys.modules, "megatron.bridge.peft.utils", fake_peft_utils)
     monkeypatch.setitem(sys.modules, "megatron.core", fake_core)
     monkeypatch.setitem(sys.modules, "megatron.core.parallel_state", fake_parallel_state)
@@ -299,7 +342,9 @@ def test_glm47_bridge_marks_shared_outer_lora_as_ep_replicated(monkeypatch) -> N
     # Re-running the patch must not double-wrap.
     monkeypatch.setattr(miles_glm47_bridge, "_SHARED_OUTER_CKPT_PATCHED", False)
     miles_glm47_bridge._patch_shared_outer_expert_adapter_replication()
-    rewrapped = FakeSharedOuterAdapter(is_fc1=True, replica_id=(0, 0, 0)).sharded_state_dict(prefix="d.")
+    rewrapped = FakeSharedOuterAdapter(is_fc1=True, replica_id=(0, 0, 0)).sharded_state_dict(
+        prefix="d."
+    )
     assert rewrapped["d.linear_in.weight"].replica_id == (0, 0, 3)
 
 
@@ -316,7 +361,9 @@ def test_glm47_bridge_drops_mtp_adapters_from_sglang_lora_sync() -> None:
             sent.append(list(hf_named_tensors))
             return [], None
 
-    fake_module = types.ModuleType("miles.backends.megatron_utils.update_weight.update_weight_from_tensor")
+    fake_module = types.ModuleType(
+        "miles.backends.megatron_utils.update_weight.update_weight_from_tensor"
+    )
     fake_module.UpdateWeightFromTensor = FakeUpdater
 
     miles_glm47_bridge._apply_sglang_lora_mtp_filter(fake_module)
@@ -440,23 +487,28 @@ def test_h100_grpo_prepares_hybrid_adapter() -> None:
     text = GLM47_H100_GRPO_RUNNER.read_text(encoding="utf-8")
     assert "scripts/check_runtime.py" in text
     assert "MILES_SKIP_RUNTIME_PREFLIGHT:-0" in text
-    assert 'MILES_AUTO_PREPARE_GRPO_ADAPTER:-1' in text
-    assert 'MILES_GRPO_ADAPTER_DIR:-${MILES_RUN_ROOT}/adapter_hybrid' in text
-    assert 'scripts/prepare_grpo_adapter.py' in text
+    assert "MILES_AUTO_PREPARE_GRPO_ADAPTER:-1" in text
+    assert "MILES_GRPO_ADAPTER_DIR:-${MILES_RUN_ROOT}/adapter_hybrid" in text
+    assert "scripts/prepare_grpo_adapter.py" in text
     assert "--include-native" in text
     assert "--include-training-state" not in text
+    assert "native_owner_count" in text
+    assert '--expected-world-size "${MILES_GPUS_PER_NODE}"' in text
 
 
 def test_h100_runtime_aligns_all_flashinfer_packages() -> None:
     text = GLM47_H100_RUNTIME.read_text(encoding="utf-8")
-    assert "GLM47_FLASHINFER_VERSION=0.6.12" in text
+    assert "GLM47_FLASHINFER_VERSION=0.6.14" in text
     assert "GLM47_FLASHINFER_CUDA_INDEX=129" in text
     assert "ENV FLASHINFER_VERSION=${GLM47_FLASHINFER_VERSION}" in text
     assert "ENV FLASHINFER_CUDA_INDEX=${GLM47_FLASHINFER_CUDA_INDEX}" in text
+    assert '--index-url "https://flashinfer.ai/whl"' in text
     for package in ("flashinfer-python", "flashinfer-cubin", "flashinfer-jit-cache"):
         assert package in text
     assert text.count("--force-reinstall") >= 3
-    assert "GLM47_SGLANG_KERNEL_VERSION=0.4.4" in text
+    assert "GLM47_SGLANG_KERNEL_VERSION=0.4.5" in text
+    assert 'assert_pkg_version("flashinfer_python", "0.6.14"' in text
+    assert 'assert_pkg_version("sglang-kernel", "0.4.5"' in text
     assert "GLM47_TORCH_MEMORY_SAVER_VERSION=0.0.9.post1" in text
     assert "ENV SGLANG_KERNEL_VERSION=${GLM47_SGLANG_KERNEL_VERSION}" in text
     assert "ENV TORCH_MEMORY_SAVER_VERSION=${GLM47_TORCH_MEMORY_SAVER_VERSION}" in text
@@ -467,7 +519,7 @@ def test_modal_reproduction_pins_model_image_and_machine_shape() -> None:
     text = GLM47_H100_MODAL_RUNNER.read_text(encoding="utf-8")
     assert 'MODEL_REVISION = "7dd20894a642a0aa287e9827cb1a1f7f91386b67"' in text
     assert "sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e52a932fcefb7031402aeff37" in text
-    assert 'modal.Image.from_dockerfile(' in text
+    assert "modal.Image.from_dockerfile(" in text
     assert '"gpu": "H100!:8"' in text
     assert '"cpu": 48.0' in text
     assert '"memory": (262_144, 1_048_576)' in text
@@ -484,10 +536,10 @@ def test_modal_aider_profile_binds_objective_adapter_and_safe_reward() -> None:
     assert 'AIDER_DATASET_KIND = "aider-polyglot-cpp-shadow-grpo"' in text
     assert 'AIDER_TASKS_DIR = f"{ASSETS_DIR}/aider-shadow/tasks/aider_polyglot_cpp_shadow"' in text
     assert '"rubrics"' in text
-    assert 'scripts/download_assets.py aider-shadow' in text
-    assert 'secrets=[hf_secret]' in text
+    assert "scripts/download_assets.py aider-shadow" in text
+    assert "secrets=[hf_secret]" in text
     assert "def prepare_aider_shadow_asset(" in text
-    assert 'volumes={ASSETS_DIR: assets, RUNS_DIR: runs}' in text
+    assert "volumes={ASSETS_DIR: assets, RUNS_DIR: runs}" in text
     assert "glm47-aider-complement-530-sft-20260721" in text
     assert "glm47-aider-1211-sft-20260718T192250Z" in text
     assert "glm47-aider-1211-530-equal-delta-merge-r32" in text
@@ -517,8 +569,8 @@ def test_aider_fixed_26_eval_requires_grpo_gate() -> None:
     assert 'os.environ.get("GLM47_EXPECTED_TRAINING_TASK_COUNT", "253")' in text
     assert 'os.environ.get("GLM47_EVAL_LORA_RANK", "16")' in text
     assert '"official_26_role": "external fixed evaluation only"' in text
-    assert 'EXPECTED_SOURCE_TENSORS = 9_741' in text
-    assert 'EXPECTED_LAYER_47_TENSORS = 207' in text
+    assert "EXPECTED_SOURCE_TENSORS = 9_741" in text
+    assert "EXPECTED_LAYER_47_TENSORS = 207" in text
     assert 'AIDER_COMMIT = "5dc9490bb35f9729ef2c95d00a19ccd30c26339c"' in text
     assert 'POLYGLOT_COMMIT = "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f"' in text
     assert "def evaluate_shard(" in text
@@ -532,13 +584,13 @@ def test_lium_aider_reproduction_pins_inputs_and_fixed_schedule() -> None:
         "a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157",
         "b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2",
         "dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91",
-        "MILES_NUM_ROLLOUT=11",
+        'MILES_NUM_ROLLOUT=11',
         "MILES_LORA_RANK=32",
         "MILES_LR=5e-7",
         "MILES_KL_LOSS_COEF=0.02",
         "MILES_ROLLOUT_SKIP_SPECIAL_TOKENS=1",
         "MILES_ROLLOUT_STOP_TOKEN_IDS='154820 154827 154829'",
-        "WANDB_MODE=offline",
+        'WANDB_MODE=offline',
         "002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00",
         "aider-shadow/tasks/aider_polyglot_cpp_shadow",
     ):
@@ -562,6 +614,25 @@ def test_lium_fixed_26_eval_pins_benchmark_and_adapter() -> None:
         assert value in text
 
 
+def test_r8_fixed_26_eval_installs_benchmark_deps_and_targets_job22_final() -> None:
+    text = GLM47_AIDER_SKY_EVAL_TASK.read_text(encoding="utf-8")
+    for value in (
+        '"${EVAL_ROOT}/aider"',
+        '"lox==1.0.0"',
+        '"pandas==2.3.3"',
+        '"matplotlib==3.10.8"',
+        '"imgcat==0.6.0"',
+        '"import lox, pandas, matplotlib, imgcat"',
+        'sudo ln -s "${EVAL_ROOT}/aider" /aider',
+        "test -x /aider/benchmark/cpp-test.sh",
+        "unadmitted-r8-r87-run21-20260814T030808Z-attempt-20260814T031719Z-d951d40e",
+        "/workspace/checkpoints/iter_0000005/adapter",
+        "7fb350de045fb1d476fefcdaeb59a5c69ea7f5e2fe744516b63e146f26d8bfc2",
+    ):
+        assert value in text
+    assert '"${EVAL_ROOT}/aider[dev]"' not in text
+
+
 def test_asset_downloader_pins_the_base_model_revision() -> None:
     module = runpy.run_path("scripts/download_assets.py")
     model = module["ASSETS"]["model"]
@@ -580,15 +651,16 @@ def test_asset_downloader_pins_the_aider_shadow_revision() -> None:
     assert shadow["verify_checksums"] is True
 
 
+
 def test_h100_runtime_preflight_accepts_aligned_versions() -> None:
     module = runpy.run_path("scripts/check_runtime.py")
     validate = module["validate_miles_h100_runtime"]
 
     expected = {
-        "flashinfer-python": "0.6.12",
-        "flashinfer-cubin": "0.6.12",
-        "flashinfer-jit-cache": "0.6.12+cu129",
-        "sglang-kernel": "0.4.4+cu129",
+        "flashinfer-python": "0.6.14",
+        "flashinfer-cubin": "0.6.14",
+        "flashinfer-jit-cache": "0.6.14+cu129",
+        "sglang-kernel": "0.4.5+cu129",
         "torch-memory-saver": "0.0.9.post1",
     }
     versions = validate(expected.__getitem__)
@@ -601,10 +673,10 @@ def test_h100_runtime_preflight_rejects_mismatched_versions() -> None:
     validate = module["validate_miles_h100_runtime"]
 
     current = {
-        "flashinfer-python": "0.6.12",
-        "flashinfer-cubin": "0.6.12",
-        "flashinfer-jit-cache": "0.6.12+cu129",
-        "sglang-kernel": "0.4.4+cu129",
+        "flashinfer-python": "0.6.14",
+        "flashinfer-cubin": "0.6.14",
+        "flashinfer-jit-cache": "0.6.14+cu129",
+        "sglang-kernel": "0.4.5+cu129",
         "torch-memory-saver": "0.0.9.post1",
     }
 
@@ -616,7 +688,15 @@ def test_h100_runtime_preflight_rejects_mismatched_versions() -> None:
     with pytest.raises(RuntimeError, match="below the required minimum"):
         validate(mismatched_saver.__getitem__)
 
-    mixed = {**current, "flashinfer-jit-cache": "0.6.13+cu129"}
+    stale_flashinfer = {**current, "flashinfer-python": "0.6.12"}
+    with pytest.raises(RuntimeError, match="below the required minimum"):
+        validate(stale_flashinfer.__getitem__)
+
+    stale_kernel = {**current, "sglang-kernel": "0.4.4+cu129"}
+    with pytest.raises(RuntimeError, match="below the required minimum"):
+        validate(stale_kernel.__getitem__)
+
+    mixed = {**current, "flashinfer-jit-cache": "0.6.15+cu129"}
     with pytest.raises(RuntimeError, match="versions are not aligned"):
         validate(mixed.__getitem__)
 
@@ -659,7 +739,12 @@ def test_aider_shadow_asset_extracts_verified_archive(tmp_path) -> None:
         (task / ".rubric.json").write_text("{}")
     source_manifest = {
         "kind": "aider-polyglot-cpp-shadow-rubrics",
+        "schema_version": 2,
         "counts": {"tasks": 253},
+        "contract": {
+            "oracle_references_packaged": True,
+            "reference_answers_model_facing": False,
+        },
     }
     manifest_bytes = (json.dumps(source_manifest) + "\n").encode()
     (source / "manifest.json").write_bytes(manifest_bytes)
@@ -668,6 +753,7 @@ def test_aider_shadow_asset_extracts_verified_archive(tmp_path) -> None:
         handle.add(source, arcname="aider_polyglot_cpp_shadow")
     artifact_manifest = {
         "kind": "glm47-aider-shadow-rubrics-archive",
+        "schema_version": 2,
         "archive": "aider-shadow-rubrics.tar.gz",
         "archive_root": "aider_polyglot_cpp_shadow",
         "source_manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
@@ -686,6 +772,13 @@ def test_strip_mtp_adapter_filters_served_layers_and_copies_native_state(tmp_pat
     clear_generated_outputs = module["clear_generated_outputs"]
     copy_native_state = module["copy_native_state"]
     filter_served_layers = module["filter_served_layers"]
+    expected_native_shard_names = module["expected_native_shard_names"]
+
+    assert expected_native_shard_names(8, tensor_parallel_size=4, expert_parallel_size=8) == {
+        f"adapter_megatron_tp{ep_rank % 4}_pp0_ep{ep_rank}.pt" for ep_rank in range(8)
+    }
+    with pytest.raises(ValueError, match="positive"):
+        expected_native_shard_names(8, tensor_parallel_size=0, expert_parallel_size=8, world_size=8)
 
     kept, dropped = filter_served_layers(
         {
@@ -733,7 +826,7 @@ def test_grpo_runner_save_interval_is_configurable() -> None:
 
 def test_grpo_runner_guards_existing_data_from_forced_rebuild() -> None:
     text = GRPO_RUNNER.read_text(encoding="utf-8")
-    guard = 'if [ ! -f "${DATA_DIR}/grpo/train.jsonl" ]; then'
+    guard = 'if [ ! -f "${GRPO_PROMPT_DATA}" ]; then'
     assert text.count(guard) == 2
     assert text.index(guard) < text.index('BUILD_DATA_ARGS[@]}"')
 
@@ -826,7 +919,10 @@ def test_grpo_runner_eval_prompt_data_is_configurable() -> None:
     text = GRPO_RUNNER.read_text(encoding="utf-8")
     assert 'EVAL_PROMPT_DATA="${MILES_EVAL_PROMPT_DATA:-}"' in text
     assert 'EVAL_NAME="${MILES_EVAL_NAME:-pie_cpp}"' in text
-    assert '--eval-prompt-data "${EVAL_NAME}" "${EVAL_PROMPT_DATA:-${DATA_DIR}/eval/validation.jsonl}"' in text
+    assert (
+        '--eval-prompt-data "${EVAL_NAME}" "${EVAL_PROMPT_DATA:-${DATA_DIR}/eval/validation.jsonl}"'
+        in text
+    )
 
 
 def test_grpo_runner_supports_raw_extra_args() -> None:
@@ -845,8 +941,8 @@ def test_miles_runners_expose_h100_throughput_knobs() -> None:
         text = script.read_text(encoding="utf-8")
         assert 'USE_DYNAMIC_BATCH_SIZE="${MILES_USE_DYNAMIC_BATCH_SIZE:-1}"' in text
         assert 'BALANCE_DATA="${MILES_BALANCE_DATA:-1}"' in text
-        assert 'PERF_ARGS+=(--use-dynamic-batch-size)' in text
-        assert 'PERF_ARGS+=(--balance-data)' in text
+        assert "PERF_ARGS+=(--use-dynamic-batch-size)" in text
+        assert "PERF_ARGS+=(--balance-data)" in text
         assert "use_dynamic_batch_size=${USE_DYNAMIC_BATCH_SIZE}" in text
         assert "balance_data=${BALANCE_DATA}" in text
         assert 'MOE_ENABLE_DEEPEP="${MILES_MOE_ENABLE_DEEPEP:-0}"' in text
@@ -856,14 +952,22 @@ def test_miles_runners_expose_h100_throughput_knobs() -> None:
         assert 'SGLANG_ENABLE_DP_LM_HEAD="${MILES_SGLANG_ENABLE_DP_LM_HEAD:-0}"' in text
         assert 'SGLANG_MOE_DENSE_TP_SIZE="${MILES_SGLANG_MOE_DENSE_TP_SIZE:-}"' in text
         assert 'SGLANG_SPECULATIVE="${MILES_SGLANG_SPECULATIVE:-0}"' in text
-        assert 'SGLANG_DISABLE_CUSTOM_ALL_REDUCE="${MILES_SGLANG_DISABLE_CUSTOM_ALL_REDUCE:-0}"' in text
-        assert 'PERF_ARGS+=(--moe-enable-deepep)' in text
-        assert 'SGLANG_ARGS+=(--sglang-enable-dp-attention --sglang-dp-size "${SGLANG_DP_SIZE}")' in text
-        assert 'SGLANG_ARGS+=(--sglang-enable-dp-lm-head)' in text
+        assert (
+            'SGLANG_DISABLE_CUSTOM_ALL_REDUCE="${MILES_SGLANG_DISABLE_CUSTOM_ALL_REDUCE:-0}"'
+            in text
+        )
+        assert "PERF_ARGS+=(--moe-enable-deepep)" in text
+        assert (
+            'SGLANG_ARGS+=(--sglang-enable-dp-attention --sglang-dp-size "${SGLANG_DP_SIZE}")'
+            in text
+        )
+        assert "SGLANG_ARGS+=(--sglang-enable-dp-lm-head)" in text
         assert 'SGLANG_ARGS+=(--sglang-moe-dense-tp-size "${SGLANG_MOE_DENSE_TP_SIZE}")' in text
         assert "--sglang-speculative-algorithm EAGLE" in text
-        assert 'SGLANG_ARGS+=(--sglang-max-running-requests "${SGLANG_MAX_RUNNING_REQUESTS}")' in text
-        assert 'SGLANG_ARGS+=(--sglang-disable-custom-all-reduce)' in text
+        assert (
+            'SGLANG_ARGS+=(--sglang-max-running-requests "${SGLANG_MAX_RUNNING_REQUESTS}")' in text
+        )
+        assert "SGLANG_ARGS+=(--sglang-disable-custom-all-reduce)" in text
         assert "moe_enable_deepep=${MOE_ENABLE_DEEPEP}" in text
         assert "sglang_speculative=${SGLANG_SPECULATIVE}" in text
         assert "utilization.memory,power.draw" in text
@@ -879,7 +983,10 @@ def test_miles_runners_gate_recompute_behind_env() -> None:
         text = script.read_text(encoding="utf-8")
         assert 'RECOMPUTE_GRANULARITY="${MILES_RECOMPUTE_GRANULARITY:-selective}"' in text
         assert 'case "${RECOMPUTE_GRANULARITY}" in' in text
-        assert "PERF_ARGS+=(--recompute-granularity full --recompute-method uniform --recompute-num-layers 1)" in text
+        assert (
+            "PERF_ARGS+=(--recompute-granularity full --recompute-method uniform --recompute-num-layers 1)"
+            in text
+        )
         assert "PERF_ARGS+=(--recompute-granularity selective)" in text
         assert "recompute_granularity=${RECOMPUTE_GRANULARITY}" in text
         assert "  --recompute-granularity full\n" not in text
@@ -895,6 +1002,30 @@ def test_runners_gate_docker_preflight_on_sandbox_backend() -> None:
         assert gate < docker_check
     grpo_text = GRPO_RUNNER.read_text(encoding="utf-8")
     assert "GLM47_CPP_SANDBOX_BACKEND=local but g++ is missing" in grpo_text
+
+
+def test_grpo_ray_uses_short_private_temp_root() -> None:
+    text = GRPO_RUNNER.read_text(encoding="utf-8")
+    assert 'RAY_TEMP_DIR="${MILES_RAY_TEMP_DIR:-/tmp/ray}"' in text
+    assert 'mkdir -p "${RAY_TEMP_DIR}"' in text
+    assert '--temp-dir "${RAY_TEMP_DIR}"' in text
+
+
+def test_grpo_clears_clang_resource_headers_before_sglang_cuda_jit() -> None:
+    text = GRPO_RUNNER.read_text(encoding="utf-8")
+    assert 'echo "CUDA_JIT_ENV_SANITIZED=unset_CPLUS_INCLUDE_PATH"' in text
+    assert "unset CPLUS_INCLUDE_PATH" in text
+    assert text.index("unset CPLUS_INCLUDE_PATH") < text.index("ray start --head")
+
+
+def test_grpo_registers_glm47_bridge_in_every_ray_worker() -> None:
+    text = GRPO_RUNNER.read_text(encoding="utf-8")
+    expected = (
+        '\\"worker_process_setup_hook\\": '
+        '\\"glm47_posttraining.integrations.miles_glm47_bridge.register_glm47_bridge\\"'
+    )
+    assert expected in text
+    assert text.index("worker_process_setup_hook") < text.index('\\"env_vars\\"')
 
 
 def test_grpo_runner_prefers_mini_eval_when_present() -> None:
@@ -1094,9 +1225,7 @@ def test_colocate_weight_sync_reloads_and_destroys_process_groups_inside_tms() -
         ci_test=False,
         keep_old_actor=False,
     )
-    actor.weight_updater = types.SimpleNamespace(
-        update_weights=lambda: events.append("sync")
-    )
+    actor.weight_updater = types.SimpleNamespace(update_weights=lambda: events.append("sync"))
     info = types.SimpleNamespace(
         rollout_engines=[],
         rollout_engine_lock=None,
@@ -1128,13 +1257,12 @@ def test_colocate_sleep_allows_rank_metadata_to_be_uninitialized() -> None:
 
     fake_module = types.SimpleNamespace(
         MegatronTrainRayActor=FakeActor,
+        logger=types.SimpleNamespace(info=lambda *args, **kwargs: None),
         clear_memory=lambda **kwargs: events.append("clear"),
         destroy_process_groups=lambda: events.append("destroy"),
         print_memory=lambda label: events.append(label),
         timer=lambda fn: fn,
-        torch_memory_saver=types.SimpleNamespace(
-            pause=lambda **kwargs: events.append("pause")
-        ),
+        torch_memory_saver=types.SimpleNamespace(pause=lambda **kwargs: events.append("pause")),
         is_lora_enabled=lambda args: False,
         log_cpu_memory=lambda *args: events.append("log-cpu"),
     )
@@ -1142,9 +1270,11 @@ def test_colocate_sleep_allows_rank_metadata_to_be_uninitialized() -> None:
 
     actor = FakeActor()
     actor.args = types.SimpleNamespace(offload_train=True)
+    actor._asleep = False
 
     actor.sleep()
 
+    assert actor._asleep is True
     assert events == [
         "clear",
         "before offload model",
@@ -1302,86 +1432,49 @@ def test_rollout_data_dp_sharding_keeps_raw_rewards_aligned() -> None:
         "total_lengths": [10, 11, 12, 13],
         "raw_reward": [0.0, 0.25, -0.5, 1.0],
     }
+    native_calls: list[tuple[object, dict]] = []
+
+    def native_process_rollout_data_shard(args, rollout_data):
+        native_calls.append((args, rollout_data))
+        partition = rollout_data.pop("partition")
+        total_lengths = rollout_data["total_lengths"]
+        timer_state.seq_lens = total_lengths
+        rollout_data["total_lengths"] = [total_lengths[i] for i in partition]
+        rollout_data["native_receipt"] = "preserved"
+        return rollout_data
+
     fake_module = types.SimpleNamespace(
-        ray=types.SimpleNamespace(get=lambda inner: dict(inner)),
-        Timer=lambda: timer_state,
-        split_train_data_by_dp_raw=lambda *args, **kwargs: None,
-        process_rollout_data=lambda *args: None,
+        process_rollout_data_shard=native_process_rollout_data_shard,
     )
     miles_glm47_bridge._apply_rollout_data_dp_sharding(fake_module)
 
-    refs = [types.SimpleNamespace(inner=payload), types.SimpleNamespace(inner={})]
-    args = types.SimpleNamespace(delay_split_train_data_by_dp=False)
-    result = fake_module.process_rollout_data(
-        args,
-        refs,
-        0,
-        2,
-        witness_info=None,
-    )
+    args = types.SimpleNamespace()
+    result = fake_module.process_rollout_data_shard(args, payload)
 
     assert result["tokens"] == ["rank-local-row-3", "rank-local-row-0"]
     assert result["response_lengths"] == [13, 10]
     assert result["total_lengths"] == [13, 10]
     assert result["raw_reward"] == [0.0, 0.25, -0.5, 1.0]
     assert result["_glm47_local_raw_reward"] == [1.0, 0.0]
+    assert result["native_receipt"] == "preserved"
     assert timer_state.seq_lens == [10, 11, 12, 13]
+    assert native_calls == [(args, payload)]
 
 
-def test_rollout_data_dp_sharding_preserves_delayed_witness_split() -> None:
+def test_rollout_data_dp_sharding_delegates_when_rewards_are_absent() -> None:
     from glm47_posttraining.integrations import miles_glm47_bridge
 
-    timer_state = types.SimpleNamespace(seq_lens=None)
-    captured: dict[str, object] = {}
-    payload = {
-        "tokens": ["global-row-0", "global-row-1"],
-        "total_lengths": [10, 11],
-        "raw_reward": [0.25, 1.0],
-    }
-
-    def split_train_data_by_dp_raw(args, raw, *, dp_size):
-        captured.update(args=args, raw=raw, dp_size=dp_size)
-        return [
-            {
-                **raw,
-                "partition": [1],
-                "tokens": ["global-row-1"],
-            },
-            {
-                **raw,
-                "partition": [0],
-                "tokens": ["global-row-0"],
-            },
-        ]
-
+    payload = {"partition": [1], "total_lengths": [10, 11]}
     fake_module = types.SimpleNamespace(
-        ray=types.SimpleNamespace(get=lambda inner: dict(inner)),
-        Timer=lambda: timer_state,
-        split_train_data_by_dp_raw=split_train_data_by_dp_raw,
-        process_rollout_data=lambda *args, **kwargs: None,
+        process_rollout_data_shard=lambda args, rollout_data: {
+            "total_lengths": [rollout_data["total_lengths"][1]],
+        },
     )
     miles_glm47_bridge._apply_rollout_data_dp_sharding(fake_module)
 
-    args = types.SimpleNamespace(delay_split_train_data_by_dp=True)
-    ref = types.SimpleNamespace(inner=payload)
-    witness_info = types.SimpleNamespace(witness_ids=[101, 102])
-    result = fake_module.process_rollout_data(
-        args,
-        ref,
-        0,
-        2,
-        witness_info=witness_info,
-    )
-
-    assert captured == {
-        "args": args,
-        "raw": {**payload, "seq_witness_ids": [101, 102]},
-        "dp_size": 2,
-    }
-    assert result["tokens"] == ["global-row-1"]
+    result = fake_module.process_rollout_data_shard(types.SimpleNamespace(), payload)
     assert result["total_lengths"] == [11]
-    assert result["_glm47_local_raw_reward"] == [1.0]
-    assert timer_state.seq_lens == [10, 11]
+    assert "_glm47_local_raw_reward" not in result
 
 
 def test_correct_sample_logging_uses_global_rewards_only_for_passrate() -> None:
@@ -1420,5 +1513,37 @@ def test_correct_sample_logging_uses_global_rewards_only_for_passrate() -> None:
         ("passrate", global_rewards),
         ("correct-samples", local_rewards),
     ]
+    assert rollout_data["raw_reward"] is global_rewards
+    assert rollout_data["_glm47_local_raw_reward"] is local_rewards
+
+
+def test_correct_sample_logging_supports_rollout_side_passrate_api() -> None:
+    """Pinned Miles has no trainer-side log_passrate to wrap."""
+
+    from glm47_posttraining.integrations import miles_glm47_bridge
+
+    views: list[list[float]] = []
+
+    def original_log_rollout_data(rollout_id, args, rollout_data):
+        del rollout_id, args
+        views.append(list(rollout_data["raw_reward"]))
+
+    fake_module = types.SimpleNamespace(log_rollout_data=original_log_rollout_data)
+    miles_glm47_bridge._apply_correct_sample_logging(fake_module)
+
+    global_rewards = [0.0, 0.25, -0.5, 1.0]
+    local_rewards = [1.0, 0.0]
+    rollout_data = {
+        "raw_reward": global_rewards,
+        "_glm47_local_raw_reward": local_rewards,
+    }
+    fake_module.log_rollout_data(
+        0,
+        types.SimpleNamespace(log_correct_samples=True),
+        rollout_data,
+    )
+
+    assert views == [local_rewards]
+    assert not hasattr(fake_module, "log_passrate")
     assert rollout_data["raw_reward"] is global_rewards
     assert rollout_data["_glm47_local_raw_reward"] is local_rewards

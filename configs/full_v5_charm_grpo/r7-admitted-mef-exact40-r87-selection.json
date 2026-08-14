@@ -1,0 +1,185 @@
+{
+  "schema_version": "charm-grpo-exact40-selection-v1",
+  "decision": "FROZEN",
+  "profile": "r7-admitted-mef-exact40-r87",
+  "source": {
+    "selected_manifest_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/independent-audit-v011/selected-manifest.json",
+    "selected_manifest_sha256": "e46c4ecf78843e3c6543bf07ef00991a5d99e3a855534670a8d1ef6edaf699fe",
+    "canonical_generation_plan_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/v1-proposal-plan.json",
+    "canonical_generation_plan_sha256": "748b36d9135d0a3a3a28b720c720f6c358eb23453116dff69be95ca2db7445b0",
+    "sft_ready_manifest_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/SFT_READY_MANIFEST-v011.json",
+    "sft_ready_manifest_sha256": "4aaafd8e84667ffc8e9f3667204682a72069fafc6954e45da600753ace3a48d4",
+    "pretraining_admission_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/v1-pretraining-admission-receipt-v011.json",
+    "pretraining_admission_sha256": "f129fb2c953e7c87fae3f796c9c04c546943f0ad8518c0cfc795a85c1c4218e0",
+    "task_id_registry_path": "dataset/registry/task_id_reservations.json",
+    "task_id_registry_sha256": "16af87d1165e0a4be20c4c0d674feecc4ee420ee8ed4f875ebbe34074ae6fb4b"
+  },
+  "heldout_contract": {
+    "official_fixed26": "evaluation-only and unchanged",
+    "r6_task_identities": "quarantined and forbidden from gradients",
+    "r6_rollouts": "failure-mechanism evidence only; never model-facing"
+  },
+  "reward_policy": "hybrid-bipolar45-mef-v1",
+  "groups": {
+    "constraint_contracts": [
+      "charm-v1r87-37414-dcb547c5-allergen-rule-evaluator",
+      "charm-v1r87-37414-dcb547c5-exposure-rotation-audit",
+      "charm-v1r87-37414-dcb547c5-t9-prefix-suggestions",
+      "charm-v1r87-37414-dcb547c5-billing-pulse-summary",
+      "charm-v1r87-37414-dcb547c5-wildcard-contiguous-matches",
+      "charm-v1r87-37414-dcb547c5-confirmed-rolling-hash-matches",
+      "charm-v1r87-37414-dcb547c5-minimum-substring-block-cover",
+      "charm-v1r87-37414-dcb547c5-adjacency-placement-count",
+      "charm-v1r87-37414-dcb547c5-latin-row-completion",
+      "charm-v1r87-37414-dcb547c5-minimum-unique-clue-subset"
+    ],
+    "numeric_aggregation": [
+      "charm-v1r87-37414-dcb547c5-traversal-parent-reconstruction",
+      "charm-v1r87-37414-dcb547c5-avl-certificate-audit",
+      "charm-v1r87-37414-dcb547c5-successor-thread-audit",
+      "charm-v1r87-37414-dcb547c5-selected-dft-bins",
+      "charm-v1r87-37414-dcb547c5-bezier-complex-samples",
+      "charm-v1r87-37414-dcb547c5-hermitian-energy",
+      "charm-v1r87-37414-dcb547c5-rubric-cap-scores",
+      "charm-v1r87-37414-dcb547c5-paired-cohort-deltas",
+      "charm-v1r87-37414-dcb547c5-postfix-dice-rule",
+      "charm-v1r87-37414-dcb547c5-equal-sum-dice-partition"
+    ],
+    "spatial_transforms": [
+      "charm-v1r87-37414-dcb547c5-ragged-columnar-transpose",
+      "charm-v1r87-37414-dcb547c5-binary-crc-syndrome",
+      "charm-v1r87-37414-dcb547c5-lfsr-cycle-report",
+      "charm-v1r87-37414-dcb547c5-diamond-intersection-lattice-count",
+      "charm-v1r87-37414-dcb547c5-diamond-erosion-depths",
+      "charm-v1r87-37414-dcb547c5-eastward-shadow-profile",
+      "charm-v1r87-37414-dcb547c5-harvest-crate-first-fit",
+      "charm-v1r87-37414-dcb547c5-voxel-shell-sums",
+      "charm-v1r87-37414-dcb547c5-turn-command-self-avoidance",
+      "charm-v1r87-37414-dcb547c5-hex-ring-coordinate"
+    ],
+    "temporal_state": [
+      "charm-v1r87-37414-dcb547c5-escrow-tranche-replay",
+      "charm-v1r87-37414-dcb547c5-standing-order-calendar",
+      "charm-v1r87-37414-dcb547c5-cursor-snapshot-replay",
+      "charm-v1r87-37414-dcb547c5-cyclic-hamming-starts",
+      "charm-v1r87-37414-dcb547c5-weekly-recurrence-wait",
+      "charm-v1r87-37414-dcb547c5-tick-rate-fit",
+      "charm-v1r87-37414-dcb547c5-persistent-common-tail",
+      "charm-v1r87-37414-dcb547c5-stable-bucket-relink",
+      "charm-v1r87-37414-dcb547c5-parallel-anagram-groups",
+      "charm-v1r87-37414-dcb547c5-parallel-caesar-coincidences"
+    ]
+  },
+  "canary_task_ids": [
+    "charm-v1r87-37414-dcb547c5-allergen-rule-evaluator",
+    "charm-v1r87-37414-dcb547c5-exposure-rotation-audit",
+    "charm-v1r87-37414-dcb547c5-latin-row-completion",
+    "charm-v1r87-37414-dcb547c5-minimum-substring-block-cover",
+    "charm-v1r87-37414-dcb547c5-t9-prefix-suggestions",
+    "charm-v1r87-37414-dcb547c5-bezier-complex-samples",
+    "charm-v1r87-37414-dcb547c5-paired-cohort-deltas",
+    "charm-v1r87-37414-dcb547c5-postfix-dice-rule",
+    "charm-v1r87-37414-dcb547c5-selected-dft-bins",
+    "charm-v1r87-37414-dcb547c5-traversal-parent-reconstruction",
+    "charm-v1r87-37414-dcb547c5-diamond-intersection-lattice-count",
+    "charm-v1r87-37414-dcb547c5-eastward-shadow-profile",
+    "charm-v1r87-37414-dcb547c5-harvest-crate-first-fit",
+    "charm-v1r87-37414-dcb547c5-lfsr-cycle-report",
+    "charm-v1r87-37414-dcb547c5-voxel-shell-sums",
+    "charm-v1r87-37414-dcb547c5-cursor-snapshot-replay",
+    "charm-v1r87-37414-dcb547c5-cyclic-hamming-starts",
+    "charm-v1r87-37414-dcb547c5-escrow-tranche-replay",
+    "charm-v1r87-37414-dcb547c5-standing-order-calendar",
+    "charm-v1r87-37414-dcb547c5-weekly-recurrence-wait"
+  ],
+  "schedule": {
+    "full_epochs": 3,
+    "canary_epochs": 5,
+    "ordinary_fraction": 0.75,
+    "repair_fraction": 0.25,
+    "one_gradient_row_per_task": true
+  },
+  "expected_full_composition": {
+    "task_count": 40,
+    "group_counts": {
+      "constraint_contracts": 10,
+      "numeric_aggregation": 10,
+      "spatial_transforms": 10,
+      "temporal_state": 10
+    },
+    "role_counts": {
+      "boundary_case": 10,
+      "calibration": 3,
+      "direct_verified_success": 17,
+      "repair_trajectory": 10
+    },
+    "starter_counts": {
+      "compile_bug": 5,
+      "empty": 9,
+      "near_correct": 5,
+      "partial_implementation": 7,
+      "semantic_bug": 6,
+      "skeleton": 8
+    },
+    "layout_counts": {
+      "cpp_only": 14,
+      "header_and_cpp": 20,
+      "header_only": 6
+    },
+    "header_mode_counts": {
+      "editable": 8,
+      "extended": 8,
+      "frozen": 8,
+      "reconstructed": 8,
+      "repaired": 8
+    },
+    "repair_type_counts": {
+      "api_repair": 2,
+      "compile_repair": 2,
+      "hidden_test_repair": 2,
+      "linker_repair": 2,
+      "runtime_repair": 1,
+      "sanitizer_repair": 1
+    },
+    "multi_file_gt2": 6,
+    "api_capability_counts": {
+      "extend_api": 26,
+      "implement_missing_api": 14,
+      "preserve_api": 40,
+      "refactor_api": 26,
+      "repair_api": 14
+    }
+  },
+  "expected_canary_composition": {
+    "task_count": 20,
+    "group_count_each": 5,
+    "role_counts": {
+      "boundary_case": 3,
+      "calibration": 1,
+      "direct_verified_success": 11,
+      "repair_trajectory": 5
+    },
+    "starter_counts": {
+      "compile_bug": 3,
+      "empty": 6,
+      "near_correct": 1,
+      "partial_implementation": 2,
+      "semantic_bug": 4,
+      "skeleton": 4
+    },
+    "layout_counts": {
+      "cpp_only": 5,
+      "header_and_cpp": 12,
+      "header_only": 3
+    },
+    "header_mode_count_each": 4,
+    "repair_types_present": [
+      "api_repair",
+      "compile_repair",
+      "hidden_test_repair",
+      "linker_repair",
+      "sanitizer_repair"
+    ],
+    "multi_file_gt2": 6
+  }
+}

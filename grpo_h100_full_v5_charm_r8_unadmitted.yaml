@@ -1,0 +1,67 @@
+name: glm47-full-v5-charm-r8-unadmitted
+
+# Direct full R8 execution is explicitly experimental. Every checkpoint is
+# quarantine-only and can never be promoted retroactively into CHARM.
+resources:
+  cloud: gcp
+  region: us-central1
+  instance_type: a3-highgpu-8g
+  accelerators: H100:8
+  network_tier: best
+  disk_size: 500
+  disk_tier: high
+  use_spot: true
+  job_recovery:
+    strategy: FAILOVER
+    max_restarts_on_errors: 0
+  autostop:
+    idle_minutes: 10
+    down: true
+
+workdir: .
+
+envs:
+  RUN_ID: ""
+  GLM47_CHARM_R8_UNADMITTED_FULL_AUTHORIZATION: ""
+  GLM47_R8_ONE_UPDATE_SMOKE: "0"
+
+file_mounts:
+  ~/glm47-full-v5-assets/model/GLM-4.7-Flash:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/model/GLM-4.7-Flash
+    mode: COPY
+
+  ~/glm47-full-v5-assets/synthmem-v1-ep50/adapter:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/synthmem-v1-ep50-grpo-adapter
+    mode: COPY
+
+  ~/glm47-full-v5-assets/runtime/charm-r8-candidate-hybrid45-exact40-r87-rewardable-20260813T044420Z:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/runtime/charm-r8-candidate-hybrid45-exact40-r87-rewardable-20260813T044420Z
+    mode: COPY
+
+  ~/glm47-results-store:
+    source: gs://lifeandhalf-24122025-w8-biayn
+    mode: MOUNT
+
+setup: |
+  set -euo pipefail
+  export EXPECTED_GPU_COUNT=8
+  export EXPECTED_GPU_MODEL=H100
+  export EXPECTED_GPU_MEMORY_MIB=80000
+  bash scripts/gcp_h100_host_setup.sh
+
+  # Use the VM service-account token only for the immediate immutable pulls.
+  # The token is short-lived and never written into the repository or logs.
+  command -v gcloud >/dev/null
+  gcloud auth print-access-token | \
+    sudo docker login --username oauth2accesstoken --password-stdin \
+      https://us-central1-docker.pkg.dev >/dev/null
+
+run: |
+  set -euo pipefail
+  export GLM47_FULL_V5_ASSET_ROOT="${HOME}/glm47-full-v5-assets"
+  export GLM47_FULL_V5_RESULT_ROOT="${HOME}/glm47-full-v5-local-results"
+  export GLM47_FULL_V5_DURABLE_RESULT_ROOT="${HOME}/glm47-results-store/runs/glm47/experiments/unadmitted-r8-hybrid45-exact40-r87"
+  export GLM47_FULL_V5_CONFIG_PATH="configs/full_v5_charm_grpo/gcp-r8-unadmitted-hybrid45-exact40-r87-skypilot.json"
+  export GLM47_EXECUTION_PROFILE="gcp-skypilot-h100-tp4-ep8-dp8-unadmitted-r8-hybrid45-r87"
+  export GLM47_PROVISIONER="skypilot"
+  bash scripts/gcp_full_v5_charm_r8_unadmitted_skypilot.sh

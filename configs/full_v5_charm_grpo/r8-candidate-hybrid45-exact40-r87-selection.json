@@ -1,0 +1,217 @@
+{
+  "canary_task_ids": [
+    "charm-v1r87-37414-dcb547c5-allergen-rule-evaluator",
+    "charm-v1r87-37414-dcb547c5-exposure-rotation-audit",
+    "charm-v1r87-37414-dcb547c5-latin-row-completion",
+    "charm-v1r87-37414-dcb547c5-minimum-substring-block-cover",
+    "charm-v1r87-37414-dcb547c5-t9-prefix-suggestions",
+    "charm-v1r87-37414-dcb547c5-decontamination-cover",
+    "charm-v1r87-37414-dcb547c5-paired-cohort-deltas",
+    "charm-v1r87-37414-dcb547c5-postfix-dice-rule",
+    "charm-v1r87-37414-dcb547c5-selected-dft-bins",
+    "charm-v1r87-37414-dcb547c5-traversal-parent-reconstruction",
+    "charm-v1r87-37414-dcb547c5-diamond-intersection-lattice-count",
+    "charm-v1r87-37414-dcb547c5-eastward-shadow-profile",
+    "charm-v1r87-37414-dcb547c5-harvest-crate-first-fit",
+    "charm-v1r87-37414-dcb547c5-lfsr-cycle-report",
+    "charm-v1r87-37414-dcb547c5-voxel-shell-sums",
+    "charm-v1r87-37414-dcb547c5-cursor-snapshot-replay",
+    "charm-v1r87-37414-dcb547c5-cyclic-hamming-starts",
+    "charm-v1r87-37414-dcb547c5-escrow-tranche-replay",
+    "charm-v1r87-37414-dcb547c5-standing-order-calendar",
+    "charm-v1r87-37414-dcb547c5-weekly-recurrence-wait"
+  ],
+  "decision": "FROZEN",
+  "expected_canary_composition": {
+    "group_count_each": 5,
+    "header_mode_count_each": 4,
+    "layout_counts": {
+      "cpp_only": 5,
+      "header_and_cpp": 12,
+      "header_only": 3
+    },
+    "multi_file_gt2": 6,
+    "repair_types_present": [
+      "api_repair",
+      "compile_repair",
+      "hidden_test_repair",
+      "linker_repair",
+      "sanitizer_repair"
+    ],
+    "role_counts": {
+      "boundary_case": 3,
+      "direct_verified_success": 12,
+      "repair_trajectory": 5
+    },
+    "starter_counts": {
+      "compile_bug": 3,
+      "empty": 6,
+      "partial_implementation": 3,
+      "semantic_bug": 4,
+      "skeleton": 4
+    },
+    "task_count": 20
+  },
+  "expected_full_composition": {
+    "api_capability_counts": {
+      "extend_api": 26,
+      "implement_missing_api": 14,
+      "preserve_api": 40,
+      "refactor_api": 26,
+      "repair_api": 14
+    },
+    "group_counts": {
+      "constraint_contracts": 10,
+      "numeric_aggregation": 10,
+      "spatial_transforms": 10,
+      "temporal_state": 10
+    },
+    "header_mode_counts": {
+      "editable": 8,
+      "extended": 8,
+      "frozen": 8,
+      "reconstructed": 8,
+      "repaired": 8
+    },
+    "layout_counts": {
+      "cpp_only": 14,
+      "header_and_cpp": 20,
+      "header_only": 6
+    },
+    "multi_file_gt2": 6,
+    "repair_type_counts": {
+      "api_repair": 2,
+      "compile_repair": 2,
+      "hidden_test_repair": 2,
+      "linker_repair": 2,
+      "runtime_repair": 1,
+      "sanitizer_repair": 1
+    },
+    "role_counts": {
+      "boundary_case": 10,
+      "direct_verified_success": 20,
+      "repair_trajectory": 10
+    },
+    "starter_counts": {
+      "compile_bug": 5,
+      "empty": 9,
+      "near_correct": 2,
+      "partial_implementation": 8,
+      "semantic_bug": 7,
+      "skeleton": 9
+    },
+    "task_count": 40
+  },
+  "groups": {
+    "constraint_contracts": [
+      "charm-v1r87-37414-dcb547c5-allergen-rule-evaluator",
+      "charm-v1r87-37414-dcb547c5-exposure-rotation-audit",
+      "charm-v1r87-37414-dcb547c5-t9-prefix-suggestions",
+      "charm-v1r87-37414-dcb547c5-billing-pulse-summary",
+      "charm-v1r87-37414-dcb547c5-wildcard-contiguous-matches",
+      "charm-v1r87-37414-dcb547c5-confirmed-rolling-hash-matches",
+      "charm-v1r87-37414-dcb547c5-minimum-substring-block-cover",
+      "charm-v1r87-37414-dcb547c5-adjacency-placement-count",
+      "charm-v1r87-37414-dcb547c5-latin-row-completion",
+      "charm-v1r87-37414-dcb547c5-minimum-unique-clue-subset"
+    ],
+    "numeric_aggregation": [
+      "charm-v1r87-37414-dcb547c5-traversal-parent-reconstruction",
+      "charm-v1r87-37414-dcb547c5-avl-certificate-audit",
+      "charm-v1r87-37414-dcb547c5-quota-lane-drain",
+      "charm-v1r87-37414-dcb547c5-selected-dft-bins",
+      "charm-v1r87-37414-dcb547c5-decontamination-cover",
+      "charm-v1r87-37414-dcb547c5-hermitian-energy",
+      "charm-v1r87-37414-dcb547c5-crop-rotation-audit",
+      "charm-v1r87-37414-dcb547c5-paired-cohort-deltas",
+      "charm-v1r87-37414-dcb547c5-postfix-dice-rule",
+      "charm-v1r87-37414-dcb547c5-equal-sum-dice-partition"
+    ],
+    "spatial_transforms": [
+      "charm-v1r87-37414-dcb547c5-ragged-columnar-transpose",
+      "charm-v1r87-37414-dcb547c5-binary-crc-syndrome",
+      "charm-v1r87-37414-dcb547c5-lfsr-cycle-report",
+      "charm-v1r87-37414-dcb547c5-diamond-intersection-lattice-count",
+      "charm-v1r87-37414-dcb547c5-diamond-erosion-depths",
+      "charm-v1r87-37414-dcb547c5-eastward-shadow-profile",
+      "charm-v1r87-37414-dcb547c5-harvest-crate-first-fit",
+      "charm-v1r87-37414-dcb547c5-voxel-shell-sums",
+      "charm-v1r87-37414-dcb547c5-turn-command-self-avoidance",
+      "charm-v1r87-37414-dcb547c5-hex-ring-coordinate"
+    ],
+    "temporal_state": [
+      "charm-v1r87-37414-dcb547c5-escrow-tranche-replay",
+      "charm-v1r87-37414-dcb547c5-standing-order-calendar",
+      "charm-v1r87-37414-dcb547c5-cursor-snapshot-replay",
+      "charm-v1r87-37414-dcb547c5-cyclic-hamming-starts",
+      "charm-v1r87-37414-dcb547c5-weekly-recurrence-wait",
+      "charm-v1r87-37414-dcb547c5-tick-rate-fit",
+      "charm-v1r87-37414-dcb547c5-persistent-common-tail",
+      "charm-v1r87-37414-dcb547c5-stable-bucket-relink",
+      "charm-v1r87-37414-dcb547c5-parallel-anagram-groups",
+      "charm-v1r87-37414-dcb547c5-parallel-caesar-coincidences"
+    ]
+  },
+  "heldout_contract": {
+    "official_fixed26": "evaluation-only and unchanged",
+    "r6_rollouts": "failure-mechanism evidence only; never model-facing",
+    "r6_task_identities": "quarantined and forbidden from gradients"
+  },
+  "profile": "r7-admitted-mef-exact40-r87",
+  "reward_policy": "hybrid-bipolar45-v2",
+  "rubric_update": {
+    "calibration_gradient_task_count": 0,
+    "curriculum_task_ids_changed": true,
+    "downstream_admission_invalidated": true,
+    "failed_rewardability_replay": {
+      "failed_task_ids": [
+        "charm-v1r87-37414-dcb547c5-bezier-complex-samples",
+        "charm-v1r87-37414-dcb547c5-rubric-cap-scores",
+        "charm-v1r87-37414-dcb547c5-successor-thread-audit"
+      ],
+      "file_sha256": "a9c209a32383e09a474c1dd4348adbcddbed9bad8de96bea9009bcb78d9e79f8",
+      "functional_reference_pass_count": 51,
+      "gradient_full_positive_reward_count": 37,
+      "gradient_task_count": 40,
+      "optimizer_updates": 0,
+      "raw_artifact_preserved_locally": true,
+      "receipt_sha256": "7529697ce51662c14e57b41942f9bb2fc8e1785b4399542a9c7ce5f74c399a0e",
+      "schema_version": "charm-r8-hybrid45-corpus-no-update-replay-v1",
+      "task_count": 51
+    },
+    "failed_selection_sha256": "6c1ab41d80964aeb014009132ffc322955afbd0f5fb22530062dfa116e69859e",
+    "formula_changed": false,
+    "historical_selection_path": "/data/Tirtha/browser-is-all-you-need/.agent_work/browser-is-all-you-need-rl8-ast17/configs/full_v5_charm_grpo/r7-admitted-mef-exact40-r87-selection.json",
+    "historical_selection_sha256": "435a672df93755ab1baeaad355c9f52294de931838d0d58ec3570475328acdf6",
+    "optimizer_reward_policy": "hybrid-bipolar45-v2",
+    "prompt_topology_changed": false,
+    "repair_prompt_fraction": 0.25,
+    "repair_reward_bonus": false,
+    "status": "CANDIDATE_NOT_ADMITTED",
+    "task_replacements": {
+      "charm-v1r87-37414-dcb547c5-bezier-complex-samples": "charm-v1r87-37414-dcb547c5-decontamination-cover",
+      "charm-v1r87-37414-dcb547c5-rubric-cap-scores": "charm-v1r87-37414-dcb547c5-crop-rotation-audit",
+      "charm-v1r87-37414-dcb547c5-successor-thread-audit": "charm-v1r87-37414-dcb547c5-quota-lane-drain"
+    }
+  },
+  "schedule": {
+    "canary_epochs": 5,
+    "full_epochs": 3,
+    "one_gradient_row_per_task": true,
+    "ordinary_fraction": 0.75,
+    "repair_fraction": 0.25
+  },
+  "schema_version": "charm-grpo-exact40-selection-v2",
+  "source": {
+    "canonical_generation_plan_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/v1-proposal-plan.json",
+    "canonical_generation_plan_sha256": "748b36d9135d0a3a3a28b720c720f6c358eb23453116dff69be95ca2db7445b0",
+    "pretraining_admission_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/v1-pretraining-admission-receipt-v011.json",
+    "pretraining_admission_sha256": "f129fb2c953e7c87fae3f796c9c04c546943f0ad8518c0cfc795a85c1c4218e0",
+    "selected_manifest_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/independent-audit-v011/selected-manifest.json",
+    "selected_manifest_sha256": "e46c4ecf78843e3c6543bf07ef00991a5d99e3a855534670a8d1ef6edaf699fe",
+    "sft_ready_manifest_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/SFT_READY_MANIFEST-v011.json",
+    "sft_ready_manifest_sha256": "4aaafd8e84667ffc8e9f3667204682a72069fafc6954e45da600753ace3a48d4",
+    "task_id_registry_path": "dataset/registry/task_id_reservations.json",
+    "task_id_registry_sha256": "16af87d1165e0a4be20c4c0d674feecc4ee420ee8ed4f875ebbe34074ae6fb4b"
+  }
+}

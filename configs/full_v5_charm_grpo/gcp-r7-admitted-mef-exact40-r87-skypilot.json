@@ -1,0 +1,17 @@
+{
+  "schema_version": "glm47-full-v5-charm-gcp-profile-overlay-v1",
+  "profile_id": "aider-charm-r7-admitted-mef-exact40-r87-skypilot",
+  "base_config_path": "configs/full_v5_charm_grpo/gcp-r7-admitted-mef-exact40-r87.json",
+  "base_config_sha256": "f4fcd3d54c88b36e7d92c302c49caefc4dfdf5062c1ce1800e4eaa6250eb549e",
+  "execution": {
+    "profile": "gcp-skypilot-h100-tp4-ep8-dp8-admitted-r7-mef-r87",
+    "provisioner": "skypilot",
+    "task_yaml": "grpo_h100_full_v5_charm_r7.yaml",
+    "smoke_mode": "prepare-only",
+    "smoke_optimizer_updates": 0,
+    "canary_launcher": "managed-jobs",
+    "admission_mode": "PRETRAINING_PASS_CANARY_REQUIRED",
+    "checkpoint_disposition": "GATED",
+    "charm_eligible": true
+  }
+}

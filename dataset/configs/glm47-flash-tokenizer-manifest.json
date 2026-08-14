@@ -1,0 +1,22 @@
+{
+  "schema_version": "charm-tokenizer-manifest-v1",
+  "model_id": "THUDM/GLM-4.7-Flash",
+  "model_revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+  "tokenizer": {
+    "path": "/data/Tirtha/browser-is-all-you-need/.w8-biayn/models/glm-4.7-flash-tokenizer-7dd20894/tokenizer.json",
+    "sha256": "19e773648cb4e65de8660ea6365e10acca112d42a854923df93db4a6f333a82d",
+    "size_bytes": 20217442
+  },
+  "tokenizer_config": {
+    "path": "/data/Tirtha/browser-is-all-you-need/.w8-biayn/models/glm-4.7-flash-tokenizer-7dd20894/tokenizer_config.json",
+    "sha256": "31a173e2797ddc8b72ac996803513e627fc28d7aad02cfcce321a431d865c86d",
+    "size_bytes": 7226
+  },
+  "chat_template": {
+    "path": "dataset/configs/glm47-flash-chat-template.jinja",
+    "sha256": "d63ad536c3c81880043e22ec7fd08db42b4d8fb7c89c7138bc562bfa25281375",
+    "size_bytes": 3120
+  },
+  "source": "recovered from the repository-local Tirtha model cache and verified against the frozen SynthMem V3 audit",
+  "tokenizer_packaging": "external-hash-bound-local-cache"
+}

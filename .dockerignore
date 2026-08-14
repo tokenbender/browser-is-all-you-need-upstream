@@ -7,5 +7,17 @@
 artifacts
 rubrics
 wandb
+updated task
+docs
+tests
+dataset/jsonls
+dataset/registry
+dataset/reports
+dataset/tasks
+dataset/configs/*
+!dataset/configs/glm47-flash-tokenizer-manifest.json
+!dataset/configs/glm47-flash-chat-template.jinja
 **/__pycache__
 **/*.pyc
+**/*.pyo
+**/*.log

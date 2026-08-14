@@ -1,0 +1,68 @@
+{
+  "schema_version": "charm-r7-promotion-evaluation-split-v1",
+  "decision": "FROZEN",
+  "source": {
+    "runtime_path": "artifacts/charm-r7-admitted-mef-exact40-r87-20260812T190000Z",
+    "runtime_manifest_sha256": "3229c159e298f24cb96f4d777cffdbedcb523e0561caeba62755ddb7e0ff637b",
+    "runtime_tree_sha256": "88a65fc1dae1909d33e1053fd4fe8f8493a45a3c3968ec7b68fea1afc0826dca",
+    "selection_sha256": "435a672df93755ab1baeaad355c9f52294de931838d0d58ec3570475328acdf6",
+    "projection_manifest_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/projection-v011/projection-manifest.json",
+    "projection_manifest_sha256": "b567f754a8a5f56dda7b229261b521c07ae66139358c1b535dcdabd6b8bad51e",
+    "private_projection_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/projection-v011/sft/train.jsonl",
+    "private_projection_sha256": "98186675819ffe7fc7fd7ea29632631f42a6e02e938b8a3fa9e030c8ae8a61a6",
+    "selected_manifest_sha256": "e46c4ecf78843e3c6543bf07ef00991a5d99e3a855534670a8d1ef6edaf699fe",
+    "chat_template_sha256": "d63ad536c3c81880043e22ec7fd08db42b4d8fb7c89c7138bc562bfa25281375"
+  },
+  "checkpoint_development_task_ids": [
+    "charm-v1r87-37414-dcb547c5-contact-source-merge",
+    "charm-v1r87-37414-dcb547c5-decontamination-cover",
+    "charm-v1r87-37414-dcb547c5-exact-histogram-rerolls",
+    "charm-v1r87-37414-dcb547c5-optimistic-appeal-replay",
+    "charm-v1r87-37414-dcb547c5-parallel-rare-offsets",
+    "charm-v1r87-37414-dcb547c5-quota-lane-drain"
+  ],
+  "unseen_shadow_task_ids": [
+    "charm-v1r87-37414-dcb547c5-closed-conversion-cycle",
+    "charm-v1r87-37414-dcb547c5-crop-rotation-audit",
+    "charm-v1r87-37414-dcb547c5-manhattan-voronoi-owners",
+    "charm-v1r87-37414-dcb547c5-stopwatch-interval-union",
+    "charm-v1r87-37414-dcb547c5-successor-jump-queries"
+  ],
+  "checkpoint_selection_contract": {
+    "development_task_count": 6,
+    "log_every_checkpoint": true,
+    "metrics": [
+      "compile_rate",
+      "hidden_test_pass_rate",
+      "target_token_validation_loss"
+    ],
+    "weights": {
+      "compile_rate": 0.4,
+      "hidden_test_pass_rate": 0.4,
+      "validation_loss": 0.2
+    },
+    "always_final": false,
+    "shadow_metrics_excluded": true
+  },
+  "unseen_shadow_contract": {
+    "task_count": 5,
+    "access": "post-selection-only",
+    "optimizer_exposure_count": 0,
+    "checkpoint_selection_exposure_count": 0,
+    "header_mode_counts": {
+      "editable": 1,
+      "extended": 1,
+      "frozen": 1,
+      "reconstructed": 1,
+      "repaired": 1
+    },
+    "repair_task_count": 1
+  },
+  "privacy_contract": {
+    "public_bundle_is_answer_free": true,
+    "validation_targets_are_private": true,
+    "validation_targets_are_development_only": true,
+    "shadow_targets_are_forbidden": true,
+    "official_fixed26_is_unchanged_and_absent": true
+  }
+}

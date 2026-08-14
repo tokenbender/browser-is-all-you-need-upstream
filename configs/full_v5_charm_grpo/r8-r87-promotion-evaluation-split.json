@@ -1,0 +1,80 @@
+{
+  "schema_version": "charm-r8-promotion-evaluation-split-v1",
+  "decision": "FROZEN",
+  "source": {
+    "runtime_path": "artifacts/charm-r8-candidate-hybrid45-exact40-r87-rewardable-20260813T044420Z",
+    "runtime_manifest_sha256": "72296f7bae1b4690a613922f3f29b2011e4a8646d356a4e7663cfc5822e7bfd2",
+    "runtime_tree_sha256": "b1fff05e66a4198dca8d74ae41e2837e0926b24b8acfb281822bd08583554075",
+    "selection_sha256": "b340fbd212f7ba8472161448ac8a579abc91178d3d0731e3e546470594ae1788",
+    "projection_manifest_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/projection-v011/projection-manifest.json",
+    "projection_manifest_sha256": "b567f754a8a5f56dda7b229261b521c07ae66139358c1b535dcdabd6b8bad51e",
+    "private_projection_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-004/projection-v011/sft/train.jsonl",
+    "private_projection_sha256": "98186675819ffe7fc7fd7ea29632631f42a6e02e938b8a3fa9e030c8ae8a61a6",
+    "selected_manifest_sha256": "e46c4ecf78843e3c6543bf07ef00991a5d99e3a855534670a8d1ef6edaf699fe",
+    "chat_template_sha256": "d63ad536c3c81880043e22ec7fd08db42b4d8fb7c89c7138bc562bfa25281375"
+  },
+  "checkpoint_development_task_ids": [
+    "charm-v1r87-37414-dcb547c5-closed-conversion-cycle",
+    "charm-v1r87-37414-dcb547c5-contact-source-merge",
+    "charm-v1r87-37414-dcb547c5-optimistic-appeal-replay",
+    "charm-v1r87-37414-dcb547c5-parallel-rare-offsets",
+    "charm-v1r87-37414-dcb547c5-stopwatch-interval-union",
+    "charm-v1r87-37414-dcb547c5-successor-jump-queries"
+  ],
+  "unseen_shadow_task_ids": [
+    "charm-v1r87-37414-dcb547c5-bezier-complex-samples",
+    "charm-v1r87-37414-dcb547c5-exact-histogram-rerolls",
+    "charm-v1r87-37414-dcb547c5-manhattan-voronoi-owners",
+    "charm-v1r87-37414-dcb547c5-rubric-cap-scores",
+    "charm-v1r87-37414-dcb547c5-successor-thread-audit"
+  ],
+  "checkpoint_selection_contract": {
+    "development_task_count": 6,
+    "expected_canary_checkpoint_count": 5,
+    "log_every_checkpoint": true,
+    "metrics": [
+      "compile_rate",
+      "hidden_test_pass_rate",
+      "target_token_validation_loss"
+    ],
+    "weights": {
+      "compile_rate": 0.4,
+      "hidden_test_pass_rate": 0.4,
+      "validation_loss": 0.2
+    },
+    "validation_loss_utility": "one_over_one_plus_loss",
+    "always_final": false,
+    "final_checkpoint_competes_on_metrics": true,
+    "deterministic_tie_break": [
+      "composite_score_desc",
+      "hidden_test_pass_rate_desc",
+      "compile_rate_desc",
+      "target_token_validation_loss_asc",
+      "optimizer_step_asc",
+      "checkpoint_id_asc"
+    ],
+    "shadow_metrics_excluded": true
+  },
+  "unseen_shadow_contract": {
+    "task_count": 5,
+    "access": "post-selection-only",
+    "optimizer_exposure_count": 0,
+    "checkpoint_selection_exposure_count": 0,
+    "header_mode_counts": {
+      "editable": 1,
+      "extended": 1,
+      "frozen": 1,
+      "reconstructed": 1,
+      "repaired": 1
+    },
+    "repair_task_count": 1,
+    "calibration_task_count": 3
+  },
+  "privacy_contract": {
+    "public_bundle_is_answer_free": true,
+    "validation_targets_are_private": true,
+    "validation_targets_are_development_only": true,
+    "shadow_targets_are_forbidden": true,
+    "official_fixed26_is_unchanged_and_absent": true
+  }
+}

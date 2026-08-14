@@ -1,0 +1,10 @@
+ARG BASE_EVALUATOR_IMAGE=us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-public-pr-eval:synthmem-v1-ep50-thinking-v8-h100-tp8@sha256:a3567f523b8e8df09fd13848b510d48a4888dd1c06d8db1f765d7de3fe2e145a
+FROM ${BASE_EVALUATOR_IMAGE}
+
+WORKDIR /opt/public-pr-eval
+
+# The parent already contains the digest-bound v8 contract, prepared repository,
+# oracle receipts, Aider environment, and all runtime dependencies.
+COPY scripts/gcp_public_pr_synthmem_50ep_eval.py scripts/gcp_public_pr_synthmem_50ep_eval.py
+
+ENTRYPOINT ["python3", "/opt/public-pr-eval/scripts/gcp_public_pr_synthmem_50ep_eval.py"]

@@ -1,0 +1,215 @@
+{
+  "schema_version": "glm47-full-v5-charm-gcp-profile-v1",
+  "profile_id": "aider-full-v5-experimental-unadmitted-r6-hybrid45-v2-full",
+  "decision": "EXPERIMENTAL_UNADMITTED",
+  "source_lineage": {
+    "active_branch": "feature/aider-rl8-ast17-production-reward",
+    "full_v5_branch": "origin/29july-aider-glm47-posttrain",
+    "full_v5_setup_commit": "c2c1489",
+    "full_v5_head": "0efce27"
+  },
+  "execution": {
+    "profile": "gcp-existing-h100-tp4-ep8-dp8-unadmitted-r6-hybrid45-v2-full",
+    "provisioner": "gce-existing-vm",
+    "task_yaml": null,
+    "smoke_mode": "prepare-only",
+    "smoke_optimizer_updates": 0,
+    "canary_launcher": "direct-gce-existing-vm",
+    "admission_mode": "UNADMITTED_EXPERIMENT_ONLY",
+    "checkpoint_disposition": "QUARANTINE_ONLY",
+    "charm_eligible": false
+  },
+  "modal_policy": {
+    "default": "DENY",
+    "authorization_env": "GLM47_MODAL_FULL_AUTHORIZATION",
+    "authorization_phrase": "I_FULLY_AUTHORIZE_MODAL_EXECUTION_AND_COSTS"
+  },
+  "gcp": {
+    "project": "lifeandhalf-24122025",
+    "region": "us-central1",
+    "preferred_zones": [
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c"
+    ],
+    "instance_name": "glm47-full-v5-charm-h100-8",
+    "machine_type": "a3-highgpu-8g",
+    "gpu_count": 8,
+    "gpu_model_contains": "H100",
+    "minimum_gpu_memory_mib": 80000,
+    "boot_disk_gb": 500,
+    "provisioning_policy": "SPOT",
+    "provisioned_status": "TERMINATED",
+    "provisioned_status_checked_at": "2026-08-12",
+    "provisioned_zone": "us-central1-a",
+    "network_tier": "PREMIUM",
+    "asset_bucket": "gs://lifeandhalf-24122025-w8-biayn",
+    "model_source": "gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/model/GLM-4.7-Flash",
+    "adapter_source": "gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/synthmem-v1-ep50-grpo-adapter",
+    "runtime_source": "gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/runtime/aider_cpp_rl_full_v5_api_contracts_r2",
+    "result_destination": "gs://lifeandhalf-24122025-w8-biayn/runs/glm47/experiments/unadmitted-r6-hybrid45-v2-full"
+  },
+  "model": {
+    "repo": "zai-org/GLM-4.7-Flash",
+    "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+    "manifest_sha256": "ac1c2693a8d8724a6aa359eb7a6778d5dda59743b1b4c45ff92986d2d1e6cecc"
+  },
+  "starting_adapter": {
+    "profile": "synthmem-v1-ep50",
+    "training_run_id": "glm47-synth-memorization-v1-100ep-20260731T071000Z",
+    "checkpoint_path": "checkpoints/sft_lora_r16/iter_0000649",
+    "epoch": 50,
+    "optimizer_iteration": 649,
+    "adapter_model_sha256": "4acb7f23c295f45380155c5d9ee6bc59422262f0cb51f0c02f7e550d405b575a",
+    "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "native_reconstruction_manifest_sha256": "8048618f6d2b858e3f6e677a5cf0652a7bb5c4801096830a0230f7cc712eb1dd",
+    "source_tensor_content_sha256": "95c4c66e62e0d0a191f760bdf1dbab091c38a8f182ce75846b1a04227d4f60db",
+    "source_tensor_count": 9741,
+    "source_tensor_bytes": 489504768,
+    "stripped_mtp_tensor_count": 207,
+    "lora_rank": 16,
+    "lora_alpha": 32,
+    "expected_native_shards": 8,
+    "gcp_asset_status": "AVAILABLE"
+  },
+  "full_v5_runtime": {
+    "repo": "TokenBender/glm47-aider-posttraining-data",
+    "revision": "4d1ba6ac953b0c264bef0edd5ec6fc1173a2801f",
+    "source_runtime_repo": "TokenBender/glm47-aider-full-v5-rl",
+    "source_runtime_revision": "bfe0f68d85bd3d2899eb275043f7f42d669e4819",
+    "source_manifest_sha256": "93d671faa44abcc6deca21c6a49e247d76436835bfa2905ee33968a478fb532a",
+    "source_tree_sha256": "0a3df3ce40eed45814651c933277bfc5ca17359a2b3e6f0a7027b184e3569c7e",
+    "archive_path": "datasets/aiderfmt-api-contracts-20260727/runtime/full-v5-base-api-contracts.tar.gz",
+    "archive_sha256": "faaccdda40ffdcf851c3e916285f877ac045a648adbac09618232e1379607620",
+    "manifest_sha256": "7e23cf99c0bfcd5bec56aa53cb3c1960282fab742c4edd835efd47fa5092d605",
+    "tree_sha256": "06a644c59f94837d587b6eb0242e7242ad8c81efa8161e53ca0cac59de668bad",
+    "asset_subdir": "runtime/aider_cpp_rl_full_v5_api_contracts_r2",
+    "api_contract_version": "exercism-cpp-api-v1",
+    "affected_descriptors": 55,
+    "targets": 615,
+    "train_targets": 551,
+    "development_targets": 60,
+    "train_prompt_variants": 661,
+    "development_prompt_variants": 83,
+    "fixed26_exact_hits": 0,
+    "reference_answers_packaged": false,
+    "gcp_asset_status": "AVAILABLE"
+  },
+  "training_image": {
+    "base": "radixark/miles:latest-cu12@sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e52a932fcefb7031402aeff37",
+    "dockerfile": "docker/full-v5-charm-grpo-gcp/Dockerfile",
+    "local_name": "glm47-full-v5-unadmitted-grpo:gcp-r6-hybrid45-v2",
+    "registry": "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo:gcp-r6-hybrid45-v2"
+  },
+  "verifier_image": {
+    "dockerfile": "docker/full-v5-charm-grpo-gcp/Verifier.Dockerfile",
+    "local_name": "glm47-full-v5-unadmitted-verifier:gcp-r6-hybrid45-v2",
+    "network": "none"
+  },
+  "canary": {
+    "task_count": 20,
+    "epochs": 5,
+    "rollout_batch_size": 20,
+    "samples_per_prompt": 8,
+    "global_batch_size": 160,
+    "rollout_updates": 5,
+    "matched_trials": 4,
+    "selection_policy": {
+      "compile_rate_weight": 0.4,
+      "hidden_test_rate_weight": 0.4,
+      "validation_loss_weight": 0.2,
+      "always_final": false
+    },
+    "requires_pretraining_admission_pass": true
+  },
+  "full_training": {
+    "train_targets": 475,
+    "development_targets": 64,
+    "epochs": 3,
+    "rollout_batch_size": 25,
+    "samples_per_prompt": 8,
+    "global_batch_size": 200,
+    "rollout_updates": 57,
+    "thinking_enabled": true,
+    "temperature": 0.7,
+    "sequence_length": 34816,
+    "maximum_response_length": 16384,
+    "maximum_tokens_per_gpu": 18432,
+    "learning_rate": 5E-7,
+    "reference_model": true,
+    "kl_loss": true,
+    "kl_coefficient": 0.02,
+    "save_interval": 1,
+    "monitor_interval": 3,
+    "full_development_interval": 19,
+    "requires_canary_promotion_pass": true
+  },
+  "parallelism": {
+    "tensor": 4,
+    "pipeline": 1,
+    "context": 1,
+    "expert": 8,
+    "expert_tensor": 1,
+    "sglang_data_parallel": 8
+  },
+  "reward": {
+    "profile": "hybrid45_v2_fullv5_r6_unadmitted",
+    "implementation_mode": "hybrid_bipolar45",
+    "response_contract": "glm47-thinking-final-answer-v1",
+    "sandbox_backend": "docker",
+    "sandbox_network": "none",
+    "workers": 32,
+    "runtime_preflight_required": true,
+    "reward_preflight_required": true,
+    "rollout_sample_validator_required": true,
+    "signal_gate_required": true,
+    "signal_thresholds": {
+      "minimum_positive_groups": 1,
+      "minimum_semantic_variance_groups": 2,
+      "minimum_reward_variance_groups": 2,
+      "minimum_kernel_variance_groups": 2,
+      "require_unique_task_groups": false,
+      "minimum_exact_format_rate": 0.35,
+      "minimum_compile_rate": 0.2
+    },
+    "policy_version": "hybrid-bipolar45-v2"
+  },
+  "admission": {
+    "pretraining_receipt": "NOT_COMPLETED",
+    "canary_task_manifest": "NOT_COMPLETED",
+    "canary_result": "NOT_COMPLETED",
+    "promotion_receipt": "NOT_COMPLETED",
+    "full_training_authorized": false,
+    "fixed26_role": "FROZEN_POST_TRAINING_EVALUATION_ONLY",
+    "charm_eligible": false,
+    "checkpoint_disposition": "QUARANTINE_ONLY",
+    "retroactive_admission_allowed": false
+  },
+  "tracking": {
+    "wandb_mode": "offline",
+    "wandb_project": "glm47-aider-r6-hybrid45-v2-unadmitted-full",
+    "result_sync_interval_seconds": 60,
+    "sync_contract": "durable-marker-last-v1",
+    "minimum_free_storage_gib": 220,
+    "persist_raw_rollouts": true,
+    "persist_component_rewards": true,
+    "persist_signal_receipts": true
+  },
+  "experimental_contract": {
+    "admission_status": "NOT_COMPLETED",
+    "checkpoint_disposition": "QUARANTINE_ONLY",
+    "retroactive_admission_allowed": false,
+    "eligible_for_charm_promotion": false,
+    "may_supply_failure_evidence_only": true,
+    "later_charm_starting_checkpoint": "synthmem-v1-ep50",
+    "hybrid45_v2_no_update_canary": "REQUIRED",
+    "hybrid45_v2_optimizer_canary": "REQUIRED_SMOKE_RECEIPT",
+    "activation_status": "EXPERIMENTAL_UNADMITTED"
+  },
+  "task_selection": {
+    "harness_kind": "aider_cpp17",
+    "ranking": "sha256-task-id-ascending-v1",
+    "count": 475,
+    "selected_task_ids_sha256": "074b37fe2668f64bf5ceac2e70a5860716c2954fe8f5cad101471c6f3393615a"
+  }
+}

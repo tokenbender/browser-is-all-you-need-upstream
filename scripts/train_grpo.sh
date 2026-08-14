@@ -17,10 +17,13 @@ TASKS_DIR="${MILES_CPP_TASKS_DIR:-${REPO_ROOT}/.glm47-posttraining/data/tasks-sm
 DATA_BUILD_MODULE="${MILES_DATA_BUILD_MODULE:-glm47_posttraining.integrations.miles_cpp_perf}"
 CUSTOM_RM_PATH="${MILES_CUSTOM_RM_PATH:-glm47_posttraining.integrations.miles_cpp_perf.reward_func}"
 REWARD_PREFLIGHT_MODULE="${MILES_REWARD_PREFLIGHT_MODULE:-}"
+GRPO_PROMPT_DATA="${MILES_GRPO_PROMPT_DATA:-${DATA_DIR}/grpo/train.jsonl}"
+EXPECTED_PROMPT_ROWS="${MILES_EXPECTED_PROMPT_ROWS:-}"
 EXPECTED_DATASET_KIND="${MILES_EXPECTED_DATASET_KIND:-}"
 EVAL_NAME="${MILES_EVAL_NAME:-pie_cpp}"
 TRAIN_LIMIT="${MILES_CPP_TRAIN_LIMIT:-}"
 EVAL_LIMIT="${MILES_CPP_EVAL_LIMIT:-}"
+TASK_SPLIT_FILE="${MILES_CPP_TASK_SPLIT_FILE:-}"
 EVAL_SPLITS="${MILES_CPP_EVAL_SPLITS:-validation,test}"
 SORT_BY_SIZE="${MILES_CPP_SORT_BY_SIZE:-1}"
 FILTER_TRAIN_ORACLE_FULL_MARKS="${MILES_CPP_FILTER_TRAIN_ORACLE_FULL_MARKS:-0}"
@@ -36,6 +39,44 @@ PP_SIZE="${MILES_PIPELINE_MODEL_PARALLEL_SIZE:-1}"
 CP_SIZE="${MILES_CONTEXT_PARALLEL_SIZE:-1}"
 EP_SIZE="${MILES_EXPERT_MODEL_PARALLEL_SIZE:-8}"
 ETP_SIZE="${MILES_EXPERT_TENSOR_PARALLEL_SIZE:-1}"
+
+native_owner_count() {
+  local tp="$1"
+  local ep="$2"
+  local world="$3"
+  local a b remainder period value
+  for value in "${tp}" "${ep}" "${world}"; do
+    if ! [[ "${value}" =~ ^[1-9][0-9]*$ ]]; then
+      echo "parallel sizes must be positive integers, got: ${value}" >&2
+      return 2
+    fi
+  done
+  if [ "${ep}" -eq 1 ]; then
+    echo "${tp}"
+    return
+  fi
+  a="${tp}"
+  b="${ep}"
+  while [ "${b}" -ne 0 ]; do
+    remainder=$((a % b))
+    a="${b}"
+    b="${remainder}"
+  done
+  period=$((tp / a * ep))
+  if [ "${world}" -lt "${period}" ]; then
+    echo "${world}"
+  else
+    echo "${period}"
+  fi
+}
+
+COMPUTED_NATIVE_SHARDS="$(native_owner_count "${TP_SIZE}" "${EP_SIZE}" "${GPUS_PER_NODE}")"
+if [ -n "${MILES_EXPECTED_NATIVE_SHARDS:-}" ] && \
+   [ "${MILES_EXPECTED_NATIVE_SHARDS}" != "${COMPUTED_NATIVE_SHARDS}" ]; then
+  echo "MILES_EXPECTED_NATIVE_SHARDS does not match the configured TP/EP owners" >&2
+  exit 2
+fi
+EXPECTED_NATIVE_SHARDS="${COMPUTED_NATIVE_SHARDS}"
 MOE_TOKEN_DISPATCHER_TYPE="${MILES_MOE_TOKEN_DISPATCHER_TYPE:-}"
 MOE_ENABLE_DEEPEP="${MILES_MOE_ENABLE_DEEPEP:-0}"
 RECOMPUTE_GRANULARITY="${MILES_RECOMPUTE_GRANULARITY:-selective}"
@@ -52,9 +93,11 @@ N_SAMPLES_PER_PROMPT="${MILES_N_SAMPLES_PER_PROMPT:-8}"
 GLOBAL_BATCH_SIZE="${MILES_GLOBAL_BATCH_SIZE:-256}"
 GRPO_ROLLOUT_SHUFFLE="${MILES_GRPO_ROLLOUT_SHUFFLE:-1}"
 ROLLOUT_MAX_RESPONSE_LEN="${MILES_ROLLOUT_MAX_RESPONSE_LEN:-1024}"
+ROLLOUT_MAX_PROMPT_LEN="${MILES_ROLLOUT_MAX_PROMPT_LEN:-2048}"
 ROLLOUT_TEMPERATURE="${MILES_ROLLOUT_TEMPERATURE:-1.0}"
 ROLLOUT_SKIP_SPECIAL_TOKENS="${MILES_ROLLOUT_SKIP_SPECIAL_TOKENS:-0}"
 ROLLOUT_STOP_TOKEN_IDS="${MILES_ROLLOUT_STOP_TOKEN_IDS:-}"
+ROLLOUT_SAMPLE_FILTER_PATH="${MILES_ROLLOUT_SAMPLE_FILTER_PATH:-}"
 read -r -a ROLLOUT_STOP_TOKEN_ID_ARGS <<< "${ROLLOUT_STOP_TOKEN_IDS}"
 APPLY_CHAT_TEMPLATE_KWARGS="${MILES_APPLY_CHAT_TEMPLATE_KWARGS:-}"
 TRAIN_MODULE="${MILES_TRAIN_MODULE:-}"
@@ -63,6 +106,20 @@ EVAL_N_SAMPLES_PER_PROMPT="${MILES_EVAL_N_SAMPLES_PER_PROMPT:-1}"
 EVAL_MAX_RESPONSE_LEN="${MILES_EVAL_MAX_RESPONSE_LEN:-1536}"
 EVAL_PROMPT_DATA="${MILES_EVAL_PROMPT_DATA:-}"
 KL_LOSS_COEF="${MILES_KL_LOSS_COEF:-0.00}"
+GRPO_ADVANTAGE_POLICY="${MILES_GRPO_ADVANTAGE_POLICY:-legacy-unbound}"
+REWARDS_NORMALIZATION="${MILES_REWARDS_NORMALIZATION:-1}"
+GRPO_STD_NORMALIZATION="${MILES_GRPO_STD_NORMALIZATION:-1}"
+NORMALIZE_ADVANTAGES="${MILES_NORMALIZE_ADVANTAGES:-0}"
+
+for boolean_value in \
+  "${REWARDS_NORMALIZATION}" \
+  "${GRPO_STD_NORMALIZATION}" \
+  "${NORMALIZE_ADVANTAGES}"; do
+  if [ "${boolean_value}" != "0" ] && [ "${boolean_value}" != "1" ]; then
+    echo "GRPO normalization controls must be 0 or 1, got: ${boolean_value}" >&2
+    exit 2
+  fi
+done
 
 LORA_RANK="${MILES_LORA_RANK:-16}"
 LORA_ALPHA="${MILES_LORA_ALPHA:-32}"
@@ -94,6 +151,76 @@ WANDB_GROUP="${MILES_WANDB_GROUP:-glm47-h100-pie-cpp-lora-r16}"
 WANDB_RUN_ID="${MILES_WANDB_RUN_ID:-${RUN_ID}}"
 WANDB_JOB_TYPE="${MILES_WANDB_JOB_TYPE:-${WANDB_JOB_TYPE:-grpo}}"
 EXPERIMENT_ID="${GLM47_EXPERIMENT_ID:-${WANDB_GROUP}}"
+GRPO_CONTINUATION_MODE="${MILES_GRPO_CONTINUATION_MODE:-none}"
+GRPO_PARENT_RUN_ID="${MILES_GRPO_PARENT_RUN_ID:-none}"
+GRPO_PARENT_ITERATION="${MILES_GRPO_PARENT_ITERATION:-none}"
+GRPO_PARENT_ADAPTER_SHA256="${MILES_GRPO_PARENT_ADAPTER_SHA256:-none}"
+NATIVE_RECONSTRUCTION_MANIFEST_PATH="${MILES_NATIVE_RECONSTRUCTION_MANIFEST_PATH:-none}"
+EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256="${MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256:-none}"
+ADMISSION_STATUS="${GLM47_ADMISSION_STATUS:-UNSPECIFIED}"
+CHARM_ELIGIBLE="${GLM47_CHARM_ELIGIBLE:-UNSPECIFIED}"
+CHECKPOINT_DISPOSITION="${GLM47_CHECKPOINT_DISPOSITION:-UNSPECIFIED}"
+RETROACTIVE_ADMISSION_ALLOWED="${GLM47_RETROACTIVE_ADMISSION_ALLOWED:-0}"
+
+case "${CHECKPOINT_DISPOSITION}" in
+  QUARANTINE_ONLY)
+    if [ "${ADMISSION_STATUS}" != "NOT_COMPLETED" ] || \
+       [ "${CHARM_ELIGIBLE}" != "0" ] || \
+       [ "${RETROACTIVE_ADMISSION_ALLOWED}" != "0" ] || \
+       { [[ "${RUN_ID}" != unadmitted-r2-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r3-smoke-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r3-full-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r4-smoke-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r4-full-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r5-smoke-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r5-full-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r6-v2-smoke-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r6-v2-four-topic40-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r6-v2-full-* ]] && \
+         [[ "${RUN_ID}" != unadmitted-r8-r87-* ]]; }; then
+      echo "quarantine-only runs require unadmitted status, zero CHARM eligibility, no retroactive admission, and a bound unadmitted run ID" >&2
+      exit 2
+    fi
+    ;;
+  GATED|UNSPECIFIED) ;;
+  *)
+    echo "unsupported checkpoint disposition: ${CHECKPOINT_DISPOSITION}" >&2
+    exit 2
+    ;;
+esac
+
+case "${GRPO_CONTINUATION_MODE}" in
+  none)
+    if [ "${GRPO_PARENT_RUN_ID}" != "none" ] || \
+       [ "${GRPO_PARENT_ITERATION}" != "none" ] || \
+       [ "${GRPO_PARENT_ADAPTER_SHA256}" != "none" ]; then
+      echo "GRPO parent provenance requires a non-none continuation mode" >&2
+      exit 2
+    fi
+    ;;
+  weights_only_fresh_optimizer)
+    if [ -z "${MILES_LORA_ADAPTER_PATH:-}" ] || \
+       [ "${GRPO_PARENT_RUN_ID}" = "none" ] || \
+       ! [[ "${GRPO_PARENT_ITERATION}" =~ ^[0-9]+$ ]] || \
+       ! [[ "${GRPO_PARENT_ADAPTER_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      echo "weights-only continuation requires an adapter, parent run, iteration, and SHA-256" >&2
+      exit 2
+    fi
+    if [ "${GRPO_PARENT_ADAPTER_SHA256}" != "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256:-}" ]; then
+      echo "continuation parent SHA-256 must equal the bound source-adapter SHA-256" >&2
+      exit 2
+    fi
+    if [ "${NATIVE_RECONSTRUCTION_MANIFEST_PATH}" = "none" ] || \
+       ! [[ "${EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      echo "weights-only continuation requires a pinned native reconstruction manifest" >&2
+      exit 2
+    fi
+    ;;
+  *)
+    echo "Unsupported MILES_GRPO_CONTINUATION_MODE: ${GRPO_CONTINUATION_MODE}" >&2
+    exit 2
+    ;;
+esac
 
 STAGE_ROOT="${RUN_ROOT}/grpo_lora_r16"
 LOG_FILE="${STAGE_ROOT}/run.log"
@@ -101,6 +228,7 @@ VRAM_LOG="${STAGE_ROOT}/vram_usage.csv"
 VRAM_PEAK_FILE="${STAGE_ROOT}/vram_peak.txt"
 RUN_RECEIPT="${STAGE_ROOT}/run_receipt.txt"
 TRAINING_GATE="${STAGE_ROOT}/grpo_training_gate.json"
+PROMPT_PREFLIGHT_RECEIPT="${STAGE_ROOT}/prompt_preflight.json"
 ROLLOUT_DUMP_TEMPLATE="${RUN_ROOT}/rollout_dumps/grpo_{rollout_id}.pt"
 
 mkdir -p "${STAGE_ROOT}" "${RUN_ROOT}/rollout_dumps" "${SAVE_DIR}"
@@ -119,6 +247,7 @@ echo "ref_load=${REF_LOAD_DIR}"
 echo "save_dir=${SAVE_DIR}"
 echo "seq_length=${SEQ_LENGTH}"
 echo "rollout_max_response_len=${ROLLOUT_MAX_RESPONSE_LEN}"
+echo "rollout_max_prompt_len=${ROLLOUT_MAX_PROMPT_LEN}"
 echo "eval_max_response_len=${EVAL_MAX_RESPONSE_LEN}"
 
 if [ ! -d "${MILES_ROOT}" ]; then
@@ -169,6 +298,9 @@ fi
 if [ -n "${EVAL_LIMIT}" ]; then
   BUILD_DATA_ARGS+=(--eval-limit "${EVAL_LIMIT}")
 fi
+if [ -n "${TASK_SPLIT_FILE}" ]; then
+  BUILD_DATA_ARGS+=(--task-split-file "${TASK_SPLIT_FILE}")
+fi
 if [ "${SORT_BY_SIZE}" = "1" ]; then
   BUILD_DATA_ARGS+=(--sort-by-size)
 fi
@@ -177,11 +309,11 @@ if [ "${FILTER_TRAIN_ORACLE_FULL_MARKS}" = "1" ]; then
 fi
 
 # Reuse a prepared dataset when available.
-if [ ! -f "${DATA_DIR}/grpo/train.jsonl" ]; then
+if [ ! -f "${GRPO_PROMPT_DATA}" ]; then
   PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}" "${PYTHON_BIN}" "${BUILD_DATA_ARGS[@]}"
 fi
-if [ ! -f "${DATA_DIR}/grpo/train.jsonl" ]; then
-  echo "Missing GRPO train data: ${DATA_DIR}/grpo/train.jsonl" >&2
+if [ ! -f "${GRPO_PROMPT_DATA}" ]; then
+  echo "Missing GRPO train data: ${GRPO_PROMPT_DATA}" >&2
   exit 2
 fi
 if [ -n "${EXPECTED_DATASET_KIND}" ]; then
@@ -204,6 +336,31 @@ fi
 if [ -n "${REWARD_PREFLIGHT_MODULE}" ]; then
   PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}" "${PYTHON_BIN}" \
     -m "${REWARD_PREFLIGHT_MODULE}" preflight
+fi
+if [ "${GLM47_AIDER_REQUIRE_CONTEXT_ISOLATION:-0}" = "1" ]; then
+  if [ "${GRPO_ADVANTAGE_POLICY}" != "miles-standard-grpo-group-std-v1" ] || \
+     [ "${REWARDS_NORMALIZATION}" != "1" ] || \
+     [ "${GRPO_STD_NORMALIZATION}" != "1" ] || \
+     [ "${NORMALIZE_ADVANTAGES}" != "0" ]; then
+    echo "context-isolated GRPO requires pinned prompt-local standard group-std normalization" >&2
+    exit 2
+  fi
+  if ! [[ "${EXPECTED_PROMPT_ROWS}" =~ ^[1-9][0-9]*$ ]]; then
+    echo "context-isolated GRPO requires a positive MILES_EXPECTED_PROMPT_ROWS" >&2
+    exit 2
+  fi
+  PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}" "${PYTHON_BIN}" \
+    -m glm47_posttraining.aider_polyglot.prompt_preflight \
+    --prompt-data "${GRPO_PROMPT_DATA}" \
+    --model-path "${HF_CHECKPOINT}" \
+    --tokenizer-manifest "${GLM47_TOKENIZER_MANIFEST_PATH:-${REPO_ROOT}/dataset/configs/glm47-flash-tokenizer-manifest.json}" \
+    --tokenizer-manifest-sha256 "${GLM47_TOKENIZER_MANIFEST_SHA256:?context-isolated GRPO requires GLM47_TOKENIZER_MANIFEST_SHA256}" \
+    --tokenizer-revision "${GLM47_TOKENIZER_REVISION:?context-isolated GRPO requires GLM47_TOKENIZER_REVISION}" \
+    --chat-template "${GLM47_CHAT_TEMPLATE_PATH:-${REPO_ROOT}/dataset/configs/glm47-flash-chat-template.jinja}" \
+    --chat-template-sha256 "${GLM47_CHAT_TEMPLATE_SHA256:?context-isolated GRPO requires GLM47_CHAT_TEMPLATE_SHA256}" \
+    --maximum-prompt-tokens "${ROLLOUT_MAX_PROMPT_LEN}" \
+    --expected-rows "${EXPECTED_PROMPT_ROWS}" \
+    --output "${PROMPT_PREFLIGHT_RECEIPT}"
 fi
 
 monitor_vram() {
@@ -233,11 +390,15 @@ write_receipt() {
   local status="$1"
   local ray_status="$2"
   local max_memory_used_mib=""
+  local prompt_preflight_sha256=""
   if [ -s "${VRAM_LOG}" ]; then
     awk -F, 'NR>1 {gsub(/^[ \t]+|[ \t]+$/, "", $3); if ($3+0 > max) max=$3+0} END {print "max_memory_used_mib=" max}' "${VRAM_LOG}" > "${VRAM_PEAK_FILE}" || true
   fi
   if [ -s "${VRAM_PEAK_FILE}" ]; then
     max_memory_used_mib="$(awk -F= '/max_memory_used_mib/ {print $2}' "${VRAM_PEAK_FILE}" | tail -n 1)"
+  fi
+  if [ -f "${PROMPT_PREFLIGHT_RECEIPT}" ]; then
+    prompt_preflight_sha256="$(sha256sum "${PROMPT_PREFLIGHT_RECEIPT}" | awk '{print $1}')"
   fi
   cat >"${RUN_RECEIPT}" <<EOF
 status=${status}
@@ -263,6 +424,20 @@ save_dir=${SAVE_DIR}
 lora_source_adapter_path=${MILES_LORA_SOURCE_ADAPTER_PATH:-}
 lora_adapter_path=${MILES_LORA_ADAPTER_PATH:-}
 expected_source_adapter_sha256=${MILES_EXPECTED_SOURCE_ADAPTER_SHA256:-}
+grpo_continuation_mode=${GRPO_CONTINUATION_MODE}
+grpo_parent_run_id=${GRPO_PARENT_RUN_ID}
+grpo_parent_iteration=${GRPO_PARENT_ITERATION}
+grpo_parent_adapter_sha256=${GRPO_PARENT_ADAPTER_SHA256}
+grpo_advantage_policy=${GRPO_ADVANTAGE_POLICY}
+rewards_normalization=${REWARDS_NORMALIZATION}
+grpo_std_normalization=${GRPO_STD_NORMALIZATION}
+global_advantage_normalization=${NORMALIZE_ADVANTAGES}
+native_reconstruction_manifest_path=${NATIVE_RECONSTRUCTION_MANIFEST_PATH}
+expected_native_reconstruction_manifest_sha256=${EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256}
+admission_status=${ADMISSION_STATUS}
+charm_eligible=${CHARM_ELIGIBLE}
+checkpoint_disposition=${CHECKPOINT_DISPOSITION}
+retroactive_admission_allowed=${RETROACTIVE_ADMISSION_ALLOWED}
 seq_length=${SEQ_LENGTH}
 gpus_per_node=${GPUS_PER_NODE}
 tensor_model_parallel_size=${TP_SIZE}
@@ -271,6 +446,10 @@ context_parallel_size=${CP_SIZE}
 expert_model_parallel_size=${EP_SIZE}
 expert_tensor_parallel_size=${ETP_SIZE}
 rollout_max_response_len=${ROLLOUT_MAX_RESPONSE_LEN}
+rollout_max_prompt_len=${ROLLOUT_MAX_PROMPT_LEN}
+expected_prompt_rows=${EXPECTED_PROMPT_ROWS}
+prompt_preflight_receipt=${PROMPT_PREFLIGHT_RECEIPT}
+prompt_preflight_sha256=${prompt_preflight_sha256}
 rollout_skip_special_tokens=${ROLLOUT_SKIP_SPECIAL_TOKENS}
 rollout_stop_token_ids=${ROLLOUT_STOP_TOKEN_IDS}
 eval_max_response_len=${EVAL_MAX_RESPONSE_LEN}
@@ -343,6 +522,9 @@ finalize_wandb() {
   if [ -f "${TRAINING_GATE}" ]; then
     finalize_args+=(--artifact-path "${TRAINING_GATE}")
   fi
+  if [ -f "${PROMPT_PREFLIGHT_RECEIPT}" ]; then
+    finalize_args+=(--artifact-path "${PROMPT_PREFLIGHT_RECEIPT}")
+  fi
   PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}" "${PYTHON_BIN}" \
     "${REPO_ROOT}/scripts/publish_results.py" "${finalize_args[@]}"
 }
@@ -352,11 +534,28 @@ ray stop --force >/dev/null 2>&1 || true
 pkill -9 ray >/dev/null 2>&1 || true
 pkill -9 redis >/dev/null 2>&1 || true
 
+# The full-v5 image exposes Clang's resource headers globally for the C++
+# verifier. SGLang JIT kernels are compiled by nvcc with GCC as the host
+# compiler; forwarding those Clang-only headers makes GCC fail on
+# __has_feature(...) during CUDA-graph capture. Keep Clang installed, but do
+# not leak its private include directory into Ray/SGLang workers.
+if [ -n "${CPLUS_INCLUDE_PATH:-}" ]; then
+  echo "CUDA_JIT_ENV_SANITIZED=unset_CPLUS_INCLUDE_PATH"
+  unset CPLUS_INCLUDE_PATH
+fi
+
 export PYTHONBUFFERED=16
 export MASTER_ADDR="${MILES_MASTER_ADDR:-${MASTER_ADDR:-127.0.0.1}}"
 RAY_NODE_IP_ADDRESS="${MILES_RAY_NODE_IP_ADDRESS:-127.0.0.1}"
 RAY_DASHBOARD_HOST="${MILES_RAY_DASHBOARD_HOST:-127.0.0.1}"
 RAY_DASHBOARD_PORT="${MILES_RAY_DASHBOARD_PORT:-8265}"
+RAY_TEMP_DIR="${MILES_RAY_TEMP_DIR:-/tmp/ray}"
+if [[ "${RAY_TEMP_DIR}" != /* || "${#RAY_TEMP_DIR}" -gt 32 ]]; then
+  echo "MILES_RAY_TEMP_DIR must be an absolute path of at most 32 characters" >&2
+  exit 2
+fi
+mkdir -p "${RAY_TEMP_DIR}"
+chmod 700 "${RAY_TEMP_DIR}"
 export no_proxy="127.0.0.1,${MASTER_ADDR},${RAY_NODE_IP_ADDRESS},${RAY_DASHBOARD_HOST}"
 export GLM47_DATA_DIR="${DATA_DIR}"
 export GLM47_CPP_SANDBOX_IMAGE="${GLM47_CPP_SANDBOX_IMAGE:-glm47-cpp-perf:latest}"
@@ -414,7 +613,7 @@ if [ "${SGLANG_LORA_USE_VIRTUAL_EXPERTS}" = "1" ]; then
 fi
 
 ROLLOUT_ARGS=(
-  --prompt-data "${DATA_DIR}/grpo/train.jsonl"
+  --prompt-data "${GRPO_PROMPT_DATA}"
   --input-key prompt
   --label-key label
   --metadata-key metadata
@@ -424,6 +623,7 @@ ROLLOUT_ARGS=(
   --num-rollout "${NUM_ROLLOUT}"
   --rollout-batch-size "${ROLLOUT_BATCH_SIZE}"
   --n-samples-per-prompt "${N_SAMPLES_PER_PROMPT}"
+  --rollout-max-prompt-len "${ROLLOUT_MAX_PROMPT_LEN}"
   --rollout-max-response-len "${ROLLOUT_MAX_RESPONSE_LEN}"
   --rollout-temperature "${ROLLOUT_TEMPERATURE}"
   --global-batch-size "${GLOBAL_BATCH_SIZE}"
@@ -439,6 +639,9 @@ if [ "${#ROLLOUT_STOP_TOKEN_ID_ARGS[@]}" -gt 0 ]; then
 fi
 if [ -n "${APPLY_CHAT_TEMPLATE_KWARGS}" ]; then
   ROLLOUT_ARGS+=(--apply-chat-template-kwargs "${APPLY_CHAT_TEMPLATE_KWARGS}")
+fi
+if [ -n "${ROLLOUT_SAMPLE_FILTER_PATH}" ]; then
+  ROLLOUT_ARGS+=(--rollout-sample-filter-path "${ROLLOUT_SAMPLE_FILTER_PATH}")
 fi
 if [ "${GRPO_ROLLOUT_SHUFFLE}" = "1" ]; then
   ROLLOUT_ARGS+=(--rollout-shuffle)
@@ -510,6 +713,15 @@ GRPO_ARGS=(
   --eps-clip 0.2
   --eps-clip-high 0.28
 )
+if [ "${REWARDS_NORMALIZATION}" = "0" ]; then
+  GRPO_ARGS+=(--disable-rewards-normalization)
+fi
+if [ "${GRPO_STD_NORMALIZATION}" = "0" ]; then
+  GRPO_ARGS+=(--disable-grpo-std-normalization)
+fi
+if [ "${NORMALIZE_ADVANTAGES}" = "1" ]; then
+  GRPO_ARGS+=(--normalize-advantages)
+fi
 # The KL penalty coefficient above is inert unless --use-kl-loss is also set; the
 # canonical PIE path leaves it off, so gate it behind an opt-in env var. Requires a
 # reference model (MILES_NO_REF must not be 1).
@@ -589,6 +801,7 @@ if [ -n "${MILES_EXTRA_ARGS:-}" ]; then
 fi
 
 ray start --head \
+  --temp-dir "${RAY_TEMP_DIR}" \
   --node-ip-address "${RAY_NODE_IP_ADDRESS}" \
   --num-gpus "${GPUS_PER_NODE}" \
   --disable-usage-stats \
@@ -596,6 +809,7 @@ ray start --head \
   --dashboard-port="${RAY_DASHBOARD_PORT}"
 
 RUNTIME_ENV_JSON="{
+  \"worker_process_setup_hook\": \"glm47_posttraining.integrations.miles_glm47_bridge.register_glm47_bridge\",
   \"env_vars\": {
     \"PYTHONPATH\": \"/root/Megatron-LM/:${REPO_ROOT}/src:${MILES_ROOT}\",
     \"CUDA_DEVICE_MAX_CONNECTIONS\": \"${CUDA_DEVICE_MAX_CONNECTIONS}\",
@@ -607,17 +821,54 @@ RUNTIME_ENV_JSON="{
     \"GLM47_ROUTER_READY_TIMEOUT_S\": \"${GLM47_ROUTER_READY_TIMEOUT_S:-}\",
     \"GLM47_CPP_SANDBOX_CPU\": \"${GLM47_CPP_SANDBOX_CPU:-1}\",
     \"GLM47_CPP_REWARD_WORKERS\": \"${GLM47_CPP_REWARD_WORKERS:-8}\",
+    \"GLM47_AIDER_EXPECTED_TRAIN_GROUPS\": \"${GLM47_AIDER_EXPECTED_TRAIN_GROUPS:-}\",
+    \"GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP\": \"${GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP:-}\",
+    \"MILES_AIDER_REWARD_MODE\": \"${MILES_AIDER_REWARD_MODE:-textbook}\",
+    \"MILES_GRPO_ADVANTAGE_POLICY\": \"${GRPO_ADVANTAGE_POLICY}\",
+    \"MILES_REWARDS_NORMALIZATION\": \"${REWARDS_NORMALIZATION}\",
+    \"MILES_GRPO_STD_NORMALIZATION\": \"${GRPO_STD_NORMALIZATION}\",
+    \"MILES_NORMALIZE_ADVANTAGES\": \"${NORMALIZE_ADVANTAGES}\",
+    \"MILES_CPP_INCLUDE_LOGS\": \"${MILES_CPP_INCLUDE_LOGS:-0}\",
+    \"GLM47_AIDER_REQUIRE_SIGNAL\": \"${GLM47_AIDER_REQUIRE_SIGNAL:-0}\",
+    \"GLM47_AIDER_REQUIRE_UNIQUE_TASK_GROUPS\": \"${GLM47_AIDER_REQUIRE_UNIQUE_TASK_GROUPS:-1}\",
+    \"GLM47_AIDER_MIN_POSITIVE_GROUPS\": \"${GLM47_AIDER_MIN_POSITIVE_GROUPS:-1}\",
+    \"GLM47_AIDER_MIN_SEMANTIC_VARIANCE_GROUPS\": \"${GLM47_AIDER_MIN_SEMANTIC_VARIANCE_GROUPS:-2}\",
+    \"GLM47_AIDER_MIN_REWARD_VARIANCE_GROUPS\": \"${GLM47_AIDER_MIN_REWARD_VARIANCE_GROUPS:-2}\",
+    \"GLM47_AIDER_MIN_KERNEL_VARIANCE_GROUPS\": \"${GLM47_AIDER_MIN_KERNEL_VARIANCE_GROUPS:-2}\",
+    \"GLM47_AIDER_MIN_EXACT_FORMAT_RATE\": \"${GLM47_AIDER_MIN_EXACT_FORMAT_RATE:-0.50}\",
+    \"GLM47_AIDER_MIN_COMPILE_RATE\": \"${GLM47_AIDER_MIN_COMPILE_RATE:-0.20}\",
+    \"GLM47_AIDER_SIGNAL_GATE_DIR\": \"${GLM47_AIDER_SIGNAL_GATE_DIR:-}\",
+    \"GLM47_AIDER_REQUIRE_CONTEXT_ISOLATION\": \"${GLM47_AIDER_REQUIRE_CONTEXT_ISOLATION:-0}\",
+    \"GLM47_AIDER_MAX_PROMPT_TOKENS\": \"${GLM47_AIDER_MAX_PROMPT_TOKENS:-${ROLLOUT_MAX_PROMPT_LEN}}\",
+    \"GLM47_TOKENIZER_REVISION\": \"${GLM47_TOKENIZER_REVISION:-}\",
+    \"GLM47_TOKENIZER_MANIFEST_SHA256\": \"${GLM47_TOKENIZER_MANIFEST_SHA256:-}\",
+    \"GLM47_CHAT_TEMPLATE_SHA256\": \"${GLM47_CHAT_TEMPLATE_SHA256:-}\",
+    \"MILES_EXPERIMENTAL_ROLLOUT_REFACTOR\": \"${MILES_EXPERIMENTAL_ROLLOUT_REFACTOR:-0}\",
     \"NVSHMEM_DISABLE_NCCL\": \"${NVSHMEM_DISABLE_NCCL:-}\",
     \"WANDB_RUN_ID\": \"${WANDB_RUN_ID}\",
     \"WANDB_JOB_TYPE\": \"${WANDB_JOB_TYPE}\",
     \"WANDB_MODE\": \"${WANDB_MODE:-online}\",
+    \"WANDB_DIR\": \"${WANDB_DIR:-}\",
+    \"WANDB_CACHE_DIR\": \"${WANDB_CACHE_DIR:-}\",
+    \"WANDB_DATA_DIR\": \"${WANDB_DATA_DIR:-}\",
+    \"WANDB_ARTIFACT_DIR\": \"${WANDB_ARTIFACT_DIR:-}\",
+    \"XDG_CACHE_HOME\": \"${XDG_CACHE_HOME:-}\",
+    \"HF_HOME\": \"${HF_HOME:-}\",
+    \"TMPDIR\": \"${TMPDIR:-}\",
     \"WANDB_RUN_GROUP\": \"${WANDB_RUN_GROUP:-${WANDB_GROUP}}\",
     \"WANDB_TAGS\": \"${WANDB_TAGS:-}\",
     \"GLM47_EXPERIMENT_ID\": \"${EXPERIMENT_ID}\",
     \"GLM47_TIMING_STATUS\": \"${GLM47_TIMING_STATUS:-unverified}\",
     \"GLM47_REGISTER_BRIDGE\": \"${GLM47_REGISTER_BRIDGE:-}\",
     \"GLM47_DISABLE_SHARED_LORA_CKPT_PATCH\": \"${GLM47_DISABLE_SHARED_LORA_CKPT_PATCH:-}\",
-    \"GLM47_SYNC_METRICS_DIR\": \"${GLM47_SYNC_METRICS_DIR:-}\"
+    \"GLM47_SYNC_METRICS_DIR\": \"${GLM47_SYNC_METRICS_DIR:-}\",
+    \"GLM47_PROFILE_ID\": \"${GLM47_PROFILE_ID:-}\",
+    \"GLM47_FULL_V5_CHARM_PROFILE\": \"${GLM47_FULL_V5_CHARM_PROFILE:-}\",
+    \"GLM47_EXECUTION_PROFILE\": \"${GLM47_EXECUTION_PROFILE:-}\",
+    \"GLM47_ADMISSION_STATUS\": \"${ADMISSION_STATUS}\",
+    \"GLM47_CHARM_ELIGIBLE\": \"${CHARM_ELIGIBLE}\",
+    \"GLM47_CHECKPOINT_DISPOSITION\": \"${CHECKPOINT_DISPOSITION}\",
+    \"GLM47_RETROACTIVE_ADMISSION_ALLOWED\": \"${RETROACTIVE_ADMISSION_ALLOWED}\"
   }
 }"
 
@@ -665,7 +916,11 @@ if [ "${RAY_STATUS}" -eq 0 ] && [ "${EXPECTED_DATASET_KIND}" = "aider-polyglot-c
     --phase "${GLM47_TIMING_STATUS:-full}" \
     --num-rollout "${NUM_ROLLOUT}" \
     --gpus-per-node "${GPUS_PER_NODE}" \
-    --expected-native-shards "${MILES_EXPECTED_NATIVE_SHARDS:-${TP_SIZE}}" \
+    --expected-native-shards "${EXPECTED_NATIVE_SHARDS}" \
+    --tensor-parallel-size "${TP_SIZE}" \
+    --expert-parallel-size "${EP_SIZE}" \
+    --expected-native-reconstruction-manifest-sha256 \
+      "${MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256:-}" \
     --expected-train-count "${MILES_EXPECTED_TRAIN_COUNT:-253}" \
     --output "${TRAINING_GATE}"
   GATE_STATUS=$?

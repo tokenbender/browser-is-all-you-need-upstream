@@ -1,0 +1,87 @@
+name: glm47-synthmem-v8-h100-eval
+
+resources:
+  cloud: gcp
+  region: us-central1
+  accelerators: H100:8
+  network_tier: best
+  disk_size: 500
+  disk_tier: high
+  use_spot: false
+  autostop:
+    idle_minutes: 10
+    down: true
+
+workdir: .
+
+file_mounts:
+  ~/glm47-assets/model/GLM-4.7-Flash:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/model/GLM-4.7-Flash
+    mode: COPY
+
+  ~/glm47-assets/synthmem-v1-ep50/adapter:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/synthmem-v1-ep50/adapter
+    mode: COPY
+
+  ~/glm47-results-store:
+    source: gs://lifeandhalf-24122025-w8-biayn
+    mode: MOUNT
+
+setup: |
+  set -euo pipefail
+
+  export EXPECTED_GPU_COUNT=8
+  export EXPECTED_GPU_MODEL=H100
+  export EXPECTED_GPU_MEMORY_MIB=80000
+  bash scripts/gcp_public_pr_eval_host_setup.sh
+
+  ACCESS_TOKEN="$(curl --fail --silent --show-error \
+    --header 'Metadata-Flavor: Google' \
+    'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token' | \
+    python3 -c 'import json, sys; print(json.load(sys.stdin)["access_token"])')"
+  printf '%s' "${ACCESS_TOKEN}" | sudo docker login \
+    --username oauth2accesstoken \
+    --password-stdin \
+    https://us-central1-docker.pkg.dev
+  unset ACCESS_TOKEN
+  sudo docker pull \
+    us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-public-pr-eval:synthmem-v1-ep50-thinking-v8-h100-tp4-dp2-r2-20260811@sha256:64cd3818b0a15cd9ff317095d5f09cafdad8a399fd346bf96f2557f31c7aa883
+
+run: |
+  set -euo pipefail
+
+  : "${RUN_ID:?RUN_ID must be supplied by sky launch}"
+
+  export MODEL_DIR="${HOME}/glm47-assets/model/GLM-4.7-Flash"
+  export MODEL_MANIFEST_SHA256="ac1c2693a8d8724a6aa359eb7a6778d5dda59743b1b4c45ff92986d2d1e6cecc"
+
+  export ADAPTER_DIR="${HOME}/glm47-assets/synthmem-v1-ep50/adapter"
+  export ADAPTER_CONFIG_SHA256="0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e"
+
+  export RESULT_DIR="${HOME}/glm47-results-store/glm47-public-pr-eval/results"
+  export CHECKPOINT_PROFILE="synthmem-v1-ep50"
+  export SUITE="fmtlib-final-cleanup-verified-mechanisms-thinking"
+  export IMAGE_NAME="us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-public-pr-eval:synthmem-v1-ep50-thinking-v8-h100-tp4-dp2-r2-20260811@sha256:64cd3818b0a15cd9ff317095d5f09cafdad8a399fd346bf96f2557f31c7aa883"
+  export DOCKERFILE="docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile.runtime-overlay"
+  export BUILD_IMAGE=0
+
+  export TENSOR_PARALLEL_SIZE=4
+  export DATA_PARALLEL_SIZE=2
+  export EXPECTED_GPU_COUNT=8
+  export EXPECTED_GPU_MODEL=H100
+  export EXPECTED_GPU_MEMORY_MIB=80000
+  export EXECUTION_PROFILE="gcp-skypilot-h100-tp4-dp2"
+  export PROVISIONER="skypilot"
+  export GCP_PROJECT="lifeandhalf-24122025"
+
+  grep -Fx "7dd20894a642a0aa287e9827cb1a1f7f91386b67" "${MODEL_DIR}/.source-revision"
+  printf '%s  %s\n' "${MODEL_MANIFEST_SHA256}" "${MODEL_DIR}/.source-manifest.sha256" | sha256sum -c -
+  grep -Fx "glm47-synth-memorization-v1-100ep-20260731T071000Z" "${ADAPTER_DIR}/.training-run-id"
+  printf '%s  %s\n' "4acb7f23c295f45380155c5d9ee6bc59422262f0cb51f0c02f7e550d405b575a" "${ADAPTER_DIR}/adapter_model.bin" | sha256sum -c -
+  printf '%s  %s\n' "${ADAPTER_CONFIG_SHA256}" "${ADAPTER_DIR}/adapter_config.json" | sha256sum -c -
+  touch "${RESULT_DIR}/.${RUN_ID}.write-test"
+  rm "${RESULT_DIR}/.${RUN_ID}.write-test"
+
+  set -o pipefail
+  bash scripts/gcp_public_pr_eval_run.sh 2>&1 | \
+    tee "${RESULT_DIR}/${RUN_ID}.console.log"

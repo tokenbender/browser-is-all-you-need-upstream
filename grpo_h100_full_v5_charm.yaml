@@ -1,0 +1,60 @@
+name: glm47-full-v5-charm-grpo
+
+resources:
+  cloud: gcp
+  region: us-central1
+  instance_type: a3-highgpu-8g
+  accelerators: H100:8
+  network_tier: best
+  disk_size: 500
+  disk_tier: high
+  use_spot: true
+  autostop:
+    idle_minutes: 10
+    down: true
+
+workdir: .
+
+envs:
+  GLM47_SKYPILOT_MODE: smoke
+  RUN_ID: ""
+  PRETRAINING_RECEIPT_GCS_URI: ""
+  PRETRAINING_RECEIPT_SHA256: ""
+  CANARY_TASK_MANIFEST_GCS_URI: ""
+  CANARY_TASK_MANIFEST_SHA256: ""
+
+file_mounts:
+  ~/glm47-full-v5-assets/model/GLM-4.7-Flash:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/model/GLM-4.7-Flash
+    mode: COPY
+
+  ~/glm47-full-v5-assets/synthmem-v1-ep50/adapter:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/synthmem-v1-ep50-grpo-adapter
+    mode: COPY
+
+  ~/glm47-full-v5-assets/runtime/aider_cpp_rl_full_v5:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/runtime/aider_cpp_rl_full_v5
+    mode: COPY
+
+  ~/glm47-results-store:
+    source: gs://lifeandhalf-24122025-w8-biayn
+    mode: MOUNT
+
+setup: |
+  set -euo pipefail
+
+  export EXPECTED_GPU_COUNT=8
+  export EXPECTED_GPU_MODEL=H100
+  export EXPECTED_GPU_MEMORY_MIB=80000
+  bash scripts/gcp_public_pr_eval_host_setup.sh
+
+run: |
+  set -euo pipefail
+
+  export GLM47_FULL_V5_ASSET_ROOT="${HOME}/glm47-full-v5-assets"
+  export GLM47_FULL_V5_RESULT_ROOT="${HOME}/glm47-full-v5-local-results"
+  export GLM47_FULL_V5_DURABLE_RESULT_ROOT="${HOME}/glm47-results-store/runs/glm47/full-v5-charm"
+  export GLM47_EXECUTION_PROFILE="gcp-skypilot-h100-tp4-ep8-dp8"
+  export GLM47_PROVISIONER="skypilot"
+
+  bash scripts/gcp_full_v5_charm_skypilot.sh

@@ -1,0 +1,181 @@
+{
+  "schema_version": "charm-grpo-exact40-selection-v1",
+  "decision": "FROZEN",
+  "profile": "r7-admitted-mef-exact40",
+  "source": {
+    "selected_manifest_path": "artifacts/charm-task-generation-v1/v1-20260803T193513Z/sft-ready-v5-20260804T033850Z/independent-audit/selected-manifest.json",
+    "selected_manifest_sha256": "d09f853003d3a003a33994ba327c47ccdfeef509d4552ac750c1f7f607768be4",
+    "canonical_generation_plan_path": "artifacts/charm-task-generation-v1/v1-20260803T193513Z/v1-canonical-generation-plan.json",
+    "canonical_generation_plan_sha256": "4024ea1a27e94c85a16a16863405d9e63b7e8fe2d52ae6eebb36f19a10d65098",
+    "sft_ready_manifest_path": "artifacts/charm-task-generation-v1/v1-20260803T193513Z/sft-ready-v5-20260804T033850Z/SFT_READY_MANIFEST.json",
+    "sft_ready_manifest_sha256": "557b120a0dfe65629c66ce10885443ac8d1a6aafd9d21e182eee190f98a3023c"
+  },
+  "heldout_contract": {
+    "official_fixed26": "evaluation-only and unchanged",
+    "r6_task_identities": "quarantined and forbidden from gradients",
+    "r6_rollouts": "failure-mechanism evidence only; never model-facing"
+  },
+  "reward_policy": "hybrid-bipolar45-mef-v1",
+  "groups": {
+    "constraint_contracts": [
+      "charm-v1-moving-roster",
+      "charm-v1-splice-handle-list",
+      "charm-v1-cursor-gap-list",
+      "charm-v1-stable-partition-repair",
+      "charm-v1-extension-canonicalizer",
+      "charm-v1-dial-plan-router",
+      "charm-v1-cyclic-window-containment",
+      "charm-v1-tolerant-subsequence-repair",
+      "charm-v1-house-constraint-engine",
+      "charm-v1-solution-certificate"
+    ],
+    "numeric_aggregation": [
+      "charm-v1-ranked-multiset-tree",
+      "charm-v1-duplicate-side-traversal",
+      "charm-v1-stable-complex-quotient",
+      "charm-v1-complex-polynomial",
+      "charm-v1-polar-mean-repair",
+      "charm-v1-bounded-shard-frequency",
+      "charm-v1-mergeable-frequency",
+      "charm-v1-partition-frequency-repair",
+      "charm-v1-configurable-dice-score",
+      "charm-v1-scorecard-assignment"
+    ],
+    "spatial_transforms": [
+      "charm-v1-keyed-square-transposition",
+      "charm-v1-streaming-square-encoder",
+      "charm-v1-ragged-square-decoder",
+      "charm-v1-styled-hollow-diamond",
+      "charm-v1-manhattan-shell",
+      "charm-v1-variable-cup-garden",
+      "charm-v1-rotating-garden-seats",
+      "charm-v1-garden-patch-repair",
+      "charm-v1-obstacle-spiral-walk",
+      "charm-v1-layer-view-repair"
+    ],
+    "temporal_state": [
+      "charm-v1-exposure-window-ledger",
+      "charm-v1-dose-policy-table",
+      "charm-v1-rotating-sensitivity-mask",
+      "charm-v1-idempotent-cent-ledger",
+      "charm-v1-atomic-transfer-plan",
+      "charm-v1-generation-overwrite-ring",
+      "charm-v1-reserve-commit-ring",
+      "charm-v1-offset-civil-clock",
+      "charm-v1-weekly-window-intersection",
+      "charm-v1-wrapped-elapsed-counter"
+    ]
+  },
+  "canary_task_ids": [
+    "charm-v1-splice-handle-list",
+    "charm-v1-stable-partition-repair",
+    "charm-v1-dial-plan-router",
+    "charm-v1-cyclic-window-containment",
+    "charm-v1-solution-certificate",
+    "charm-v1-ranked-multiset-tree",
+    "charm-v1-duplicate-side-traversal",
+    "charm-v1-stable-complex-quotient",
+    "charm-v1-complex-polynomial",
+    "charm-v1-polar-mean-repair",
+    "charm-v1-keyed-square-transposition",
+    "charm-v1-ragged-square-decoder",
+    "charm-v1-manhattan-shell",
+    "charm-v1-garden-patch-repair",
+    "charm-v1-obstacle-spiral-walk",
+    "charm-v1-exposure-window-ledger",
+    "charm-v1-idempotent-cent-ledger",
+    "charm-v1-generation-overwrite-ring",
+    "charm-v1-offset-civil-clock",
+    "charm-v1-weekly-window-intersection"
+  ],
+  "schedule": {
+    "full_epochs": 3,
+    "canary_epochs": 5,
+    "ordinary_fraction": 0.75,
+    "repair_fraction": 0.25,
+    "one_gradient_row_per_task": true
+  },
+  "expected_full_composition": {
+    "task_count": 40,
+    "group_counts": {
+      "constraint_contracts": 10,
+      "numeric_aggregation": 10,
+      "spatial_transforms": 10,
+      "temporal_state": 10
+    },
+    "role_counts": {
+      "boundary_case": 4,
+      "calibration": 3,
+      "direct_verified_success": 23,
+      "repair_trajectory": 10
+    },
+    "starter_counts": {
+      "compile_bug": 4,
+      "empty": 8,
+      "near_correct": 4,
+      "partial_implementation": 8,
+      "semantic_bug": 6,
+      "skeleton": 10
+    },
+    "layout_counts": {
+      "cpp_only": 15,
+      "header_and_cpp": 20,
+      "header_only": 5
+    },
+    "header_mode_counts": {
+      "editable": 8,
+      "extended": 8,
+      "frozen": 8,
+      "reconstructed": 8,
+      "repaired": 8
+    },
+    "repair_type_counts": {
+      "api_repair": 2,
+      "compile_repair": 2,
+      "hidden_test_repair": 2,
+      "linker_repair": 1,
+      "runtime_repair": 2,
+      "sanitizer_repair": 1
+    },
+    "multi_file_gt2": 6,
+    "api_capability_counts": {
+      "extend_api": 25,
+      "implement_missing_api": 15,
+      "preserve_api": 40,
+      "refactor_api": 25,
+      "repair_api": 15
+    }
+  },
+  "expected_canary_composition": {
+    "task_count": 20,
+    "group_count_each": 5,
+    "role_counts": {
+      "boundary_case": 2,
+      "calibration": 1,
+      "direct_verified_success": 12,
+      "repair_trajectory": 5
+    },
+    "starter_counts": {
+      "compile_bug": 2,
+      "empty": 4,
+      "near_correct": 2,
+      "partial_implementation": 4,
+      "semantic_bug": 3,
+      "skeleton": 5
+    },
+    "layout_counts": {
+      "cpp_only": 7,
+      "header_and_cpp": 10,
+      "header_only": 3
+    },
+    "header_mode_count_each": 4,
+    "repair_types_present": [
+      "api_repair",
+      "compile_repair",
+      "hidden_test_repair",
+      "linker_repair",
+      "sanitizer_repair"
+    ],
+    "multi_file_gt2": 6
+  }
+}

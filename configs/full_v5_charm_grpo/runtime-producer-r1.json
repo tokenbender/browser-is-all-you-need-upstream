@@ -1,0 +1,29 @@
+{
+  "schema_version": "glm47-full-v5-runtime-producer-v1",
+  "profile_id": "aider-full-v5-production-ast17-gcp-r1",
+  "status": "NOT_COMPLETED",
+  "materialization_policy": "build-verify-locally-then-stage-to-gcs",
+  "model_host_access_authorized": false,
+  "producer": {
+    "branch": "29july-aider-glm47-posttrain",
+    "revision": "0efce27cd2c333f769afc74c9f9b852823256322"
+  },
+  "inputs": {
+    "v5_train_sha256": "a01a07c9d4e2706683814a3d5afc2bcd47172ff92b08f15e2c673729f185bd66",
+    "registry_manifest_sha256": "28e2ea54261704866ed4d1b566a0037d7ebae111faf0c01706bd315bf93dc142",
+    "registry_rows_sha256": "ff13441e968eca08387339e43f1fbbcf3993337c69ddd2ed8754a7cf0287a745",
+    "registry_targets_sha256": "c59538796e828530842f8fd36c2f0effa13fbf9a493d995c749973db4d6c28cc",
+    "inventory_manifest_sha256": "bfcac4247182b11edad690d8cfd4b9437e2e291eb68d54fb85fc187b76f2272a",
+    "inventory_executable_sha256": "6e537a40c8e6fcd6c0f43b3cd0dc13f3309121ae812cfe3d5f5a1b75f9630df3",
+    "inventory_excluded_sha256": "f7355ef61301f0c492f9373d5d3d07aab12cab4b1a64a887833baa7a1ce7902e",
+    "split_sha256": "e7691f8889babdf05a1254c58ba902ae13a42ddf17a0473281928b035fc8d7d5"
+  },
+  "outputs": {
+    "runtime_manifest_sha256": "93d671faa44abcc6deca21c6a49e247d76436835bfa2905ee33968a478fb532a",
+    "runtime_tree_sha256": "0a3df3ce40eed45814651c933277bfc5ca17359a2b3e6f0a7027b184e3569c7e",
+    "archive_sha256": "d2a4c413f8944dc2d560b3ca156b5543455f4dbeb24cbfa8e1f7770d356861f5",
+    "artifact_manifest_sha256": "5490c109fd2ed746f5680f0e996e847112872940b8e5eb466cd6af86bc6579e2"
+  },
+  "gcs_destination": "gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/runtime/aider_cpp_rl_full_v5",
+  "gpu_provisioning_allowed": false
+}

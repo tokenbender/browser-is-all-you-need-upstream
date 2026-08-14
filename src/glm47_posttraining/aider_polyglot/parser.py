@@ -18,6 +18,7 @@ RECOVERABLE_LABEL_RE = re.compile(r"^(?:#{1,6}\s+|[-*]\s+)?`{0,2}(?P<label>[^`]+
 PROTECTED_NAMES = {"CMakeLists.txt"}
 PROTECTED_SUFFIXES = ("_test.cpp", "_test.cc", "_test.h", ".cmake")
 MAX_RESPONSE_BYTES = 1024 * 1024
+THINKING_END_MARKER = "</think>"
 
 
 class AiderResponseError(ValueError):
@@ -26,6 +27,46 @@ class AiderResponseError(ValueError):
     def __init__(self, reason: str, message: str) -> None:
         super().__init__(message)
         self.reason = reason
+
+
+@dataclass(frozen=True)
+class Glm47ResponseSegments:
+    """Consumer-visible response segments for GLM thinking-mode output."""
+
+    final_answer: str
+    thinking_boundary_applied: bool
+
+
+def _validate_response_text(response: str) -> None:
+    try:
+        response_bytes = response.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise AiderResponseError(
+            "invalid_encoding", "response is not valid UTF-8 text"
+        ) from exc
+    if len(response_bytes) > MAX_RESPONSE_BYTES:
+        raise AiderResponseError("response_too_large", "response exceeds the safe byte limit")
+
+
+def segment_glm47_response(response: str) -> Glm47ResponseSegments:
+    """Expose only the final answer after GLM's thinking terminator.
+
+    The complete raw response is validated before segmentation so a malformed
+    or oversized thinking prefix cannot bypass the response contract. Without
+    a terminator, the full response remains visible for non-thinking output.
+    """
+
+    _validate_response_text(response)
+    _thinking, marker, final_answer = response.partition(THINKING_END_MARKER)
+    if not marker:
+        return Glm47ResponseSegments(
+            final_answer=response,
+            thinking_boundary_applied=False,
+        )
+    return Glm47ResponseSegments(
+        final_answer=final_answer,
+        thinking_boundary_applied=True,
+    )
 
 
 @dataclass(frozen=True)
@@ -38,13 +79,15 @@ def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> P
     """Extract complete files while rejecting any non-editable target.
 
     Mirrors Aider's whole-file coder: fences without a usable filename label are
-    skipped (recoverable format penalty), and a path-prefixed label whose basename
-    is editable maps to that basename. Space-free file-like labels outside the
+    normally skipped (recoverable format penalty), and a path-prefixed label whose
+    basename is editable maps to that basename. A single otherwise-unlabelled code
+    fence is recoverable only when its target is unambiguous: either there is one
+    editable file, or there is one editable source file and its code includes an
+    exact declared editable header. Space-free file-like labels outside the
     editable set stay fatal — that is the tamper boundary.
     """
 
-    if len(response.encode("utf-8")) > MAX_RESPONSE_BYTES:
-        raise AiderResponseError("response_too_large", "response exceeds the safe byte limit")
+    _validate_response_text(response)
 
     # GLM-4.7's pinned generation config treats these chat-control tokens as
     # terminal EOS ids. Miles deliberately retains the stop token in decoded
@@ -57,6 +100,7 @@ def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> P
     parsed: dict[str, str] = {}
     format_valid = True
     fence_count = 0
+    unlabelled_fences: list[re.Match[str]] = []
 
     for match in FENCE_RE.finditer(response):
         fence_count += 1
@@ -74,6 +118,8 @@ def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> P
             )
         else:
             format_valid = False
+            if not normalized and language in {"", "cpp", "c++", "cc", "hpp", "h"}:
+                unlabelled_fences.append(match)
             continue
 
         if target in parsed:
@@ -85,6 +131,13 @@ def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> P
         if not exact:
             format_valid = False
         parsed[target] = match.group("code").rstrip() + "\n"
+
+    if not parsed and fence_count == 1 and len(unlabelled_fences) == 1:
+        code = unlabelled_fences[0].group("code")
+        target = _infer_unlabelled_target(code, allowed)
+        if target is not None:
+            parsed[target] = code.rstrip() + "\n"
+            format_valid = False
 
     if fence_count == 0 or not parsed:
         raise AiderResponseError("invalid_format", "response contains no complete editable files")
@@ -112,3 +165,24 @@ def _looks_like_file_target(label: str) -> bool:
     if path.is_absolute() or ".." in path.parts or len(path.parts) > 1:
         return True
     return label in PROTECTED_NAMES or label.endswith(PROTECTED_SUFFIXES) or "." in label
+
+
+def _infer_unlabelled_target(code: str, allowed: set[str]) -> str | None:
+    if len(allowed) == 1:
+        return next(iter(allowed))
+
+    source_files = sorted(
+        name for name in allowed if PurePath(name).suffix.lower() in {".cpp", ".cc", ".cxx"}
+    )
+    header_files = sorted(
+        name for name in allowed if PurePath(name).suffix.lower() in {".h", ".hh", ".hpp", ".hxx"}
+    )
+    if len(source_files) != 1 or not header_files:
+        return None
+    for header in header_files:
+        include = re.compile(
+            rf'^\s*#\s*include\s*["<]{re.escape(header)}[">]\s*$', re.MULTILINE
+        )
+        if include.search(code):
+            return source_files[0]
+    return None

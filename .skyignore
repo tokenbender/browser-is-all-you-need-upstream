@@ -1,0 +1,24 @@
+# Never upload local private task material, receipts, results, or agent state.
+/.git/
+/.agents/
+/.codex/
+/artifacts/
+/dataset/jsonls/
+/dataset/registry/
+/dataset/reports/
+/dataset/tasks/
+/dataset/configs/*
+!/dataset/configs/glm47-flash-tokenizer-manifest.json
+!/dataset/configs/glm47-flash-chat-template.jinja
+/docs/
+/tests/
+/updated task/
+/wandb/
+/results/
+/.venv*/
+/.pytest_cache/
+/.ruff_cache/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.log

@@ -10,10 +10,10 @@ from importlib import metadata
 
 
 MINIMUM_VERSIONS = {
-    "flashinfer-python": "0.6.12",
-    "flashinfer-cubin": "0.6.12",
-    "flashinfer-jit-cache": "0.6.12",
-    "sglang-kernel": "0.4.4",
+    "flashinfer-python": "0.6.14",
+    "flashinfer-cubin": "0.6.14",
+    "flashinfer-jit-cache": "0.6.14",
+    "sglang-kernel": "0.4.5",
     "torch-memory-saver": "0.0.9.post1",
 }
 FLASHINFER_PACKAGES = (

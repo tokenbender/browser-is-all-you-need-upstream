@@ -1,0 +1,378 @@
+{
+  "admission": {
+    "canary_result": "NOT_COMPLETED",
+    "canary_task_manifest": {
+      "decision": "FROZEN",
+      "epochs": 5,
+      "matched_trial_count": 4,
+      "optimizer_updates": 5,
+      "path": "configs/full_v5_charm_grpo/r8-candidate-hybrid45-exact40-r87-canary.json",
+      "sha256": "83624d84f04dd479f415329f65ab6602d6a5d1be8f98dde64a82fe199bbe1b63",
+      "task_count": 20
+    },
+    "charm_eligible": true,
+    "checkpoint_disposition": "GATED",
+    "fixed26_role": "FROZEN_POST_TRAINING_EVALUATION_ONLY",
+    "full_training_authorized": false,
+    "pretraining_receipt": "NOT_COMPLETED",
+    "promotion_evaluation_split": {
+      "calibration_tasks_are_post_selection_only": true,
+      "decision": "FROZEN",
+      "development_task_count": 6,
+      "path": "configs/full_v5_charm_grpo/r8-r87-promotion-evaluation-split.json",
+      "sha256": "817aa22252acf9c6687313396be7d59b79052585ead9fbb6a2cdae797275e858",
+      "unseen_shadow_task_count": 5
+    },
+    "promotion_receipt": "NOT_COMPLETED",
+    "retroactive_admission_allowed": false,
+    "sft_ready_manifest_sha256": "INVALIDATED_BY_RUBRIC_UPDATE",
+    "task_id_registry_sha256": "16af87d1165e0a4be20c4c0d674feecc4ee420ee8ed4f875ebbe34074ae6fb4b"
+  },
+  "canary": {
+    "epochs": 5,
+    "global_batch_size": 160,
+    "matched_trials": 4,
+    "requires_pretraining_admission_pass": true,
+    "rollout_batch_size": 20,
+    "rollout_shuffle": false,
+    "rollout_updates": 5,
+    "samples_per_prompt": 8,
+    "selection_policy": {
+      "always_final": false,
+      "compile_rate_weight": 0.4,
+      "hidden_test_rate_weight": 0.4,
+      "validation_loss_weight": 0.2
+    },
+    "task_count": 20
+  },
+  "checkpoint_selection": {
+    "algorithm": "weighted-development-metrics-v1",
+    "always_final": false,
+    "deterministic_tie_break": [
+      "composite_score_desc",
+      "hidden_test_pass_rate_desc",
+      "compile_rate_desc",
+      "target_token_validation_loss_asc",
+      "optimizer_step_asc",
+      "checkpoint_id_asc"
+    ],
+    "development_task_count": 6,
+    "expected_canary_checkpoint_count": 5,
+    "final_checkpoint_competes_on_metrics": true,
+    "implementation": "glm47_posttraining.aider_polyglot.charm_r8_checkpoint_selection",
+    "log_every_checkpoint": true,
+    "metrics": [
+      "compile_rate",
+      "hidden_test_pass_rate",
+      "target_token_validation_loss"
+    ],
+    "shadow_metrics_excluded": true,
+    "split_path": "configs/full_v5_charm_grpo/r8-r87-promotion-evaluation-split.json",
+    "split_sha256": "817aa22252acf9c6687313396be7d59b79052585ead9fbb6a2cdae797275e858",
+    "unseen_shadow_task_count": 5,
+    "validation_loss_utility": "one_over_one_plus_loss",
+    "weights": {
+      "compile_rate": 0.4,
+      "hidden_test_pass_rate": 0.4,
+      "validation_loss": 0.2
+    }
+  },
+  "decision": "NOT_COMPLETED",
+  "effective_source": {
+    "file_count": 76,
+    "git_commit_is_provenance_only": true,
+    "manifest_path": "configs/full_v5_charm_grpo/r8-effective-source-manifest.json",
+    "manifest_sha256": "95895885d9d020b2bae7112fbe9d2e9ffca2347e399dd0fee3dcd054158d0179",
+    "schema_version": "glm47-r8-effective-source-manifest-v1",
+    "source_set_sha256": "b0e0f9b9209067c4ad5eae970ce13648842e19e35d043cb035bf01ffffb1ff30"
+  },
+  "execution": {
+    "admission_mode": "PRETRAINING_GATES_NOT_COMPLETED",
+    "canary_launcher": "managed-jobs",
+    "charm_eligible": true,
+    "checkpoint_disposition": "GATED",
+    "profile": "gcp-skypilot-h100-tp4-ep8-dp8-candidate-r8-hybrid45-r87",
+    "provisioner": "skypilot",
+    "smoke_mode": "prepare-only",
+    "smoke_optimizer_updates": 0,
+    "task_yaml": "grpo_h100_full_v5_charm_r8.yaml"
+  },
+  "full_training": {
+    "development_targets": 11,
+    "epochs": 3,
+    "full_development_interval": 6,
+    "global_batch_size": 160,
+    "kl_coefficient": 0.02,
+    "kl_loss": true,
+    "learning_rate": 5e-07,
+    "maximum_prompt_length": 2048,
+    "maximum_response_length": 16384,
+    "maximum_tokens_per_gpu": 18432,
+    "monitor_interval": 1,
+    "reference_model": true,
+    "requires_canary_promotion_pass": true,
+    "rollout_batch_size": 20,
+    "rollout_shuffle": false,
+    "rollout_updates": 6,
+    "samples_per_prompt": 8,
+    "save_interval": 1,
+    "sequence_length": 34816,
+    "temperature": 0.7,
+    "thinking_enabled": true,
+    "train_targets": 40
+  },
+  "full_v5_runtime": {
+    "asset_subdir": "runtime/charm-r8-candidate-hybrid45-exact40-r87-rewardable-20260813T044420Z",
+    "canary_schedule_exposures": 100,
+    "canary_targets": 20,
+    "development_targets": 11,
+    "fixed26_exact_hits": 0,
+    "full_schedule_exposures": 120,
+    "gcp_asset_status": "LOCAL_MATERIALIZED_ORACLE_PASS_UPLOAD_PENDING",
+    "kind": "charm-r8-candidate-hybrid45-exact40",
+    "manifest_sha256": "72296f7bae1b4690a613922f3f29b2011e4a8646d356a4e7663cfc5822e7bfd2",
+    "oracle_receipt_sha256": "f3878a58fe6fb7b4412d00a90eab732230c823ff0c73d0409669ebf18b878ce6",
+    "public_api_manifest_count": 51,
+    "public_api_manifest_schema": "glm47-public-api-ast-manifest-v1",
+    "public_api_manifest_set_sha256": "691eaa29592877385ff10b265a592c7e9884214f279eae0a8c31fe879535be64",
+    "reference_answers_packaged": false,
+    "selection_sha256": "b340fbd212f7ba8472161448ac8a579abc91178d3d0731e3e546470594ae1788",
+    "targets": 51,
+    "train_targets": 40,
+    "tree_sha256": "b1fff05e66a4198dca8d74ae41e2837e0926b24b8acfb281822bd08583554075"
+  },
+  "gcp": {
+    "adapter_source": "gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/synthmem-v1-ep50-grpo-adapter",
+    "asset_bucket": "gs://lifeandhalf-24122025-w8-biayn",
+    "boot_disk_gb": 500,
+    "gpu_count": 8,
+    "gpu_model_contains": "H100",
+    "instance_name": "skypilot-managed",
+    "machine_type": "a3-highgpu-8g",
+    "minimum_gpu_memory_mib": 80000,
+    "model_source": "gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/model/GLM-4.7-Flash",
+    "network_tier": "PREMIUM",
+    "preferred_zones": [
+      "us-central1-a"
+    ],
+    "project": "lifeandhalf-24122025",
+    "provisioned_status": "NOT_PROVISIONED",
+    "provisioned_status_checked_at": null,
+    "provisioned_zone": "us-central1-a",
+    "provisioning_policy": "SPOT",
+    "region": "us-central1",
+    "result_destination": "gs://lifeandhalf-24122025-w8-biayn/runs/glm47/charm/r8-candidate-hybrid45-exact40-r87",
+    "runtime_source": "gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/runtime/charm-r8-candidate-hybrid45-exact40-r87-rewardable-20260813T044420Z"
+  },
+  "modal_policy": {
+    "authorization_env": "GLM47_MODAL_FULL_AUTHORIZATION",
+    "authorization_phrase": "I_FULLY_AUTHORIZE_MODAL_EXECUTION_AND_COSTS",
+    "default": "DENY"
+  },
+  "model": {
+    "manifest_sha256": "ac1c2693a8d8724a6aa359eb7a6778d5dda59743b1b4c45ff92986d2d1e6cecc",
+    "repo": "zai-org/GLM-4.7-Flash",
+    "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
+  },
+  "optimizer_policy": {
+    "advantage_estimator": "grpo",
+    "dr_grpo_selected": false,
+    "epsilon": 1e-06,
+    "global_advantage_normalization": false,
+    "group_std_normalization": true,
+    "policy_version": "miles-standard-grpo-group-std-v1",
+    "rewards_normalization": true
+  },
+  "parallelism": {
+    "context": 1,
+    "expert": 8,
+    "expert_tensor": 1,
+    "pipeline": 1,
+    "sglang_data_parallel": 8,
+    "tensor": 4
+  },
+  "preflight_evidence": {
+    "all_local_zero_update_gates_passed": true,
+    "corpus_v4_1_pretraining": {
+      "decision": "PASS",
+      "file_sha256": "f129fb2c953e7c87fae3f796c9c04c546943f0ad8518c0cfc795a85c1c4218e0",
+      "path": "artifacts/charm-r8-preflight-20260813/v4.1-pretraining-revalidation.json",
+      "receipt_sha256": null,
+      "schema_version": "charm-generator-admission-receipt-v4.1"
+    },
+    "executable_oracle": {
+      "decision": "PASS",
+      "file_sha256": "f3878a58fe6fb7b4412d00a90eab732230c823ff0c73d0409669ebf18b878ce6",
+      "path": "artifacts/charm-r8-candidate-hybrid45-exact40-r87-rewardable-20260813T044420Z/oracle-verification-receipt.json",
+      "receipt_sha256": "0b033bc84873ca4bbf0264053cfa08e0cf6d125597e11bdad41818bf4c721e66",
+      "schema_version": "charm-r8-executable-oracle-receipt-v1"
+    },
+    "hybrid45_corpus_replay": {
+      "decision": "PASS",
+      "file_sha256": "fd0e5560a864ae3bb29f48b9b0dc522013bad278f60e20cc6bb48bfb3b491593",
+      "functional_reference_pass_count": 51,
+      "gradient_full_positive_reward_count": 40,
+      "optimizer_updates": 0,
+      "path": "artifacts/charm-r8-preflight-20260813/rewardable-hybrid45-corpus-no-update-replay-libclangfix.json",
+      "receipt_sha256": "3bf7cf32b8140de292ebb9193808373a506ed8b163fe57ab7e51219e8ff022bf",
+      "schema_version": "charm-r8-hybrid45-corpus-no-update-replay-v1"
+    },
+    "monitor_prompt_preflight": {
+      "decision": "PASS",
+      "file_sha256": "eb946a4cabe749de19a703423937306f9102db57fdd9d1621f078b78f3427530",
+      "maximum_prompt_tokens": 1432,
+      "minimum_prompt_tokens": 895,
+      "path": "artifacts/charm-r8-preflight-20260813/rewardable-monitor-prompt-preflight.json",
+      "prompt_data_sha256": "dae3f6e54449e76ac91f4a1031b84c765f40deafaa1d57071c6e5614ea9ae591",
+      "receipt_sha256": "8b1c8b8dc31c30d688c14d0ca1f85c941b8b1d24077534f6398208daf32627eb",
+      "row_count": 11,
+      "schema_version": "glm47-aider-prompt-preflight-v1"
+    },
+    "sanitizer_preflight": {
+      "decision": "PASS",
+      "file_sha256": "363042ba6b406e69a483f3c38aa5d608b9ab0e2399a3b258d4f898455ea13ac0",
+      "path": "artifacts/charm-r8-preflight-20260813/sanitizer-preflight-local.json",
+      "receipt_sha256": null,
+      "schema_version": "charm-r8-sanitizer-preflight-v1"
+    },
+    "scope": "local-zero-update-evidence-not-training-admission",
+    "train_prompt_preflight": {
+      "decision": "PASS",
+      "file_sha256": "94a19103e324ef2d8ba16fdcebe59aacc6114bfce939bfbd54b62d07df433f19",
+      "maximum_prompt_tokens": 1649,
+      "minimum_prompt_tokens": 859,
+      "path": "artifacts/charm-r8-preflight-20260813/rewardable-train-prompt-preflight.json",
+      "prompt_data_sha256": "06bae2a92ae4be1e7f5340486f1adc89e478b474c2e80cd9e972ed6e2edeaf1c",
+      "receipt_sha256": "63dc4b647e281ca141834bdc72c17bdce15f360724d9cde13a7a9ec695b8c4f6",
+      "row_count": 40,
+      "schema_version": "glm47-aider-prompt-preflight-v1"
+    },
+    "training_admission_status": "NOT_COMPLETED",
+    "verifier_image_id": "sha256:14c9e6e468ff65b3f205eeaf95dbcc6bd509e6515dbd601089a1cdca8fa66464"
+  },
+  "profile_id": "aider-charm-r8-candidate-hybrid45-exact40-r87-skypilot",
+  "reward": {
+    "chat_template_sha256": "d63ad536c3c81880043e22ec7fd08db42b4d8fb7c89c7138bc562bfa25281375",
+    "concurrency_policy": "task-isolated-docker-gcc13-v1",
+    "context_isolation_required": true,
+    "implementation_mode": "hybrid_bipolar45",
+    "policy_version": "hybrid-bipolar45-v2",
+    "profile": "hybrid45_v2_r8_corrected_exact40_r87",
+    "repair_bonus": false,
+    "response_contract": "glm47-thinking-final-answer-v1",
+    "reward_preflight_required": true,
+    "rollout_sample_validator_required": true,
+    "runtime_preflight_required": true,
+    "sandbox_backend": "docker",
+    "sandbox_network": "none",
+    "signal_gate_required": true,
+    "signal_thresholds": {
+      "minimum_compile_rate": 0.2,
+      "minimum_exact_format_rate": 0.5,
+      "minimum_kernel_variance_groups": 2,
+      "minimum_positive_groups": 1,
+      "minimum_reward_variance_groups": 2,
+      "minimum_semantic_variance_groups": 2,
+      "require_unique_task_groups": true
+    },
+    "strong_negative_scores": {
+      "api": -0.8,
+      "link": -0.75,
+      "syntax": -0.85
+    },
+    "tsan_execution_allowed": true,
+    "tsan_preflight_required": true,
+    "workers": 32
+  },
+  "schema_version": "glm47-full-v5-charm-gcp-profile-v1",
+  "source_lineage": {
+    "active_branch": "feature/aider-rl8-ast17-production-reward",
+    "generation_batch_id": "charm-task-generation-v1r87-20260812T122334Z",
+    "generation_session_id": "dcb547c5-de45-4541-8faa-e889b2790bf5",
+    "rubric_update": {
+      "curriculum_task_ids_changed": true,
+      "downstream_admission_invalidated": true,
+      "historical_profile_path": "/data/Tirtha/browser-is-all-you-need/.agent_work/browser-is-all-you-need-rl8-ast17/configs/full_v5_charm_grpo/gcp-r7-admitted-mef-exact40-r87.json",
+      "historical_profile_sha256": "f4fcd3d54c88b36e7d92c302c49caefc4dfdf5062c1ce1800e4eaa6250eb549e",
+      "historical_r6_checkpoint": "QUARANTINE_DIAGNOSTICS_ONLY",
+      "hybrid45_formula_changed": false,
+      "starting_checkpoint_changed": false,
+      "task_replacements": {
+        "charm-v1r87-37414-dcb547c5-bezier-complex-samples": "charm-v1r87-37414-dcb547c5-decontamination-cover",
+        "charm-v1r87-37414-dcb547c5-rubric-cap-scores": "charm-v1r87-37414-dcb547c5-crop-rotation-audit",
+        "charm-v1r87-37414-dcb547c5-successor-thread-audit": "charm-v1r87-37414-dcb547c5-quota-lane-drain"
+      }
+    }
+  },
+  "starting_adapter": {
+    "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "adapter_model_sha256": "4acb7f23c295f45380155c5d9ee6bc59422262f0cb51f0c02f7e550d405b575a",
+    "checkpoint_path": "checkpoints/sft_lora_r16/iter_0000649",
+    "epoch": 50,
+    "expected_native_shards": 8,
+    "gcp_asset_status": "AVAILABLE",
+    "lora_alpha": 32,
+    "lora_rank": 16,
+    "native_reconstruction_manifest_sha256": "8048618f6d2b858e3f6e677a5cf0652a7bb5c4801096830a0230f7cc712eb1dd",
+    "optimizer_iteration": 649,
+    "profile": "synthmem-v1-ep50",
+    "source_tensor_bytes": 489504768,
+    "source_tensor_content_sha256": "95c4c66e62e0d0a191f760bdf1dbab091c38a8f182ce75846b1a04227d4f60db",
+    "source_tensor_count": 9741,
+    "stripped_mtp_tensor_count": 207,
+    "training_run_id": "glm47-synth-memorization-v1-100ep-20260731T071000Z"
+  },
+  "task_selection": {
+    "canary_count": 20,
+    "count": 40,
+    "ordinary_count": 30,
+    "ranking": "frozen-r8-rewardable-selection-v2",
+    "repair_count": 10,
+    "selection_sha256": "b340fbd212f7ba8472161448ac8a579abc91178d3d0731e3e546470594ae1788"
+  },
+  "tokenizer": {
+    "chat_template_path": "dataset/configs/glm47-flash-chat-template.jinja",
+    "chat_template_sha256": "d63ad536c3c81880043e22ec7fd08db42b4d8fb7c89c7138bc562bfa25281375",
+    "manifest_path": "dataset/configs/glm47-flash-tokenizer-manifest.json",
+    "manifest_sha256": "53bcc04c0e0acedb8b57abbb03f28c29519b79a245c78784c341554ad33ce1a2",
+    "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
+  },
+  "tracking": {
+    "minimum_free_storage_gib": 220,
+    "persist_component_rewards": true,
+    "persist_raw_rollouts": true,
+    "persist_signal_receipts": true,
+    "result_sync_interval_seconds": 60,
+    "sync_contract": "durable-marker-last-v1",
+    "wandb_mode": "offline",
+    "wandb_project": "glm47-aider-charm-r8-corrected-hybrid45-r87"
+  },
+  "training_image": {
+    "base": "radixark/miles:latest-cu12@sha256:6def6d45ffa6b34d668adcb7eeaaf8670bc38d29f5cb6e497e23a06c0ad1b900",
+    "dockerfile": "docker/full-v5-charm-grpo-gcp/Dockerfile",
+    "local_name": "glm47-full-v5-charm-grpo:gcp-r8-corrected-hybrid45-r87",
+    "miles_commit": "8f0d065080076186ab152ee0129aceae34be756f",
+    "miles_source_files": {
+      "miles/backends/training_utils/loss.py": "a30edc0a74356c4e470febac5d3551409dfbe8da220c7b60d60dc55293e6c602",
+      "miles/backends/training_utils/loss_hub/advantages.py": "3fc20719fba7448e78933c571e30aa8f54f96e7d425c4a1e6c1c0aadccacca3f",
+      "miles/backends/training_utils/loss_hub/losses.py": "4ddafab9cdae154f6122ef01aff86738d83713eaa49035c8e1a6df00e576e505",
+      "miles/backends/training_utils/loss_hub/math_utils.py": "0306b2cdadaa4effcf483b7d8e0d3a5da1a01cc83aca76ef99ae7a14c56e9cf9",
+      "miles/ray/rollout/train_data_conversion.py": "d4ea898d0242679146710d491e5b0bf362af8320810ff05bcafc6d4c096cab07",
+      "miles/utils/arguments.py": "c67e8340ff881a88844a82c9aa1e8e122e382b99c8a6167d465f3fb1ed2e73f0",
+      "miles/utils/external_utils/model_args_utils.py": "9bc0bc742dac9c51300f2137bf35c6ceb224f85563735fb1b2ef3900831b9082",
+      "scripts/models/glm4.7-flash.py": "5533d9f88644f3b1d47c3dd869cf94b549872eaaf4879c66fab2731f1c5db571",
+      "tools/convert_hf_to_torch_dist.py": "0c2541d30073777a30344273a3773844a70ca1961287520c0496a1cec18d43f6"
+    },
+    "registry": "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-charm-grpo:gcp-r8-corrected-hybrid45-r87",
+    "trainer_contract_preflight_required": true
+  },
+  "verifier_image": {
+    "clang18_base": "silkeh/clang:18-bookworm@sha256:9388794775d1393c16b6897b4775b6d3e29459319de0bfafec59a20262e1fa68",
+    "compile_compiler": "gcc-13.4.0",
+    "dockerfile": "docker/full-v5-charm-grpo-gcp/Verifier.Dockerfile",
+    "gcc13_base": "gcc:13@sha256:4f86732b7340848efeb2b4ea4d907e2eb754eaeb6d4d26ab462b14c1e4a90c3a",
+    "local_name": "glm47-full-v5-charm-verifier:gcp-r8-corrected-hybrid45-r87",
+    "network": "none",
+    "public_api_compiler": "clang-18.1.8"
+  }
+}

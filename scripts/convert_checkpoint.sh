@@ -68,9 +68,14 @@ echo "tp=${TP_SIZE} pp=${PP_SIZE} ep=${EP_SIZE} etp=${ETP_SIZE}"
 # Glm4MoeLite); run it through the bridge-registering wrapper with the repo
 # src on PYTHONPATH, mirroring how training uses miles_train_with_glm47_bridge.
 # GLM47_KEEP_PP1 stops the converter from repurposing PP for conversion
-# parallelism so the checkpoint is written in the exact training layout.
+# parallelism so the checkpoint is written in the exact training layout. The
+# pinned Miles converter honors CONVERT_KEEP_PP1 natively; the Python wrapper
+# retains a fail-closed compatibility patch for the known legacy source shape.
 export MILES_CONVERT_PY="${MILES_ROOT}/tools/convert_hf_to_torch_dist.py"
 export GLM47_KEEP_PP1="${GLM47_KEEP_PP1:-1}"
+if [ "${GLM47_KEEP_PP1}" = "1" ]; then
+  export CONVERT_KEEP_PP1=1
+fi
 CONVERT_PYTHONPATH="${REPO_ROOT}/src:${MEGATRON_DIR}:${PYTHONPATH:-}"
 if [ "${CONVERT_NPROC}" = "1" ]; then
   CUDA_DEVICE_MAX_CONNECTIONS=1 \

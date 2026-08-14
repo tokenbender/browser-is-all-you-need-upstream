@@ -19,6 +19,49 @@ export MILES_PIPELINE_MODEL_PARALLEL_SIZE="${MILES_PIPELINE_MODEL_PARALLEL_SIZE:
 export MILES_CONTEXT_PARALLEL_SIZE="${MILES_CONTEXT_PARALLEL_SIZE:-1}"
 export MILES_EXPERT_MODEL_PARALLEL_SIZE="${MILES_EXPERT_MODEL_PARALLEL_SIZE:-8}"
 export MILES_EXPERT_TENSOR_PARALLEL_SIZE="${MILES_EXPERT_TENSOR_PARALLEL_SIZE:-1}"
+
+native_owner_count() {
+  local tp="$1"
+  local ep="$2"
+  local world="$3"
+  local a b remainder period value
+  for value in "${tp}" "${ep}" "${world}"; do
+    if ! [[ "${value}" =~ ^[1-9][0-9]*$ ]]; then
+      echo "parallel sizes must be positive integers, got: ${value}" >&2
+      return 2
+    fi
+  done
+  if [ "${ep}" -eq 1 ]; then
+    echo "${tp}"
+    return
+  fi
+  a="${tp}"
+  b="${ep}"
+  while [ "${b}" -ne 0 ]; do
+    remainder=$((a % b))
+    a="${b}"
+    b="${remainder}"
+  done
+  period=$((tp / a * ep))
+  if [ "${world}" -lt "${period}" ]; then
+    echo "${world}"
+  else
+    echo "${period}"
+  fi
+}
+
+COMPUTED_NATIVE_SHARDS="$(
+  native_owner_count \
+    "${MILES_TENSOR_MODEL_PARALLEL_SIZE}" \
+    "${MILES_EXPERT_MODEL_PARALLEL_SIZE}" \
+    "${MILES_GPUS_PER_NODE}"
+)"
+if [ -n "${MILES_EXPECTED_NATIVE_SHARDS:-}" ] && \
+   [ "${MILES_EXPECTED_NATIVE_SHARDS}" != "${COMPUTED_NATIVE_SHARDS}" ]; then
+  echo "MILES_EXPECTED_NATIVE_SHARDS does not match the configured TP/EP owners" >&2
+  exit 2
+fi
+export MILES_EXPECTED_NATIVE_SHARDS="${COMPUTED_NATIVE_SHARDS}"
 export MILES_SEQ_LENGTH="${MILES_SEQ_LENGTH:-4096}"
 # Measured packing profile for colocated GRPO.
 export MILES_MAX_TOKENS_PER_GPU="${MILES_MAX_TOKENS_PER_GPU:-16384}"
@@ -70,7 +113,9 @@ export MILES_EXPERTS_SHARED_OUTER_LORAS="${MILES_EXPERTS_SHARED_OUTER_LORAS:-1}"
 export MILES_LORA_BASE_CPU_BACKUP="${MILES_LORA_BASE_CPU_BACKUP:-1}"
 export MILES_NO_GRADIENT_ACCUMULATION_FUSION="${MILES_NO_GRADIENT_ACCUMULATION_FUSION:-1}"
 export MILES_SGLANG_LORA_USE_VIRTUAL_EXPERTS="${MILES_SGLANG_LORA_USE_VIRTUAL_EXPERTS:-1}"
-export MILES_APPLY_CHAT_TEMPLATE_KWARGS="${MILES_APPLY_CHAT_TEMPLATE_KWARGS:-{\"enable_thinking\": false}}"
+if [ -z "${MILES_APPLY_CHAT_TEMPLATE_KWARGS:-}" ]; then
+  export MILES_APPLY_CHAT_TEMPLATE_KWARGS='{"enable_thinking": false}'
+fi
 export MILES_TRAIN_MODULE="${MILES_TRAIN_MODULE:-glm47_posttraining.integrations.miles_train_with_glm47_bridge}"
 export GLM47_REGISTER_BRIDGE="${GLM47_REGISTER_BRIDGE:-1}"
 
@@ -98,7 +143,10 @@ if [ -n "${MILES_LORA_ADAPTER_PATH:-}" ] && [ "${MILES_AUTO_PREPARE_GRPO_ADAPTER
   export MILES_LORA_SOURCE_ADAPTER_PATH="${TRAINER_ADAPTER_PATH}"
   PREPARE_ARGS=(
     --include-native
-    --expected-native-shards "${MILES_EXPECTED_NATIVE_SHARDS:-${MILES_TENSOR_MODEL_PARALLEL_SIZE}}"
+    --expected-native-shards "${MILES_EXPECTED_NATIVE_SHARDS}"
+    --expected-tensor-parallel-size "${MILES_TENSOR_MODEL_PARALLEL_SIZE}"
+    --expected-expert-parallel-size "${MILES_EXPERT_MODEL_PARALLEL_SIZE}"
+    --expected-world-size "${MILES_GPUS_PER_NODE}"
   )
   if [ -n "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256:-}" ]; then
     PREPARE_ARGS+=(--expected-source-sha256 "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}")
@@ -108,6 +156,19 @@ if [ -n "${MILES_LORA_ADAPTER_PATH:-}" ] && [ "${MILES_AUTO_PREPARE_GRPO_ADAPTER
   fi
   if [ -n "${MILES_EXPECTED_STRIPPED_TENSORS:-}" ]; then
     PREPARE_ARGS+=(--expected-stripped-tensors "${MILES_EXPECTED_STRIPPED_TENSORS}")
+  fi
+  if [ -n "${MILES_NATIVE_RECONSTRUCTION_MANIFEST_PATH:-}" ] || \
+     [ -n "${MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256:-}" ]; then
+    if [ -z "${MILES_NATIVE_RECONSTRUCTION_MANIFEST_PATH:-}" ] || \
+       [ -z "${MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256:-}" ]; then
+      echo "native reconstruction manifest path and SHA-256 are required together" >&2
+      exit 2
+    fi
+    PREPARE_ARGS+=(
+      --native-reconstruction-manifest "${MILES_NATIVE_RECONSTRUCTION_MANIFEST_PATH}"
+      --expected-native-reconstruction-manifest-sha256 \
+        "${MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256}"
+    )
   fi
   "${MILES_PYTHON:-python3}" "${REPO_ROOT}/scripts/prepare_grpo_adapter.py" \
     "${PREPARE_ARGS[@]}" "${TRAINER_ADAPTER_PATH}" "${HYBRID_ADAPTER_PATH}"

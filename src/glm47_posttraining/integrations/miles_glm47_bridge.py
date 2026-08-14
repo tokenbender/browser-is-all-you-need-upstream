@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import re
+from pathlib import Path
 from typing import Any
 
 
@@ -15,6 +17,14 @@ _LORA_TMS_PATCHED = False
 _LORA_UPDATE_TMS_PATCHED = False
 _ROLLOUT_DP_SHARD_PATCHED = False
 _CORRECT_SAMPLE_LOG_PATCHED = False
+
+
+_EP_NATIVE_ADAPTER_RE = re.compile(
+    r"^adapter_megatron_tp(?P<tp>\d+)_pp(?P<pp>\d+)_ep(?P<ep>\d+)\.pt$"
+)
+_LEGACY_NATIVE_ADAPTER_RE = re.compile(
+    r"^adapter_megatron_tp(?P<tp>\d+)_pp(?P<pp>\d+)\.pt$"
+)
 
 
 def register_glm47_bridge() -> None:
@@ -289,7 +299,7 @@ def _patch_sglang_lora_sync_skip_mtp() -> None:
 
 
 def _patch_warm_start_optimizer_reload() -> None:
-    """Align optimizer master parameters with a loaded LoRA adapter."""
+    """Install EP-safe native checkpoint I/O and optimizer-master reload."""
 
     global _WARM_START_OPT_PATCHED
     if _WARM_START_OPT_PATCHED:
@@ -300,15 +310,214 @@ def _patch_warm_start_optimizer_reload() -> None:
     _when_imported("miles.backends.megatron_utils.lora_utils", _apply_warm_start_optimizer_reload)
 
 
+def _ep_native_adapter_name(tp_rank: int, pp_rank: int, ep_rank: int) -> str:
+    return f"adapter_megatron_tp{tp_rank}_pp{pp_rank}_ep{ep_rank}.pt"
+
+
+def _distributed_is_initialized(dist_module) -> bool:
+    is_available = getattr(dist_module, "is_available", None)
+    if is_available is not None and not is_available():
+        return False
+    return bool(getattr(dist_module, "is_initialized", lambda: False)())
+
+
+def _ep_native_owner_topology(parallel_state, dist_module):
+    """Return the exact EP-native files and elected writer for this rank.
+
+    Dense TP and routed-expert EP rank spaces need not form a Cartesian product.
+    Gather the coordinates that actually exist, then elect the lowest global rank
+    among DP/CP replicas of each ``(TP, PP, EP)`` owner.  ETP is included in the
+    collision check even though the current format omits it: two different ETP
+    owners must never be allowed to race into one filename.
+    """
+
+    tp_rank = int(parallel_state.tp.rank)
+    pp_rank = int(parallel_state.pp.rank)
+    ep_rank = int(parallel_state.ep.rank)
+    etp_rank = int(parallel_state.etp.rank)
+    initialized = _distributed_is_initialized(dist_module)
+    global_rank = int(dist_module.get_rank()) if initialized else 0
+    local_record = (global_rank, tp_rank, pp_rank, ep_rank, etp_rank)
+
+    if initialized:
+        records = [None] * int(dist_module.get_world_size())
+        dist_module.all_gather_object(records, local_record)
+    else:
+        records = [local_record]
+
+    owners: dict[tuple[int, int, int], list[tuple[int, int]]] = {}
+    for record in records:
+        if not isinstance(record, (tuple, list)) or len(record) != 5:
+            raise RuntimeError(f"invalid native-adapter owner record: {record!r}")
+        rank, tp, pp, ep, etp = (int(value) for value in record)
+        owners.setdefault((tp, pp, ep), []).append((rank, etp))
+
+    writers: dict[tuple[int, int, int], int] = {}
+    for owner, replicas in owners.items():
+        etp_ranks = {etp for _, etp in replicas}
+        if len(etp_ranks) != 1:
+            raise RuntimeError(
+                "EP-aware native adapter filename collision: "
+                f"owner tp={owner[0]} pp={owner[1]} ep={owner[2]} spans "
+                f"ETP ranks {sorted(etp_ranks)}"
+            )
+        writers[owner] = min(rank for rank, _ in replicas)
+
+    local_owner = (tp_rank, pp_rank, ep_rank)
+    expected_names = {
+        _ep_native_adapter_name(tp, pp, ep) for tp, pp, ep in owners
+    }
+    return {
+        "local_name": _ep_native_adapter_name(*local_owner),
+        "expected_names": expected_names,
+        "is_writer": writers[local_owner] == global_rank,
+        "coordinator_rank": min(rank for rank, *_ in records),
+        "records": tuple(tuple(int(value) for value in record) for record in records),
+    }
+
+
+def _present_ep_native_names(adapter_dir: Path) -> set[str]:
+    if not adapter_dir.is_dir():
+        return set()
+    return {
+        path.name
+        for path in adapter_dir.iterdir()
+        if path.is_file() and _EP_NATIVE_ADAPTER_RE.fullmatch(path.name)
+    }
+
+
+def _require_complete_ep_native_set(adapter_dir: Path, expected_names: set[str]) -> None:
+    present = _present_ep_native_names(adapter_dir)
+    if present == expected_names:
+        return
+    missing = sorted(expected_names - present)
+    unexpected = sorted(present - expected_names)
+    legacy = sorted(
+        path.name
+        for path in adapter_dir.iterdir()
+        if path.is_file() and _LEGACY_NATIVE_ADAPTER_RE.fullmatch(path.name)
+    ) if adapter_dir.is_dir() else []
+    raise RuntimeError(
+        "incomplete EP-aware Megatron LoRA checkpoint; refusing TP-only fallback: "
+        f"missing={missing}, unexpected={unexpected}, legacy_tp_only={legacy}"
+    )
+
+
+def _load_ep_native_adapter(
+    module,
+    model,
+    adapter_path,
+    *,
+    parallel_state,
+    optimizer=None,
+    opt_param_scheduler=None,
+):
+    adapter_dir = Path(adapter_path)
+    topology = _ep_native_owner_topology(parallel_state, module.dist)
+    _require_complete_ep_native_set(adapter_dir, topology["expected_names"])
+    native_path = adapter_dir / topology["local_name"]
+    state_dict = module.torch.load(native_path, map_location="cpu", weights_only=True)
+    if not isinstance(state_dict, dict):
+        raise RuntimeError(f"EP-aware adapter shard is not a state dictionary: {native_path}")
+
+    parameters = {
+        name: param
+        for model_chunk in model
+        for name, param in model_chunk.named_parameters()
+        if module._is_adapter_param_name(name)
+    }
+    missing = sorted(set(parameters) - set(state_dict))
+    unexpected = sorted(set(state_dict) - set(parameters))
+    schema_errors = []
+    for name in sorted(set(parameters) & set(state_dict)):
+        tensor = state_dict[name]
+        param = parameters[name]
+        if not module.torch.is_tensor(tensor):
+            schema_errors.append(f"{name}: not a tensor")
+        elif tensor.shape != param.shape or tensor.dtype != param.dtype:
+            schema_errors.append(
+                f"{name}: checkpoint={tuple(tensor.shape)}/{tensor.dtype}, "
+                f"model={tuple(param.shape)}/{param.dtype}"
+            )
+    if missing or unexpected or schema_errors:
+        raise RuntimeError(
+            f"EP-aware adapter shard schema mismatch for {native_path}: "
+            f"missing={missing[:8]}, unexpected={unexpected[:8]}, "
+            f"schema_errors={schema_errors[:8]}"
+        )
+
+    for name, param in parameters.items():
+        param.data.copy_(state_dict[name].to(device=param.device))
+    module.logger.info(
+        "Loaded %d adapter tensors from EP-aware Megatron checkpoint: %s",
+        len(parameters),
+        native_path,
+    )
+    iteration = module._load_training_state(adapter_dir, optimizer, opt_param_scheduler)
+    return True, iteration
+
+
+def _save_ep_native_adapter(module, model, save_dir, *, parallel_state) -> None:
+    save_path = Path(save_dir)
+    topology = _ep_native_owner_topology(parallel_state, module.dist)
+    initialized = _distributed_is_initialized(module.dist)
+
+    if topology["is_writer"]:
+        adapter_state = {
+            name: param.data.cpu()
+            for model_chunk in model
+            for name, param in model_chunk.named_parameters()
+            if module._is_adapter_param_name(name)
+        }
+        if not adapter_state:
+            raise RuntimeError("refusing to save an empty EP-aware LoRA adapter shard")
+        destination = save_path / topology["local_name"]
+        temporary = save_path / f".{destination.name}.rank{module.dist.get_rank() if initialized else 0}.tmp"
+        try:
+            module.torch.save(adapter_state, temporary)
+            os.replace(temporary, destination)
+        finally:
+            if temporary.exists():
+                temporary.unlink()
+
+    if initialized:
+        module.dist.barrier()
+
+    global_rank = int(module.dist.get_rank()) if initialized else 0
+    if global_rank == topology["coordinator_rank"]:
+        for path in save_path.iterdir():
+            if path.is_file() and _LEGACY_NATIVE_ADAPTER_RE.fullmatch(path.name):
+                path.unlink()
+        os.sync()
+
+    if initialized:
+        module.dist.barrier()
+    _require_complete_ep_native_set(save_path, topology["expected_names"])
+
+
 def _apply_warm_start_optimizer_reload(module) -> None:
     original_load = getattr(module, "load_lora_adapter", None)
     if original_load is None or getattr(module, "_glm47_opt_reload_patched", False):
         return
 
+    original_save = getattr(module, "save_lora_checkpoint", None)
+
     def load_lora_adapter(model, adapter_path, *, optimizer=None, opt_param_scheduler=None):
-        loaded, iteration = original_load(
-            model, adapter_path, optimizer=optimizer, opt_param_scheduler=opt_param_scheduler
-        )
+        get_parallel_state = getattr(module, "get_parallel_state", None)
+        parallel_state = get_parallel_state() if get_parallel_state is not None else None
+        if parallel_state is not None and int(parallel_state.ep.size) > 1:
+            loaded, iteration = _load_ep_native_adapter(
+                module,
+                model,
+                adapter_path,
+                parallel_state=parallel_state,
+                optimizer=optimizer,
+                opt_param_scheduler=opt_param_scheduler,
+            )
+        else:
+            loaded, iteration = original_load(
+                model, adapter_path, optimizer=optimizer, opt_param_scheduler=opt_param_scheduler
+            )
         if loaded and optimizer is not None and hasattr(optimizer, "reload_model_params"):
             optimizer.reload_model_params()
             print(
@@ -319,6 +528,36 @@ def _apply_warm_start_optimizer_reload(module) -> None:
         return loaded, iteration
 
     module.load_lora_adapter = load_lora_adapter
+    if original_save is not None:
+
+        def save_lora_checkpoint(
+            model,
+            args,
+            save_dir,
+            *,
+            optimizer=None,
+            opt_param_scheduler=None,
+            iteration=None,
+        ):
+            result = original_save(
+                model,
+                args,
+                save_dir,
+                optimizer=optimizer,
+                opt_param_scheduler=opt_param_scheduler,
+                iteration=iteration,
+            )
+            parallel_state = module.get_parallel_state()
+            if int(parallel_state.ep.size) > 1:
+                _save_ep_native_adapter(
+                    module,
+                    model,
+                    save_dir,
+                    parallel_state=parallel_state,
+                )
+            return result
+
+        module.save_lora_checkpoint = save_lora_checkpoint
     module._glm47_opt_reload_patched = True
 
 
@@ -453,6 +692,10 @@ def _apply_colocate_lora_update_tms_scope(module) -> None:
 
     def sleep(self) -> None:
         assert self.args.offload_train
+        if getattr(self, "_asleep", False):
+            module.logger.info("sleep() called while already offloaded; skipping")
+            return
+
 
         if module.is_lora_enabled(self.args):
             snapshots = _snapshot_lora_parameters(self.model)
@@ -475,6 +718,7 @@ def _apply_colocate_lora_update_tms_scope(module) -> None:
 
         tag = "default" if module.is_lora_enabled(self.args) else None
         module.torch_memory_saver.pause(tag=tag)
+        self._asleep = True
 
         module.print_memory("after offload model")
 
@@ -636,53 +880,43 @@ def _patch_rollout_data_dp_sharding() -> None:
     }:
         return
     _ROLLOUT_DP_SHARD_PATCHED = True
-    _when_imported("miles.utils.data", _apply_rollout_data_dp_sharding)
+    _when_imported(
+        "miles.ray.rollout.train_data_conversion",
+        _apply_rollout_data_dp_sharding,
+    )
 
 
 def _apply_rollout_data_dp_sharding(module) -> None:
-    """Apply Miles' saved DP partition to both lengths and raw rewards.
+    """Apply Miles' saved DP partition to raw rewards after native sharding.
 
-    ``split_train_data_by_dp`` intentionally carries these two vectors globally
-    and stores the balanced row partition beside them. The stock train-side
-    conversion shards ``total_lengths`` but forgets ``raw_reward``. Detailed
-    correct-sample logging then indexes local response arrays with global reward
-    indices and crashes before the optimizer step.
+    The pinned Miles revision owns Ray/object-store fetching and train-side
+    length sharding in ``process_rollout_data`` and
+    ``process_rollout_data_shard``. Wrap only the latter instead of copying
+    the former: copied fetch logic is version-sensitive and previously assumed
+    that ``ray`` and ``Timer`` were re-exported by ``miles.utils.data``.
+
+    ``split_train_data_by_dp`` intentionally carries ``raw_reward`` globally
+    and stores the balanced row partition beside it. Miles consumes the global
+    vector for pass@k, while detailed correct-sample logging needs the DP-local
+    view saved here.
     """
 
     if getattr(module, "_glm47_rollout_dp_shard_patched", False):
         return
 
-    def process_rollout_data(
-        args,
-        rollout_data_ref,
-        dp_rank,
-        dp_size,
-        witness_info=None,
-    ):
-        if getattr(args, "delay_split_train_data_by_dp", False):
-            raw = module.ray.get(rollout_data_ref.inner)
-            if witness_info is not None:
-                raw = {**raw, "seq_witness_ids": witness_info.witness_ids}
-            raw = module.split_train_data_by_dp_raw(args, raw, dp_size=dp_size)
-            rollout_data = raw[dp_rank]
-        else:
-            assert len(rollout_data_ref) == dp_size
-            assert witness_info is None
-            rollout_data = module.ray.get(rollout_data_ref[dp_rank].inner)
+    original_process_rollout_data_shard = module.process_rollout_data_shard
 
-        partition = rollout_data.pop("partition")
-        total_lengths = rollout_data["total_lengths"]
-        module.Timer().seq_lens = total_lengths
-        rollout_data["total_lengths"] = [total_lengths[i] for i in partition]
-        if "raw_reward" in rollout_data:
-            raw_reward = rollout_data["raw_reward"]
+    def process_rollout_data_shard(args, rollout_data):
+        partition = list(rollout_data["partition"])
+        raw_reward = rollout_data.get("raw_reward")
+        rollout_data = original_process_rollout_data_shard(args, rollout_data)
+        if raw_reward is not None:
             rollout_data["_glm47_local_raw_reward"] = [
                 raw_reward[i] for i in partition
             ]
-
         return rollout_data
 
-    module.process_rollout_data = process_rollout_data
+    module.process_rollout_data_shard = process_rollout_data_shard
     module._glm47_rollout_dp_shard_patched = True
 
 
@@ -707,12 +941,18 @@ def _patch_correct_sample_logging() -> None:
 
 
 def _apply_correct_sample_logging(module) -> None:
-    """Select the reward view required by each Miles logging consumer."""
+    """Select the reward view required by each Miles logging consumer.
+
+    Current Miles computes pass@k from rollout-side ``Sample`` objects before
+    train-data sharding and no longer exposes ``log_passrate`` in this module.
+    Older Miles computes it from trainer-side ``raw_reward``. Support both
+    APIs while keeping correct-sample row metrics DP-local.
+    """
 
     if getattr(module, "_glm47_correct_sample_log_patched", False):
         return
     original_log_rollout_data = module.log_rollout_data
-    original_log_passrate = module.log_passrate
+    original_log_passrate = getattr(module, "log_passrate", None)
 
     def log_rollout_data(rollout_id, args, rollout_data) -> None:
         local_rewards = rollout_data.pop("_glm47_local_raw_reward", None)
@@ -726,6 +966,13 @@ def _apply_correct_sample_logging(module) -> None:
 
         global_rewards = rollout_data["raw_reward"]
         rollout_data["raw_reward"] = local_rewards
+        if original_log_passrate is None:
+            try:
+                return original_log_rollout_data(rollout_id, args, rollout_data)
+            finally:
+                rollout_data["raw_reward"] = global_rewards
+                rollout_data["_glm47_local_raw_reward"] = local_rewards
+
         previous_log_passrate = module.log_passrate
 
         def log_passrate(passrate_rollout_id, passrate_args, passrate_data) -> None:

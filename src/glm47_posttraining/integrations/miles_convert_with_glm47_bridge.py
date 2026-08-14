@@ -13,6 +13,10 @@ from pathlib import Path
 from glm47_posttraining.integrations.miles_glm47_bridge import register_glm47_bridge
 
 PP_OVERRIDE_MARKER = "if args.pipeline_model_parallel_size == 1 and world_size > 1:"
+NATIVE_PP1_GUARD = (
+    'if args.pipeline_model_parallel_size == 1 and world_size > 1 '
+    'and not os.environ.get("CONVERT_KEEP_PP1"):'
+)
 PP_OVERRIDE_REPLACEMENT = (
     "if False:  # keep requested PP1 during conversion"
 )
@@ -32,10 +36,17 @@ def _load_source(convert_py: Path) -> str:
     source = convert_py.read_text(encoding="utf-8")
     if os.environ.get("GLM47_KEEP_PP1", "0") != "1":
         return source
+    if NATIVE_PP1_GUARD in source:
+        # Current pinned Miles exposes an explicit, source-native opt-out for
+        # conversion-time PP expansion. Preserve the converter bytes and make
+        # that contract effective in this process before executing them.
+        os.environ["CONVERT_KEEP_PP1"] = "1"
+        return source
     if PP_OVERRIDE_MARKER not in source:
         raise RuntimeError(
-            f"GLM47_KEEP_PP1=1 but the PP-override marker is missing in {convert_py}; "
-            "inspect the converter before forcing PP1"
+            f"GLM47_KEEP_PP1=1 but neither the native CONVERT_KEEP_PP1 guard nor "
+            f"the legacy PP-override marker is present in {convert_py}; inspect "
+            "the converter before forcing PP1"
         )
     return source.replace(PP_OVERRIDE_MARKER, PP_OVERRIDE_REPLACEMENT, 1)
 
