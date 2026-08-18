@@ -26,6 +26,12 @@ from glm47_posttraining.aider_polyglot.bank_account_official_drill import (
     build_bank_account_official_drill,
     imitation_targets,
 )
+from glm47_posttraining.aider_polyglot.midband_official_drill import (
+    CURRICULUM_NAME as MIDBAND_OFFICIAL_DRILL,
+)
+from glm47_posttraining.aider_polyglot.midband_official_drill import (
+    build_midband_official_drill,
+)
 from glm47_posttraining.aider_polyglot.dataset import build_aider_polyglot_datasets
 from glm47_posttraining.aider_polyglot.harness import (
     DEFAULT_AIDER_DOCKER_IMAGE,
@@ -306,7 +312,7 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--out", required=True)
     build.add_argument(
         "--curriculum",
-        choices=[BANK_ACCOUNT_CURRICULUM, BANK_ACCOUNT_OFFICIAL_DRILL],
+        choices=[BANK_ACCOUNT_CURRICULUM, BANK_ACCOUNT_OFFICIAL_DRILL, MIDBAND_OFFICIAL_DRILL],
     )
     build.add_argument("--allow-non-gcc-curriculum", action="store_true")
     build.add_argument("--train-limit", type=int)
@@ -339,6 +345,15 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
     if args.filter_train_oracle_full_marks:
         raise ValueError("the packaged shadow corpus is already restricted to terminal oracle passes")
+    if args.curriculum == MIDBAND_OFFICIAL_DRILL:
+        paths = build_midband_official_drill(
+            args.tasks_dir,
+            args.out,
+            compiler=os.environ.get("CXX", "g++"),
+            run_id=args.run_id,
+        )
+        print(json.dumps({key: str(path) for key, path in paths.items()}, indent=2, sort_keys=True))
+        return
     tasks_dir = args.tasks_dir
     sft_targets: dict[str, str] | None = None
     temporary: TemporaryDirectory[str] | None = None
