@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:48:13.718429+00:00",
+  "policy_id": "03-TWO-STAGE-BUILD-VERIFIER",
+  "verifier": "03_two_stage_build_verifier.py",
+  "verifier_source_sha256": "f28da7dbdcb4d399f6645a81919f0d9acc6038cf9dc229b9dac3b0e0dc1b25dc",
+  "status": "fail",
+  "kernel_results": [
+    {
+      "kernel_id": "03-TWO-STAGE-BUILD-VERIFIER-A",
+      "kernel": -1,
+      "status": "fail",
+      "summary": "STATUS: LE",
+      "facts": {
+        "exit_code": 1,
+        "stdout_sha256": "2a0f7a464e8c2f5c9c72872f803d9996612979317809c16d781600d9c11d9dfb",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 1487,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/workspace/generalized_verifier_docs/03_two_stage_build_verifier.py",
+        "--fixture-dir",
+        "/workspace/Reward_GRPO/multi_env_fixtures/linked-list",
+        "--header",
+        "/workspace/generalized_verifier_docs/validation/candidates/linked-list/linked_list.h",
+        "--source",
+        "/workspace/generalized_verifier_docs/validation/candidates/linked-list/linked_list.cpp",
+        "--receipt",
+        "/out/receipts/03-fault"
+      ],
+      "duration_seconds": 8.801456,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": -1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 1,
+  "duration_seconds": 8.801456,
+  "command": [
+    "/usr/bin/python3",
+    "/workspace/generalized_verifier_docs/03_two_stage_build_verifier.py",
+    "--fixture-dir",
+    "/workspace/Reward_GRPO/multi_env_fixtures/linked-list",
+    "--header",
+    "/workspace/generalized_verifier_docs/validation/candidates/linked-list/linked_list.h",
+    "--source",
+    "/workspace/generalized_verifier_docs/validation/candidates/linked-list/linked_list.cpp",
+    "--receipt",
+    "/out/receipts/03-fault"
+  ],
+  "stdout_sha256": "2a0f7a464e8c2f5c9c72872f803d9996612979317809c16d781600d9c11d9dfb",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 1487,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/workspace/generalized_verifier_docs/validation/candidates/linked-list/linked_list.h": "6a8c19d0a4375dcf39a6b3e5cc393b0bac6915eaa2806f6ef63e26867aef0446",
+    "/workspace/generalized_verifier_docs/validation/candidates/linked-list/linked_list.cpp": "5f273b2d3194954a027b0a03f9623f15ca7072c2d70daf312404b1c3c3156e62"
+  },
+  "input_dir_manifests": {
+    "/workspace/Reward_GRPO/multi_env_fixtures/linked-list": {
+      "manifest_sha256": "cb972d2c3a122c6482b804509b6e580b715b64840d2a5fa7f6cf7d4c403cc86d",
+      "file_count": 13
+    }
+  }
+}

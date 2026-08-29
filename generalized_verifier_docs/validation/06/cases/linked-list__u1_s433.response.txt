@@ -1,0 +1,387 @@
+The user wants me to implement a doubly linked list for train routes based on specific instructions.
+The files provided are `linked_list.h` and `linked_list.cpp`.
+I need to maintain existing function/class names if they exist, but since the provided files are empty stubs, I have full freedom to define the structure.
+
+**Requirements:**
+1.  **Data Structure:** Doubly linked list.
+2.  **Nodes:** Represented by a station number (int).
+3.  **Operations:**
+    *   Add station to beginning.
+    *   Add station to end.
+    *   Remove station from beginning.
+    *   Remove station from end.
+    *   Remove station by value (station getting closed down).
+4.  **Size:** Count of stations.
+
+**Implementation Details:**
+
+*   **Node Class:**
+    *   Needs `value` (int).
+    *   Needs `prev` pointer (Node*).
+    *   Needs `next` pointer (Node*).
+
+*   **List Class:**
+    *   Needs a pointer to the head (`head`).
+    *   Needs a pointer to the tail (`tail`).
+    *   Needs a size counter (`size`).
+    *   Methods:
+        *   `push_front(int value)`: Adds to head.
+        *   `push_back(int value)`: Adds to tail.
+        *   `pop_front()`: Removes head.
+        *   `pop_back()`: Removes tail.
+        *   `remove(int value)`: Removes node with specific value.
+        *   `size()`: Returns size.
+        *   `empty()`: Returns bool if empty.
+        *   Maybe `front()`, `back()`? The instructions don't explicitly ask for accessors, but they are usually expected in such implementations. However, the prompt says "Don't change the names of existing functions or classes... Only use standard libraries". Since the files were empty, I will stick strictly to the required operations to avoid over-engineering, unless I see implied requirements. Let's stick to the explicit list of operations: extend (add begin/end), shorten (remove begin/end), remove by value, size.
+
+**Drafting the Code:**
+
+*   **linked_list.h**
+    *   Namespace `linked_list`.
+    *   `struct Node` (private to the namespace or internal class).
+    *   `class List` (public).
+    *   Constructor/Destructor.
+
+*   **linked_list.cpp**
+    *   Include header.
+    *   Implement Node struct (optional in header, but cleaner here).
+    *   Implement List methods.
+
+**Refining the Logic:**
+
+*   `push_front`:
+    *   Create new node.
+    *   If list empty, head = tail = new node.
+    *   Else, new node->next = head; head->prev = new node; head = new node.
+    *   Increment size.
+
+*   `push_back`:
+    *   Create new node.
+    *   If list empty, head = tail = new node.
+    *   Else, new node->prev = tail; tail->next = new node; tail = new node.
+    *   Increment size.
+
+*   `pop_front`:
+    *   If empty, do nothing (or throw exception? usually do nothing if spec is simple).
+    *   If one node, head = tail = nullptr.
+    *   Else, head = head->next; head->prev = nullptr.
+    *   Decrement size.
+
+*   `pop_back`:
+    *   If empty, do nothing.
+    *   If one node, head = tail = nullptr.
+    *   Else, tail = tail->prev; tail->next = nullptr.
+    *   Decrement size.
+
+*   `remove(int value)`:
+    *   Traverse list.
+    *   If found:
+        *   If node is head, call `pop_front`.
+        *   If node is tail, call `pop_back`.
+        *   Else: node->prev->next = node->next; node->next->prev = node->prev.
+    *   Decrement size.
+
+*   `size()`:
+    *   Return `_size`.
+
+**Formatting:**
+Strict file listing format required.
+
+Let's write the code.
+
+**linked_list.h**
+```cpp
+#pragma once
+
+namespace linked_list {
+
+struct Node {
+    int value;
+    Node* prev;
+    Node* next;
+};
+
+class List {
+public:
+    List();
+    ~List();
+
+    void push_front(int value);
+    void push_back(int value);
+    void pop_front();
+    void pop_back();
+    void remove(int value);
+    size_t size() const;
+    bool empty() const;
+
+private:
+    Node* head_;
+    Node* tail_;
+    size_t size_;
+};
+
+}  // namespace linked_list
+```
+
+**linked_list.cpp**
+```cpp
+#include "linked_list.h"
+#include <cstdlib>
+#include <cstddef>
+#include <stdexcept>
+
+namespace linked_list {
+
+List::List() : head_(nullptr), tail_(nullptr), size_(0) {}
+
+List::~List() {
+    while (!empty()) {
+        pop_front();
+    }
+}
+
+void List::push_front(int value) {
+    Node* new_node = new Node{value, nullptr, head_};
+    if (head_ == nullptr) {
+        head_ = tail_ = new_node;
+    } else {
+        head_->prev = new_node;
+        head_ = new_node;
+    }
+    ++size_;
+}
+
+void List::push_back(int value) {
+    Node* new_node = new Node{value, tail_, nullptr};
+    if (head_ == nullptr) {
+        head_ = tail_ = new_node;
+    } else {
+        tail_->next = new_node;
+        tail_ = new_node;
+    }
+    ++size_;
+}
+
+void List::pop_front() {
+    if (head_ == nullptr) {
+        return;
+    }
+    Node* old_head = head_;
+    head_ = head_->next;
+    if (head_ != nullptr) {
+        head_->prev = nullptr;
+    } else {
+        tail_ = nullptr;
+    }
+    delete old_head;
+    --size_;
+}
+
+void List::pop_back() {
+    if (tail_ == nullptr) {
+        return;
+    }
+    Node* old_tail = tail_;
+    tail_ = tail_->prev;
+    if (tail_ != nullptr) {
+        tail_->next = nullptr;
+    } else {
+        head_ = nullptr;
+    }
+    delete old_tail;
+    --size_;
+}
+
+void List::remove(int value) {
+    Node* current = head_;
+    while (current != nullptr) {
+        if (current->value == value) {
+            if (current == head_) {
+                pop_front();
+            } else if (current == tail_) {
+                pop_back();
+            } else {
+                current->prev->next = current->next;
+                current->next->prev = current->prev;
+                Node* temp = current;
+                current = current->next;
+                delete temp;
+            }
+            --size_;
+            continue;
+        }
+        current = current->next;
+    }
+}
+
+size_t List::size() const {
+    return size_;
+}
+
+bool List::empty() const {
+    return size_ == 0;
+}
+
+}  // namespace linked_list
+```
+
+Wait, I need to check if the user wants accessors like `front()` or `back()`. The instructions say "Routes can be extended... shortened... station removed... size measured". It doesn't explicitly ask to access the station numbers. Usually, doubly linked lists imply bidirectional traversal, but for this specific prompt, the CRUD operations are the focus. I will stick to the required operations to keep the solution clean and focused on the prompt.
+
+One small detail: `std::size_t` is standard, but `size_t` itself isn't in the global namespace unless included. I'll use `std::size_t` or just `size_t` assuming `<cstddef>` is included (which is standard for `std::size_t`). The prompt says "Only use standard libraries", so `<cstddef>` is fine, or `<cstdint>` if I want to be pedantic, but `<cstddef>` is the standard for `size_t`. Actually, just declaring `size_t size_;` in the class might conflict if not included, but the compiler usually handles the `using namespace std;` or similar in the user's environment. I'll include `<cstddef>` in cpp and `std::size_t` in header for safety.
+
+Re-checking the `remove` logic.
+If I find the value at the head, I call `pop_front`. `pop_front` handles the pointer updates and deletion. Correct.
+If I find the value at the tail, I call `pop_back`. Correct.
+If I find it in the middle:
+`current->prev->next = current->next;`
+`current->next->prev = current->prev;`
+`delete current;`
+`current = current->next;` (important to move pointer after deletion).
+Correct.
+
+Final check of file formats.
+The user wants `path/to/filename.js` format for the output. The files are `.h` and `.cpp`.
+I will output them exactly as requested.
+
+One edge case: `pop_front`/`pop_back` on empty list. The instructions don't specify behavior, but doing nothing is standard for a "schedule" list to avoid crashing or throwing errors if a route is empty. I'll stick to `return` or `continue` logic.
+
+The class name `List` is fine. The methods `push_front`, `push_back`, `pop_front`, `pop_back`, `remove`, `size`.
+The instructions mention "Routes can be extended... shortened... station removed... size". These map perfectly.
+
+Let's assemble the output.
+
+linked_list.h
+```
+#pragma once
+
+#include <cstddef>
+
+namespace linked_list {
+
+struct Node {
+    int value;
+    Node* prev;
+    Node* next;
+};
+
+class List {
+public:
+    List();
+    ~List();
+
+    void push_front(int value);
+    void push_back(int value);
+    void pop_front();
+    void pop_back();
+    void remove(int value);
+    size_t size() const;
+    bool empty() const;
+
+private:
+    Node* head_;
+    Node* tail_;
+    size_t size_;
+};
+
+}  // namespace linked_list
+```
+
+linked_list.cpp
+```
+#include "linked_list.h"
+#include <cstdlib>
+
+namespace linked_list {
+
+List::List() : head_(nullptr), tail_(nullptr), size_(0) {}
+
+List::~List() {
+    while (!empty()) {
+        pop_front();
+    }
+}
+
+void List::push_front(int value) {
+    Node* new_node = new Node{value, nullptr, head_};
+    if (head_ == nullptr) {
+        head_ = tail_ = new_node;
+    } else {
+        head_->prev = new_node;
+        head_ = new_node;
+    }
+    ++size_;
+}
+
+void List::push_back(int value) {
+    Node* new_node = new Node{value, tail_, nullptr};
+    if (head_ == nullptr) {
+        head_ = tail_ = new_node;
+    } else {
+        tail_->next = new_node;
+        tail_ = new_node;
+    }
+    ++size_;
+}
+
+void List::pop_front() {
+    if (head_ == nullptr) {
+        return;
+    }
+    Node* old_head = head_;
+    head_ = head_->next;
+    if (head_ != nullptr) {
+        head_->prev = nullptr;
+    } else {
+        tail_ = nullptr;
+    }
+    delete old_head;
+    --size_;
+}
+
+void List::pop_back() {
+    if (tail_ == nullptr) {
+        return;
+    }
+    Node* old_tail = tail_;
+    tail_ = tail_->prev;
+    if (tail_ != nullptr) {
+        tail_->next = nullptr;
+    } else {
+        head_ = nullptr;
+    }
+    delete old_tail;
+    --size_;
+}
+
+void List::remove(int value) {
+    Node* current = head_;
+    while (current != nullptr) {
+        if (current->value == value) {
+            if (current == head_) {
+                pop_front();
+            } else if (current == tail_) {
+                pop_back();
+            } else {
+                current->prev->next = current->next;
+                current->next->prev = current->prev;
+                Node* temp = current;
+                current = current->next;
+                delete temp;
+            }
+            --size_;
+            continue;
+        }
+        current = current->next;
+    }
+}
+
+size_t List::size() const {
+    return size_;
+}
+
+bool List::empty() const {
+    return size_ == 0;
+}
+
+}  // namespace linked_list
+```

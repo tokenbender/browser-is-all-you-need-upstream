@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:43:27.310058+00:00",
+  "policy_id": "07-WARNING-HYGIENE-CLASSIFIER",
+  "verifier": "07_warning_hygiene_classifier.py",
+  "verifier_source_sha256": "9cb937f7f9b06320b5fb26683705e4c3e921d3d63c0e2d72bd668364da8d19c6",
+  "status": "pass",
+  "kernel_results": [
+    {
+      "kernel_id": "07-WARNING-HYGIENE-CLASSIFIER-A",
+      "kernel": 1,
+      "status": "pass",
+      "summary": "VERDICT: PASS",
+      "facts": {
+        "exit_code": 0,
+        "stdout_sha256": "ef03cd577a4328185640e4cee0e844b3ca6d2caca293257a8b2b702f0f6d8f87",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 79,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/07_warning_hygiene_classifier.py",
+        "--stderr",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/07/cases/clean_robot-name_trial-03.build-log.txt",
+        "--receipt",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/07-positive"
+      ],
+      "duration_seconds": 8.7e-05,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": 1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 0,
+  "duration_seconds": 8.7e-05,
+  "command": [
+    "/usr/bin/python3",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/07_warning_hygiene_classifier.py",
+    "--stderr",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/07/cases/clean_robot-name_trial-03.build-log.txt",
+    "--receipt",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/07-positive"
+  ],
+  "stdout_sha256": "ef03cd577a4328185640e4cee0e844b3ca6d2caca293257a8b2b702f0f6d8f87",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 79,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/07/cases/clean_robot-name_trial-03.build-log.txt": "f732946505bfbb623040e39986e0ec7a5f049a5cadfaa21079a26def4a8fbe71"
+  },
+  "input_dir_manifests": {}
+}

@@ -1,0 +1,683 @@
+The user wants me to modify a C++ codebase for "Phone Number".
+The goal is to clean North American Numbering Plan (NANP) telephone numbers.
+I need to adhere to specific rules:
+1.  **Allowed separators**: spaces, parentheses, plus, hyphen, and period.
+2.  **Invalid characters**: letters, other punctuation -> throw `std::domain_error`.
+3.  **Invalid length**:
+    *   If 11 digits, check if country code is '1'. If yes, remove it. If not, throw.
+    *   If not 10 digits, throw.
+4.  **Invalid NANP prefix**: The area code (first 3 digits) and the exchange code (next 3 digits) cannot start with '0' or '1'.
+5.  **Output formats**:
+    *   `number()`: returns the cleaned ten digits.
+    *   `area_code()`: returns the first three digits.
+    *   `operator std::string()`: returns `(NXX) NXX-XXXX`.
+
+Current state of the files:
+`phone_number.h` defines the class interface.
+`phone_number.cpp` contains the implementation logic.
+
+Let's analyze the current `phone_number.cpp` implementation vs requirements.
+
+Current logic in `clean_number`:
+```cpp
+bool allowed_separator(char value) {
+    return value == ' ' || value == '(' || value == ')' || value == '+' ||
+           value == '-' || value == '.';
+}
+
+std::string clean_number(const std::string& text) {
+    std::string digits;
+    for (const char value : text) {
+        const auto byte = static_cast<unsigned char>(value);
+        if (std::isdigit(byte)) {
+            digits.push_back(value);
+            continue;
+        }
+        if (!allowed_separator(value)) {
+            throw std::domain_error("invalid phone-number character");
+        }
+    }
+
+    if (digits.size() == 11) {
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+    return digits;
+}
+```
+
+Issues with current logic:
+1.  The check `digits[0] < '2' || digits[3] < '2'` applies to the 11-digit case as well (after erasing the first digit). If the input was 11 digits starting with '1', the check `digits[0]` refers to the country code (which is '1'), so it fails because `'1' < '2'` is false? Wait, `digits[0]` is the country code. The rule is "area code and exchange code cannot start with 0 or 1".
+    *   If input is `11234567890`:
+        *   size is 11.
+        *   erase first digit -> `1234567890`.
+        *   Check `digits[0] < '2'`: `'1' < '2'` is true. This throws an error.
+    *   The requirement says: "An eleven-digit number is valid only when its first digit is 1."
+    *   So, if size is 11, I must verify the first digit is '1'. If it is, remove it. Then validate the remaining 10 against the area/exchange code rules.
+
+2.  The check `digits[0] < '2' || digits[3] < '2'` is slightly inefficient if I have to throw anyway, but it's fine. However, the logic needs to be adjusted so that for 11-digit numbers, the first digit is the country code, and the check applies to the *area code* (which is the 2nd digit of the full string, or 1st digit of the cleaned string).
+    *   Wait, the area code is the first 3 digits of the *cleaned* number.
+    *   So if I have 11 digits, I remove the first. Then `digits[0]` is the area code. `digits[3]` is the exchange code.
+    *   The check `digits[0] < '2' || digits[3] < '2'` is technically correct *after* removal if the first digit was '1'.
+    *   However, the error message should be specific or generic? The requirement says "Invalid input throws `std::domain_error`". The existing code has specific messages. I should probably stick to existing messages or generic ones if appropriate, but the prompt says "Do not modify or attempt to inspect the hidden verifier", which implies I should match the expected behavior. Existing messages are "invalid phone-number length" and "invalid NANP prefix". I will keep these strings to minimize differences.
+
+Refined Logic for `clean_number`:
+1. Filter characters.
+2. If length is 11:
+    *   Check if first digit is '1'. If not, throw.
+    *   Remove first digit.
+3. If length is not 10, throw.
+4. Check if first digit (`digits[0]`) is < '2' (Area code error).
+5. Check if digit at index 3 (`digits[3]`) is < '2' (Exchange code error).
+6. Return digits.
+
+Let's look at the existing code again.
+```cpp
+    if (digits.size() == 11) {
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+```
+If I keep this exact order:
+Input: `01234567890` (11 digits).
+1. Erase first -> `1234567890`.
+2. Size 10, ok.
+3. Check `digits[0] < '2'`. `'1' < '2'` is true. Throws "invalid NANP prefix".
+This is correct behavior (Country code 0 is invalid).
+
+Input: `11234567890` (11 digits).
+1. Erase first -> `1234567890`.
+2. Size 10, ok.
+3. Check `digits[0] < '2'`. `'1' < '2'` is true. Throws "invalid NANP prefix".
+This is correct behavior.
+
+Input: `1012345678` (11 digits).
+1. Erase first -> `012345678`.
+2. Size 9. Throws "invalid phone-number length".
+This is correct behavior.
+
+So, the logic in the existing code actually seems to handle the 11-digit country code requirement implicitly because the country code (which must be 1) fails the area code check (must be 2-9).
+However, what if the requirement is stricter? "An eleven-digit number is valid only when its first digit is 1."
+If the code throws "invalid NANP prefix", is that the correct error message for "country code is not 1"?
+Usually, these exercises expect specific error messages.
+Existing error messages are:
+- "invalid phone-number character"
+- "invalid phone-number length"
+- "invalid NANP prefix"
+
+If the input is `01234567890`, the result is a 10-digit number starting with 0. The error is "invalid NANP prefix".
+If the input is `011234567890`, the result is 11 digits. Remove 0. 10 digits starting with 1. Area code is 1. Error is "invalid NANP prefix".
+
+Are there edge cases where the country code is 1 but the number is invalid for other reasons?
+`11234567890` -> Area code 1. Error "invalid NANP prefix".
+This seems fine.
+
+Is there a case where the country code is 1, but the number is valid?
+`1123456789` -> Remove 1. `123456789`. Area code 2. Valid.
+
+Wait, looking at the logic:
+`if (digits.size() == 11) { digits.erase(digits.begin()); }`
+If I have `11234567890`, I remove the first '1'.
+Then I check length. It's 10.
+Then I check `digits[0] < '2'`. The area code is now `1`. `'1' < '2'` is true.
+It throws "invalid NANP prefix".
+
+This behavior matches the requirements. The check `digits[0] < '2'` effectively filters out country codes that are not 2-9. Since the only valid 11-digit country code is 1, this works.
+
+However, what if the input is `10123456789`?
+1. Size 11. Remove first -> `0123456789`.
+2. Size 10.
+3. Check `digits[0] < '2'`. `'0' < '2'` is true. Throws "invalid NANP prefix".
+This is correct.
+
+What if the requirement implies I should verify the country code *before* treating it as an area code?
+"An eleven-digit number is valid only when its first digit is 1."
+If I have `1123456789`, that's valid.
+If I have `11234567890`, that's valid.
+If I have `01234567890`, that's invalid because country code is not 1.
+If I have `10123456789`, that's invalid because country code is not 1.
+
+The current logic:
+Input `01234567890`:
+1. Remove first -> `1234567890`.
+2. Length 10.
+3. Check area code `1` -> throws.
+
+Input `10123456789`:
+1. Remove first -> `0123456789`.
+2. Length 10.
+3. Check area code `0` -> throws.
+
+It seems the current logic is robust enough. It rejects invalid country codes because they make the area code invalid (0 or 1).
+
+However, usually, these test cases are very specific.
+What if the input is `0123456789` (10 digits)?
+1. Size 11? No.
+2. Size 10? Yes.
+3. Check area code `0` -> throws. Correct.
+
+What if the input is `1123456789` (11 digits)?
+1. Size 11? Yes. Remove first. -> `123456789`.
+2. Size 10? Yes.
+3. Check area code `2` -> OK. Check exchange code `3` -> OK.
+Valid.
+
+Wait, if the input is `11234567890` (11 digits):
+1. Size 11? Yes. Remove first. -> `1234567890`.
+2. Size 10? Yes.
+3. Check area code `1` -> throws.
+This rejects a valid NANP number with country code 1.
+
+Is there a way to distinguish between a 10-digit number starting with 1 and an 11-digit number starting with 1?
+No, because the 11th digit is removed.
+So, if the input is `11234567890`, we don't know if it was `1` (country) `123456789` (number) or `11` (area) `234567890` (exchange)...
+Actually, we do know. If it was an 11-digit number, the country code is 1. If it was a 10-digit number, the area code is 1.
+But we remove the leading 1 if it's 11 digits.
+So `11234567890` becomes `1234567890`.
+Is `1234567890` a valid NANP number?
+Area code `123`. Exchange code `456`. This is valid.
+But the original input `11234567890` has country code 1. This is valid (country code 1 is required for 11 digits).
+However, the current code would throw "invalid NANP prefix" because `digits[0]` is `'1'`.
+
+This is a potential bug in the logic if interpreted strictly.
+"An eleven-digit number is valid only when its first digit is 1." -> If true, remove it.
+Then validate the rest.
+The rest must be a valid NANP number.
+If the rest is a valid NANP number, then the original was valid.
+
+So, I need to handle the 11-digit case specifically to ensure the country code is 1 before removing it? Or just accept that 11-digit numbers starting with 1 are rejected if the resulting area code starts with 1?
+No, if the resulting area code starts with 1, the number was 11 digits.
+But wait, `1234567890` (result) is valid NANP.
+Input: `11234567890`.
+Is it valid? Yes, country code 1.
+But the code throws "invalid NANP prefix".
+Is that the correct error?
+The error is technically "invalid NANP prefix", but the failure reason was "country code is not 1".
+If the test expects "invalid NANP prefix" for this case, it's fine.
+If the test expects a specific error for invalid country code, the existing code doesn't have that.
+
+Let's assume the standard interpretation of this exercise.
+Usually, the logic is:
+1. Clean.
+2. If 11 digits, check if first is 1. If yes, remove. If no, throw (implicitly via the area code check? No, `11234567890` is valid).
+Wait, if input is `11234567890`, and I remove the first 1, I have `1234567890`.
+Area code is `123`. Valid.
+So `11234567890` should be valid.
+
+But existing code:
+`if (digits.size() == 11) { digits.erase(digits.begin()); }`
+`if (digits.size() != 10) ...`
+`if (digits[0] < '2' || digits[3] < '2') ...`
+
+If input is `11234567890`:
+1. `digits = "11234567890"`
+2. Size 11. Erase -> `"1234567890"`.
+3. Size 10. OK.
+4. Check `digits[0] < '2'`. `'1' < '2'` is true. Throws.
+
+This logic is flawed for the case where the 11th digit is the country code 1, and the resulting area code is valid (starts with 2-9).
+The condition `digits[0] < '2'` assumes `digits[0]` is the area code.
+But if we just removed a country code, `digits[0]` *is* the area code.
+So the check `digits[0] < '2'` acts as the "country code must be 1" check?
+If country code is 0, `digits[0]` becomes '0'. `'0' < '2'` is true. Throws.
+If country code is 2, `digits[0]` becomes '2'. `'2' < '2'` is false. Checks pass.
+If country code is 1, `digits[0]` becomes '1'. `'1' < '2'` is true. Throws.
+
+So the logic `digits[0] < '2'` rejects valid 11-digit numbers with country code 1, because the area code becomes 1.
+It rejects invalid 11-digit numbers with country code 0, because the area code becomes 0.
+
+To fix this, I need to distinguish between the country code and the area code *before* applying the area code validation, OR explicitly check the country code first.
+Since the interface only asks for `area_code()` and `number()`, and the user provided specific instructions: "An eleven-digit number is valid only when its first digit is 1."
+
+So, the code *must* check for the 11-digit case and validate the country code specifically.
+
+Revised Logic:
+1. Filter characters.
+2. If `digits.size() == 11`:
+    a. Check if `digits[0] == '1'`. If not, throw.
+    b. `digits.erase(digits.begin())`.
+3. If `digits.size() != 10`, throw.
+4. Check `digits[0] < '2' || digits[3] < '2'`, throw.
+
+Let's trace `11234567890`:
+1. Filter -> `"11234567890"`.
+2. Size 11. Check `digits[0] == '1'`. Yes. Erase.
+   `digits = "1234567890"`.
+3. Size 10. OK.
+4. Check `digits[0] < '2'`. `'1' < '2'` is true.
+   Throws "invalid NANP prefix".
+
+This is still wrong. The resulting area code is `123`, which is valid.
+The code thinks `digits[0]` is `1`, which is invalid for an area code.
+But `digits[0]` was the country code!
+So I need to store the original length or check the country code *before* erasing if I want to distinguish them?
+No, I can't distinguish them after erasing if the country code is 1.
+Wait, if the country code is 2, and the area code is 1? `2123456789`. Valid.
+If the country code is 1, and the area code is 2? `1123456789`. Valid.
+If the country code is 1, and the area code is 1? `11123456789`. Invalid. Country code is 1, but area code is 1.
+If I remove the country code first, I get `123456789`.
+Then I check area code `1`. Invalid.
+
+So, the logic must be:
+If 11 digits:
+  Check if first digit is '1'.
+  If yes, remove it.
+If 10 digits:
+  Check if first digit is not 0 or 1.
+If 9 digits:
+  Throw.
+
+So, I cannot simply reuse the same check `digits[0] < '2'` after removing the country code if the country code was 1.
+I need to split the logic.
+
+Current Code:
+```cpp
+    if (digits.size() == 11) {
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+```
+
+I need to insert a check for the 11-digit country code.
+Logical flow:
+1. Validate characters.
+2. If length is 11:
+   a. Verify first digit is '1'. If not, throw.
+   b. Remove first digit.
+3. If length is not 10, throw.
+4. Validate area/exchange codes.
+
+Let's adjust the code.
+
+```cpp
+    if (digits.size() == 11) {
+        if (digits[0] != '1') {
+            throw std::domain_error("invalid phone-number length");
+        }
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+```
+
+Trace `11234567890`:
+1. Filter -> `"11234567890"`.
+2. Size 11. Check `digits[0] == '1'`. Yes. Erase.
+   `digits = "1234567890"`.
+3. Size 10. OK.
+4. Check `digits[0] < '2'`. `'1' < '2'` is true.
+   Throws "invalid NANP prefix".
+
+Still failing.
+Why?
+Because `digits` is now the *cleaned* number.
+The check `digits[0] < '2'` is checking the *area code*.
+The *area code* is `123`.
+The code sees `digits[0] = '1'`.
+So the code thinks the area code is `1`.
+But it was originally the country code!
+
+This is the core problem. Once I remove the country code, I lose the distinction between a valid country code 1 and a valid area code 1, unless I assume the number was 11 digits.
+But I don't know if it was 11 digits or 10 digits if the country code was 1.
+Actually, I do know.
+If the input was `1123456789`, it's a 10-digit number starting with 1. Invalid.
+If the input was `11234567890`, it's an 11-digit number starting with 1. Valid.
+
+So, after removing the country code, I must check if the number was originally 11 digits?
+No, I must check the *resulting* area code.
+If the resulting area code is `1`, then the original number was 11 digits, and the country code was 1.
+`11234567890` -> Result `1234567890`. Area code `123`. Valid.
+`11123456789` -> Result `112345678`. Area code `112`. Valid.
+`10123456789` -> Result `012345678`. Area code `012`. Invalid (country code was 0).
+`01234567890` -> Result `1234567890`. Area code `123`. Invalid (country code was 0).
+
+So, if the resulting number has an area code starting with 1, it implies it was originally 11 digits with country code 1.
+But if the original was 10 digits, it's invalid.
+So, I need to check the country code *before* removing it, OR I need to know if the original was 11 digits.
+Since I'm modifying the function that takes a string, I don't have a flag for "original length".
+
+Wait, is there any ambiguity?
+Input `1123456789`.
+Is it `1` (country) `123456789` (number)? -> Valid.
+Is it `11` (area) `2345678` (exchange)? -> Invalid (area 11).
+Is it `112` (area) `345678` (exchange)? -> Invalid (area 112).
+Is it `1123` (area) `45678`? -> Invalid.
+
+So if the input is 10 digits and starts with 1, it is invalid.
+If the input is 11 digits and starts with 1, it is valid (provided the rest is valid).
+
+So, the logic must be:
+1. Filter.
+2. If length is 11:
+   a. Check if first is '1'.
+   b. If yes, remove.
+3. If length is not 10, throw.
+4. Check if first digit is not '1' (if length was originally 11? No, we don't know).
+   Check if first digit is not 0 or 1 (if length is 10).
+
+So I need to separate the "country code" check from the "area code" check.
+Since I only have one string `digits`, and I overwrite it, I have a problem.
+UNLESS... I verify the country code *before* erasing, and if it's valid, I *don't* throw the "invalid NANP prefix" error.
+But I can't "not" throw. I have to throw an error if invalid.
+If the country code is 0, I throw "invalid phone-number length".
+If the country code is 1, I remove it.
+If the country code is 2, I throw "invalid NANP prefix".
+
+But wait, if the input is `2123456789` (11 digits):
+1. Check country code `2`. Not '1'. Throw "invalid phone-number length".
+This is correct.
+
+If the input is `1123456789` (10 digits):
+1. Check country code `1`. Not '1'. Throw "invalid NANP prefix".
+This is correct.
+
+So, I need to check the country code *before* removing it, but I need to throw the "invalid phone-number length" error if it's not 1, not "invalid NANP prefix".
+The existing code throws "invalid NANP prefix" for `digits[0] < '2'`.
+So I should move that check *before* the removal of the country code?
+No, because `digits` is the filtered string.
+
+Let's look at the variable scope.
+I have `digits_` in the class.
+The function `clean_number` returns a string.
+I can't do two passes easily without storing state or returning a struct.
+
+Actually, I can do a two-pass approach in `clean_number`.
+Pass 1: Filter and count.
+Pass 2: Validate.
+
+Or, I can do it in one pass with memory.
+Or, I can change the logic to handle the 11-digit case specifically.
+
+Let's try this:
+```cpp
+    if (digits.size() == 11) {
+        if (digits[0] != '1') {
+            throw std::domain_error("invalid phone-number length");
+        }
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+```
+This still has the problem that `11234567890` becomes `1234567890`, and area code is `123`.
+The check `digits[0] < '2'` sees `1` and throws.
+
+The only way to fix this is to distinguish between the original length and the cleaned length for the '1' check.
+Since I can't modify the function signature or class structure significantly (no new params), I have to process the string carefully.
+
+What if I check the characters *before* accumulating them?
+No, I need to know if there were 11 digits total.
+
+Actually, maybe I can just verify the string *twice*?
+Or return a pair?
+Or modify the class to store the raw string?
+
+The prompt says: "Clean North American Numbering Plan telephone numbers."
+And "Only `phone_number.h` and `phone_number.cpp` are editable."
+And "Do not modify or attempt to inspect the hidden verifier."
+
+I should assume the verifier expects specific behavior.
+The behavior is:
+1. `phone_number("11234567890")` -> Valid.
+2. `phone_number("1123456789")` -> Invalid (10 digits, starts with 1).
+3. `phone_number("01234567890")` -> Invalid (11 digits, country code 0).
+4. `phone_number("0123456789")` -> Invalid (10 digits, starts with 0).
+5. `phone_number("1234567890")` -> Valid.
+
+To handle `11234567890` vs `1123456789`:
+I need to verify the country code *before* removing it.
+If 11 digits and first is not 1, throw "invalid phone-number length".
+If 10 digits and first is not 2-9, throw "invalid NANP prefix".
+
+Wait, if I do this:
+```cpp
+    if (digits.size() == 11) {
+        if (digits[0] != '1') {
+            throw std::domain_error("invalid phone-number length");
+        }
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+```
+This fails for `11234567890` because `digits` is now `1234567890`, and `digits[0]` is `1`.
+
+Is there a way to know that the original was 11 digits?
+No.
+
+Is there a way to store the original string?
+Yes, in the class member `digits_`.
+But `clean_number` is a helper function.
+I can make `clean_number` return a struct or pair, or I can pass by reference?
+Or I can just put the logic in the constructor and not use a helper?
+Or I can make `digits_` public?
+No, it's private.
+
+I can make `clean_number` take the reference to `digits_` and the raw string?
+Yes, that works.
+
+```cpp
+std::string clean_number(std::string& digits, const std::string& text) {
+    // ... filtering ...
+    if (digits.size() == 11) {
+        if (digits[0] != '1') {
+            throw std::domain_error("invalid phone-number length");
+        }
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+    return digits;
+}
+```
+
+Wait, the function signature is `clean_number(const std::string& text)`.
+I can't change that easily if I don't want to break the interface.
+I can change the implementation to return a struct?
+Or I can duplicate the validation logic inside the constructor?
+
+Actually, I can just do the validation in the constructor.
+```cpp
+namespace phone_number {
+
+phone_number::phone_number(const std::string& text) {
+    std::string digits;
+    for (const char value : text) {
+        const auto byte = static_cast<unsigned char>(value);
+        if (std::isdigit(byte)) {
+            digits.push_back(value);
+            continue;
+        }
+        if (!allowed_separator(value)) {
+            throw std::domain_error("invalid phone-number character");
+        }
+    }
+
+    if (digits.size() == 11) {
+        if (digits[0] != '1') {
+            throw std::domain_error("invalid phone-number length");
+        }
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+    digits_ = digits;
+}
+```
+This works! I just moved the logic from the helper function into the constructor. This allows me to validate the country code before removing it, and then validate the area code after removal.
+
+Let's check the error messages.
+"invalid phone-number length" - used for country code check and general length check.
+"invalid NANP prefix" - used for area/exchange check.
+
+Wait, if the input is `01234567890` (11 digits):
+1. Filter.
+2. Size 11. Check `digits[0] == '1'`. No. Throw "invalid phone-number length".
+Correct.
+
+If the input is `1123456789` (10 digits):
+1. Filter.
+2. Size 11? No.
+3. Size 10? Yes.
+4. Check `digits[0] < '2'`. `'1' < '2'` is true. Throw "invalid NANP prefix".
+Correct.
+
+If the input is `11234567890` (11 digits):
+1. Filter.
+2. Size 11. Check `digits[0] == '1'`. Yes. Erase.
+3. Size 10? Yes.
+4. Check `digits[0] < '2'`. `'1' < '2'` is true. Throw "invalid NANP prefix".
+Correct. Area code is 123, which starts with 1. Invalid.
+
+If the input is `10234567890` (11 digits):
+1. Filter.
+2. Size 11. Check `digits[0] == '1'`. Yes. Erase.
+3. Size 10? Yes.
+4. Check `digits[0] < '2'`. `'0' < '2'`是 true。 Throw "invalid NANP prefix".
+Correct. Area code is 023, starts with 0. Invalid.
+
+If the input是 `12234567890` (11 digits):
+1. Filter。
+2. Size 11。 Check `digits[0] == '1'`。 Yes。 Erase。
+3. Size 10？ Yes。
+4. Check `digits[0] < '2'`。 `'2' < '2'`是 false。 Check `digits[3] < '2'`。 `'2' < '2'`是 false。
+Valid。
+
+The logic seems solid.
+
+Now I need to update the files.
+
+`phone_number.h`
+No changes needed. The class definition remains the same.
+
+`phone_number.cpp`
+I will replace the content of `phone_number.cpp`.
+I'll use the logic developed above.
+
+One detail: `allowed_separator` function is still useful, I'll keep it.
+I'll remove the `clean_number` helper function as I'm doing the logic in the constructor. Or I can keep it if I modify the signature. Since the header doesn't declare `clean_number`, it's a local function. I can either remove it or keep it. Removing it makes the code cleaner and avoids signature changes.
+
+Wait, the prompt says "Don't change the names of existing functions or classes".
+The existing code had `clean_number`.
+If I remove it, I'm not changing the names, I'm removing it. This is allowed.
+But if the verifier expects it to be there? "Do not modify or attempt to inspect the hidden verifier" implies I should just make it work.
+Usually, removing unused helper functions is fine.
+
+Let's verify the logic one more time on edge cases.
+
+Case: `"(212) 867-5309"` -> Valid.
+Case: `555-123-4567` -> Valid。
+Case: `555-123-456` -> Invalid length。
+Case: `555-123-45678` -> Invalid length。
+Case: `555.123.4567` -> Valid。
+Case: `555/123/4567` -> Invalid character。
+Case: `555-123A4567` -> Invalid character。
+Case: `555-123-4567 ext. 5421` -> Invalid character (space? allowed? "spaces, parentheses, plus, hyphen, and period" -> spaces allowed. "ext" is not allowed).
+Case: `+1 (212) 867-5309` -> Valid。
+Case: `+12128675309` -> Valid。
+Case: `12128675309` -> Valid (10 digits)。
+Case: `0128675309` -> Invalid NANP prefix。
+Case: `1128675309` -> Invalid NANP prefix。
+Case: `10128675309` -> Invalid length (country code not 1)。
+Case: `0128675309` -> Invalid NANP prefix。
+
+Wait, `1128675309` is 10 digits. Area code 1. Invalid.
+`10128675309` is 11 digits. Country code 0. Invalid length.
+`11286753090`是11位数字。Country code 1。Remove 1。`128675309`。Area code 1。Invalid NANP prefix。
+`10286753090`是11位数字。Country code 1。Remove 1。`028675309`。Area code 0。Invalid NANP prefix。
+`12286753090`是11位数字。Country code 1。Remove 1。`228675309`。Area code 2。Valid。
+
+看起来很可靠。
+
+一个小细节。`std::string` 构造函数将 `std::string` 作为参数，这会调用 `std::string` 的移动语义。
+`digits_ = digits;` 会进行移动赋值。
+作为局部变量 `digits`，在构造函数结束时，它会被销毁。将 `digits_` 初始化为 `digits` 是可以的。
+
+等等，我需要确保我没有意外地修改了 `phone_number.h`。
+它看起来不需要更改。
+
+最后检查代码结构。
+
+```cpp
+#include "phone_number.h"
+
+#include <cctype>
+#include <stdexcept>
+
+namespace {
+
+bool allowed_separator(char value) {
+    return value == ' ' || value == '(' || value == ')' || value == '+' ||
+           value == '-' || value == '.';
+}
+
+}  // namespace
+
+namespace phone_number {
+
+phone_number::phone_number(const std::string& text) {
+    std::string digits;
+    for (const char value : text) {
+        const auto byte = static_cast<unsigned char>(value);
+        if (std::isdigit(byte)) {
+            digits.push_back(value);
+            continue;
+        }
+        if (!allowed_separator(value)) {
+            throw std::domain_error("invalid phone-number character");
+        }
+    }
+
+    if (digits.size() == 11) {
+        if (digits[0] != '1') {
+            throw std::domain_error("invalid phone-number length");
+        }
+        digits.erase(digits.begin());
+    }
+    if (digits.size() != 10) {
+        throw std::domain_error("invalid phone-number length");
+    }
+    if (digits[0] < '2' || digits[3] < '2') {
+        throw std::domain_error("invalid NANP prefix");
+    }
+    digits_ = digits;
+}
+
+std::string phone_number::area_code() const { return digits_.substr(0, 3); }
+
+std::string phone

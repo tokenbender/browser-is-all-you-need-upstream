@@ -1,0 +1,75 @@
+{
+  "candidate_source_sha256": "947763d6c0aa749fcab25394f5cf58fa5b40bef9a71ca48615f45e729be1aaa1",
+  "candidate_source_sha256_after": "947763d6c0aa749fcab25394f5cf58fa5b40bef9a71ca48615f45e729be1aaa1",
+  "candidate_source_sha256_before": "947763d6c0aa749fcab25394f5cf58fa5b40bef9a71ca48615f45e729be1aaa1",
+  "candidate_source_unchanged": true,
+  "excluded_conditions": [],
+  "generated_at": "2026-08-28T12:49:51.569875+00:00",
+  "kernel_results": [
+    {
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-DEXERCISM_RUN_ALL_TESTS",
+        "-I.",
+        "-c",
+        "binary_search_tree.cpp",
+        "-o",
+        "binary_search_tree.o"
+      ],
+      "duration_seconds": null,
+      "facts": {
+        "return_code": 0,
+        "stderr_tail": ""
+      },
+      "kernel": 1,
+      "kernel_id": "G06-1",
+      "status": "pass",
+      "stderr_log": null,
+      "stdout_log": null,
+      "summary": "stage-1 compile: candidate translation unit compiles with zero diagnostics under strict flags"
+    },
+    {
+      "command": [
+        "07_warning_hygiene_classifier.py",
+        "--stderr",
+        "/tmp/tmpod3ttyjj.stderr.txt",
+        "--json"
+      ],
+      "duration_seconds": 0.035442,
+      "facts": {
+        "build_engine": "03_two_stage_build_verifier.py",
+        "build_status": "PASS",
+        "classifier_engine": "07_warning_hygiene_classifier.py",
+        "classifier_exit_code": 0,
+        "dominant_class": null,
+        "error_count": 0,
+        "findings": [],
+        "stderr_tail": "",
+        "warning_count": 0
+      },
+      "kernel": 1,
+      "kernel_id": "G06-2",
+      "status": "pass",
+      "stderr_log": null,
+      "stdout_log": null,
+      "summary": "warning hygiene: 0 error(s), 0 warning(s), dominant class None"
+    }
+  ],
+  "kernel_sum": 2,
+  "manifest_schema_sha256": "93e470b21d7cc3dbf65b62f2f3cdfb1a4fd670e3266cb2b92ca71278fc74290c",
+  "manifest_sha256": "33aa88387a97ae79099f4912f091d5759c6d91813e751767fad1c3451efc9d08",
+  "maximum_kernel_sum": 2,
+  "policy_id": "G06",
+  "reason": "warning hygiene: build PASS, 0 error(s), 0 warning(s)",
+  "schema_version": 2,
+  "status": "pass",
+  "task_id": "bst-e2e-pass",
+  "verifier_common_sha256": "3c3a8719effe5a9c35c5e3b555f59bc0e8abe7472ae6f4ad5f380a6847261234",
+  "verifier_source_sha256": "b16ac31a4c6abe4cc3c265ccb9c815bb7ba49dce2911349a35532609ab633f32",
+  "verifier_wrapper_sha256": "b16ac31a4c6abe4cc3c265ccb9c815bb7ba49dce2911349a35532609ab633f32"
+}

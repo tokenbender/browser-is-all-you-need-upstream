@@ -1,0 +1,821 @@
+The user wants me to solve the Zebra Puzzle using the provided C++ header and source files.
+The puzzle involves assigning attributes to 5 houses (position 1-5).
+Attributes are: Color, Nationality, Pet, Drink, Hobby.
+All attributes must be unique per category.
+
+Rules:
+1.  5 houses.
+2.  Englishman -> Red.
+3.  Spaniard -> Dog.
+4.  Green -> Coffee.
+5.  Ukrainian -> Tea.
+6.  Green is immediately right of Ivory.
+7.  Snail owner -> Dancing.
+8.  Yellow -> Painter.
+9.  Middle -> Milk.
+10. Norwegian -> House 1.
+11. Reader lives next to Fox.
+12. Painter lives next to Horse.
+13. Football -> Orange Juice.
+14. Japanese -> Chess.
+15. Norwegian lives next to Blue.
+
+Goal: Find who drinks water and who owns the zebra.
+
+Plan:
+I'll write a solver in the `.cpp` file.
+
+Attributes:
+Colors: Red, Green, Ivory, Yellow, Blue.
+Nationalities: English, Spaniard, Ukrainian, Norwegian, Japanese.
+Pets: Dog, Snail, Fox, Horse, Zebra.
+Drinks: Coffee, Tea, Milk, Orange Juice, Water.
+Hobbies: Dancing, Painting, Reading, Football, Chess.
+
+House indices: 0 to 4 (representing house 1 to 5).
+
+Logic:
+Iterate through all permutations of attributes for the 5 houses.
+Or, use constraint satisfaction (backtracking).
+Given the constraints, simple backtracking is feasible.
+
+Steps:
+1.  Define the solver class/function.
+2.  Generate permutations or use nested loops.
+3.  Check constraints one by one.
+4.  If all constraints pass, record the solution.
+
+Let's refine the constraints into a form easy to check in code.
+
+Position 0 (House 1): Norwegian.
+Position 2 (House 3): Milk.
+Color Green is at position i, Color Ivory must be at position i-1.
+Color Green, Drink Coffee.
+Color Ivory, Drink ?
+Color Yellow, Hobby Painter.
+Color Red, Nationality English.
+Color Blue, Nationality ?
+Nationality Spaniard, Pet Dog.
+Nationality Ukrainian, Drink Tea.
+Nationality Japanese, Hobby Chess.
+Hobby Dancing, Pet Snail.
+Hobby Reading, Pet Fox.
+Hobby Football, Drink Orange Juice.
+
+Wait, constraints 11 and 12 need "next to".
+Constraint 15: Norwegian is next to Blue.
+
+Let's write the code.
+
+File: zebra_puzzle.h
+Keep the struct Solution.
+Add a function to solve it.
+
+File: zebra_puzzle.cpp
+Implement the solver.
+
+Class ZebraPuzzle:
+Method solve() -> Solution.
+
+Implementation details:
+Colors: {Red, Green, Ivory, Yellow, Blue}
+Nationalities: {English, Spaniard, Ukrainian, Norwegian, Japanese}
+Pets: {Dog, Snail, Fox, Horse, Zebra}
+Drinks: {Coffee, Tea, Milk, Orange Juice, Water}
+Hobbies: {Dancing, Painting, Reading, Football, Chess}
+
+Permutation generator:
+Since 5^5 = 3125 combinations, it's small enough to brute force with nested loops or a recursive generator.
+
+Better approach: Recursive backtracking with a partial assignment map (house -> attributes) and sets of remaining options for each category.
+
+State:
+houses: array of 5 objects
+remaining_colors, remaining_nationalities, etc.
+
+Checks:
+1. House 0 is Norwegian.
+2. House 2 is Milk.
+3. Green is right of Ivory (Green index = Ivory index + 1).
+4. Green drink is Coffee.
+5. Yellow is Painter.
+6. Red is English.
+7. Spaniard is Dog.
+8. Ukrainian is Tea.
+9. Japanese is Chess.
+10. Snail is Dancing.
+11. Reader is next to Fox.
+12. Painter is next to Horse.
+13. Football is Orange Juice.
+14. Norwegian is next to Blue.
+
+Let's write the C++ code.
+
+zebra_puzzle.h
+```
+#if !defined(ZEBRA_PUZZLE_H)
+#define ZEBRA_PUZZLE_H
+
+#include <string>
+
+namespace zebra_puzzle {
+
+struct Solution {
+    std::string drinksWater;
+    std::string ownsZebra;
+};
+
+class ZebraPuzzle {
+public:
+    Solution solve();
+};
+
+}  // namespace zebra_puzzle
+
+#endif  // ZEBRA_PUZZLE_H
+```
+
+zebra_puzzle.cpp
+```
+#include "zebra_puzzle.h"
+#include <algorithm>
+#include <array>
+#include <string_view>
+#include <utility>
+
+namespace zebra_puzzle {
+
+Solution ZebraPuzzle::solve() {
+    std::array<std::string_view, 5> colors = {"Red", "Green", "Ivory", "Yellow", "Blue"};
+    std::array<std::string_view, 5> nationalities = {"English", "Spaniard", "Ukrainian", "Norwegian", "Japanese"};
+    std::array<std::string_view, 5> pets = {"Dog", "Snail", "Fox", "Horse", "Zebra"};
+    std::array<std::string_view, 5> drinks = {"Coffee", "Tea", "Milk", "Orange Juice", "Water"};
+    std::array<std::string_view, 5> hobbies = {"Dancing", "Painting", "Reading", "Football", "Chess"};
+
+    std::array<std::string_view, 5> house_color = {};
+    std::array<std::string_view, 5> house_nationality = {};
+    std::array<std::string_view, 5> house_pet = {};
+    std::array<std::string_view, 5> house_drink = {};
+    std::array<std::string_view, 5> house_hobby = {};
+
+    std::array<bool, 5> used_color = {};
+    std::array<bool, 5> used_nationality = {};
+    std::array<bool, 5> used_pet = {};
+    std::array<bool, 5> used_drink = {};
+    std::array<bool, 5> used_hobby = {};
+
+    auto is_used = [&](std::array<bool, 5>& used, std::string_view item) -> bool {
+        for (int i = 0; i < 5; ++i) {
+            if (used[i] && colors[i] == item) return true;
+            if (used[i] && nationalities[i] == item) return true;
+            if (used[i] && pets[i] == item) return true;
+            if (used[i] && drinks[i] == item) return true;
+            if (used[i] && hobbies[i] == item) return true;
+        }
+        return false;
+    };
+
+    auto assign = [&](int house, std::string_view color, std::string_view nationality, std::string_view pet, std::string_view drink, std::string_view hobby) -> bool {
+        if (is_used(used_color, color) || is_used(used_nationality, nationality) ||
+            is_used(used_pet, pet) || is_used(used_drink, drink) || is_used(used_hobby, hobby)) {
+            return false;
+        }
+
+        house_color[house] = color;
+        house_nationality[house] = nationality;
+        house_pet[house] = pet;
+        house_drink[house] = drink;
+        house_hobby[house] = hobby;
+
+        used_color[std::distance(colors.begin(), std::find(colors.begin(), colors.end(), color))] = true;
+        used_nationality[std::distance(nationalities.begin(), std::find(nationalities.begin(), nationalities.end(), nationality))] = true;
+        used_pet[std::distance(pets.begin(), std::find(pets.begin(), pets.end(), pet))] = true;
+        used_drink[std::distance(drinks.begin(), std::find(drinks.begin(), drinks.end(), drink))] = true;
+        used_hobby[std::distance(hobbies.begin(), std::find(hobbies.begin(), hobbies.end(), hobby))] = true;
+
+        return true;
+    };
+
+    auto satisfies = [&]() -> bool {
+        // 1. 5 houses (trivial due to assignment)
+        // 2. Englishman -> Red
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "English" && house_color[h] != "Red") return false;
+        }
+        // 3. Spaniard owns the dog
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "Spaniard" && house_pet[h] != "Dog") return false;
+        }
+        // 4. Green -> Coffee
+        for (int h = 0; h < 5; ++h) {
+            if (house_color[h] == "Green" && house_drink[h] != "Coffee") return false;
+        }
+        // 5. Ukrainian -> Tea
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "Ukrainian" && house_drink[h] != "Tea") return false;
+        }
+        // 6. Green immediately right of Ivory
+        for (int h = 1; h < 5; ++h) {
+            if (house_color[h] == "Green" && house_color[h - 1] != "Ivory") return false;
+            if (house_color[h] == "Ivory" && house_color[h - 1] != "Green") return false;
+        }
+        // 7. Yellow -> Painter
+        for (int h = 0; h < 5; ++h) {
+            if (house_color[h] == "Yellow" && house_hobby[h] != "Painting") return false;
+        }
+        // 8. Middle -> Milk
+        if (house_drink[2] != "Milk") return false;
+        // 9. Norwegian -> First
+        if (house_nationality[0] != "Norwegian") return false;
+        // 11. Reader next to Fox
+        for (int h = 0; h < 5; ++h) {
+            if (house_hobby[h] == "Reading") {
+                if (h > 0 && house_pet[h - 1] != "Fox") return false;
+                if (h < 4 && house_pet[h + 1] != "Fox") return false;
+            }
+        }
+        // 12. Painter next to Horse
+        for (int h = 0; h < 5; ++h) {
+            if (house_hobby[h] == "Painting") {
+                if (h > 0 && house_pet[h - 1] != "Horse") return false;
+                if (h < 4 && house_pet[h + 1] != "Horse") return false;
+            }
+        }
+        // 13. Football -> Orange Juice
+        for (int h = 0; h < 5; ++h) {
+            if (house_hobby[h] == "Football" && house_drink[h] != "Orange Juice") return false;
+        }
+        // 14. Japanese -> Chess
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "Japanese" && house_hobby[h] != "Chess") return false;
+        }
+        // 15. Norwegian next to Blue
+        for (int h = 1; h < 5; ++h) {
+            if (house_nationality[h] == "Norwegian") {
+                if (house_color[h - 1] != "Blue") return false;
+            }
+        }
+        // 16. Snail owner likes to go dancing
+        for (int h = 0; h < 5; ++h) {
+            if (house_pet[h] == "Snail" && house_hobby[h] != "Dancing") return false;
+        }
+        return true;
+    };
+
+    std::function<void(int)> backtrack = [&](int house) {
+        if (house == 5) {
+            if (satisfies()) {
+                // Found solution
+                Solution sol;
+                for (int h = 0; h < 5; ++h) {
+                    if (house_drink[h] == "Water") sol.drinksWater = std::string(house_nationality[h]);
+                    if (house_pet[h] == "Zebra") sol.ownsZebra = std::string(house_nationality[h]);
+                }
+                return;
+            }
+            return;
+        }
+
+        // Order of assignment matters for pruning
+        const std::array<std::string_view, 5>& current_colors = colors;
+        const std::array<std::string_view, 5>& current_nationalities = nationalities;
+        const std::array<std::string_view, 5>& current_pets = pets;
+        const std::array<std::string_view, 5>& current_drinks = drinks;
+        const std::array<std::string_view, 5>& current_hobbies = hobbies;
+
+        for (int c = 0; c < 5; ++c) {
+            if (used_color[c]) continue;
+            for (int n = 0; n < 5; ++n) {
+                if (used_nationality[n]) continue;
+                for (int p = 0; p < 5; ++p) {
+                    if (used_pet[p]) continue;
+                    for (int d = 0; d < 5; ++d) {
+                        if (used_drink[d]) continue;
+                        for (int h = 0; h < 5; ++h) {
+                            if (used_hobby[h]) continue;
+
+                            if (assign(house, current_colors[c], current_nationalities[n],
+                                       current_pets[p], current_drinks[d], current_hobbies[h])) {
+                                backtrack(house + 1);
+                                // Note: assign modifies used arrays, need to reset or use a copy.
+                                // Actually, since we are backtracking with a fresh copy of used arrays in each wrapper or passed by reference
+                                // wait, the current approach modifies 'used' in place.
+                                // I need to reset used arrays after recursive call.
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    backtrack(0);
+    return Solution();
+}
+
+}  // namespace zebra_puzzle
+```
+
+Refining the backtrack logic:
+The `assign` function modifies the global `used` arrays. I need to reset them after the recursive call returns.
+Or better, pass the state by value in the recursive wrapper, but that creates heavy copying.
+Since 5^5 is small, I can just loop over the indices and reset.
+
+Wait, I structure the loops inside backtrack. I can pass the indices of the current assignment to `satisfies`.
+
+Revised Plan for backtrack:
+Pass the indices of the assigned attributes to `satisfies`.
+Inside `satisfies`, use the global house arrays.
+The recursive function takes `house_index`.
+Inside, it iterates over the remaining indices for colors, nationalities, etc.
+If valid, recurse to next house.
+
+Let's optimize the order of assignment to prune faster.
+Constraining rules:
+- Norwegian at 0.
+- Milk at 2.
+- Green right of Ivory.
+- Green drink Coffee.
+- Yellow painter.
+- Red English.
+- Spaniard Dog.
+- Ukrainian Tea.
+- Japanese Chess.
+- Football Orange Juice.
+- Reader next to Fox.
+- Painter next to Horse.
+- Norwegian next to Blue.
+- Snail Dancing.
+
+House 0:
+Must be Norwegian.
+Must be next to Blue. So House 1 must be Blue.
+Must be Painted Yellow? Not necessarily, but if it is, hobby is Painting.
+Must be Red? No.
+So House 0: Nationality Norwegian. Color? Drink? Pet? Hobby?
+House 1: Color Blue.
+
+Let's just write the generic solver. Python is easier for this, but I must use C++.
+
+I will use a vector of vectors to represent the state and use a recursive backtracking with constraint checking after filling a house.
+Or better: Fill all attributes for House 0, then House 1...
+Actually, the constraints connect houses. "Green is right of Ivory" requires checking two houses.
+"Norwegian next to Blue" requires checking House 0 and House 1.
+
+Strategy:
+Recursive function `backtrack(house_index)`.
+Base case: house_index == 5. Check global constraints.
+Recursive step:
+Iterate over all possible combinations of attributes for `house_index`.
+Check "local" constraints for this house (e.g. if a rule is "House X is Y").
+If local constraints pass, recurse to `house_index + 1`.
+
+Local constraints:
+- House 0 is Norwegian.
+- House 2 is Milk.
+- House 0 is next to Blue (implies House 1 is Blue).
+- House 1 is Blue (due to above).
+- If House 0 is Yellow, House 0 is Painter.
+- If House 1 is Green, House 0 is Ivory.
+- If House 1 is Green, House 1 is Coffee.
+- If House 2 is Red, House 2 is English.
+- If House 2 is Spaniard, House 2 is Dog.
+- If House 2 is Ukrainian, House 2 is Tea.
+- If House 2 is Japanese, House 2 is Chess.
+- If House 2 is Football, House 2 is Orange Juice.
+- If House 2 is Snail, House 2 is Dancing.
+- If House 2 is Fox, then House 1 or 3 is Reader.
+- If House 2 is Horse, then House 1 or 3 is Painter.
+
+Wait, this is getting complex to enumerate manually.
+I will write a solver that assigns attributes to houses and checks constraints whenever a house is fully assigned.
+Or, better, check partial constraints as soon as possible.
+
+Let's stick to the "assign house, recurse" approach with strong pruning.
+
+Attributes:
+Colors: Red, Green, Ivory, Yellow, Blue
+Nationalities: English, Spaniard, Ukrainian, Norwegian, Japanese
+Pets: Dog, Snail, Fox, Horse, Zebra
+Drinks: Coffee, Tea, Milk, Orange Juice, Water
+Hobbies: Dancing, Painting, Reading, Football, Chess
+
+House 0:
+Nationality: Norwegian.
+Constraint: Next to Blue -> House 1 is Blue.
+Remaining Colors for House 0: Red, Green, Ivory, Yellow.
+Remaining Nationalities for House 0: English, Spaniard, Ukrainian, Japanese.
+Remaining Pets for House 0: Dog, Snail, Fox, Horse, Zebra.
+Remaining Drinks for House 0: Coffee, Tea, Milk, Orange Juice, Water.
+Remaining Hobbies for House 0: Dancing, Painting, Reading, Football, Chess.
+
+House 1:
+Color: Blue.
+Constraint: Next to Norwegian (House 0). (Already satisfied).
+Remaining Colors for House 1: Red, Green, Ivory, Yellow.
+Remaining Nationalities for House 1: English, Spaniard, Ukrainian, Japanese.
+Remaining Pets for House 1: Dog, Snail, Fox, Horse, Zebra.
+Remaining Drinks for House 1: Coffee, Tea, Milk, Orange Juice, Water.
+Remaining Hobbies for House 1: Dancing, Painting, Reading, Football, Chess.
+
+Constraints that apply to specific houses:
+- House 2: Drink Milk.
+- If House 0 is Yellow, Hobby is Painting.
+- If House 1 is Green, House 0 is Ivory.
+- If House 1 is Green, Drink is Coffee.
+- If House 2 is Red, Nationality is English.
+- If House 2 is Spaniard, Pet is Dog.
+- If House 2 is Ukrainian, Drink is Tea.
+- If House 2 is Japanese, Hobby is Chess.
+- If House 2 is Football, Drink is Orange Juice.
+- If House 2 is Snail, Hobby is Dancing.
+- If House 2 is Fox, then House 1 or 3 is Reader.
+- If House 2 is Horse, then House 1 or 3 is Painter.
+- If House 3 is Green, House 2 is Ivory.
+- If House 3 is Green, Drink is Coffee.
+- If House 4 is Green, House 3 is Ivory.
+- If House 4 is Green, Drink is Coffee.
+- If House 3 is Red, Nationality is English.
+- If House 3 is Spaniard, Pet is Dog.
+- If House 3 is Ukrainian, Drink is Tea.
+- If House 3 is Japanese, Hobby is Chess.
+- If House 3 is Football, Drink is Orange Juice.
+- If House 3 is Snail, Hobby is Dancing.
+- If House 3 is Fox, then House 2 or 4 is Reader.
+- If House 3 is Horse, then House 2 or 4 is Painter.
+- If House 4 is Red, Nationality is English.
+- If House 4 is Spaniard, Pet is Dog.
+- If House 4 is Ukrainian, Drink is Tea.
+- If House 4 is Japanese, Hobby is Chess.
+- If House 4 is Football, Drink is Orange Juice.
+- If House 4 is Snail, Hobby is Dancing.
+- If House 4 is Fox, then House 3 is Reader.
+- If House 4 is Horse, then House 3 is Painter.
+
+This is getting repetitive. I'll use a generic solver with constraint checking functions.
+
+class ZebraPuzzle {
+public:
+    Solution solve() {
+        // ... implementation ...
+    }
+};
+
+I will use a vector of maps or arrays for the house attributes.
+I'll use `std::array<std::string_view, 5>` for each attribute category for the 5 houses.
+e.g. `std::array<std::string_view, 5> house_color = {};`
+
+Backtracking function signature: `solve_recursive(int house_index)`
+
+Inside:
+If house_index == 5, check global constraints.
+Else:
+Iterate over all possible attribute values for that house (checking if already used).
+Set the attribute for the house.
+Call `solve_recursive(house_index + 1)`.
+
+Global constraints check:
+1. Englishman -> Red
+2. Spaniard -> Dog
+3. Green -> Coffee
+4. Ukrainian -> Tea
+5. Green is right of Ivory (Green index = Ivory index + 1)
+6. Yellow -> Painter
+7. Middle -> Milk
+8. Norwegian -> First
+9. Reader lives next to Fox
+10. Painter lives next to Horse
+11. Football -> Orange Juice
+12. Japanese -> Chess
+13. Norwegian lives next to Blue
+
+Wait, "Middle" is House 2.
+"Green is right of Ivory" means Green is at least 1 and Ivory is at least 0.
+Indices: 0, 1, 2, 3, 4.
+
+Code structure:
+zebra_puzzle.h
+zebra_puzzle.cpp
+
+Let's refine the code.
+
+zebra_puzzle.h
+```
+#if !defined(ZEBRA_PUZZLE_H)
+#define ZEBRA_PUZZLE_H
+
+#include <string>
+
+namespace zebra_puzzle {
+
+struct Solution {
+    std::string drinksWater;
+    std::string ownsZebra;
+};
+
+class ZebraPuzzle {
+public:
+    Solution solve();
+};
+
+}  // namespace zebra_puzzle
+
+#endif  // ZEBRA_PUZZLE_H
+```
+
+zebra_puzzle.cpp
+```
+#include "zebra_puzzle.h"
+#include <algorithm>
+#include <array>
+#include <string_view>
+#include <vector>
+
+namespace zebra_puzzle {
+
+Solution ZebraPuzzle::solve() {
+    const std::array<std::string_view, 5> colors = {"Red", "Green", "Ivory", "Yellow", "Blue"};
+    const std::array<std::string_view, 5> nationalities = {"English", "Spaniard", "Ukrainian", "Norwegian", "Japanese"};
+    const std::array<std::string_view, 5> pets = {"Dog", "Snail", "Fox", "Horse", "Zebra"};
+    const std::array<std::string_view, 5> drinks = {"Coffee", "Tea", "Milk", "Orange Juice", "Water"};
+    const std::array<std::string_view, 5> hobbies = {"Dancing", "Painting", "Reading", "Football", "Chess"};
+
+    std::array<std::string_view, 5> house_color = {};
+    std::array<std::string_view, 5> house_nationality = {};
+    std::array<std::string_view, 5> house_pet = {};
+    std::array<std::string_view, 5> house_drink = {};
+    std::array<std::string_view, 5> house_hobby = {};
+
+    std::array<bool, 5> used_color = {};
+    std::array<bool, 5> used_nationality = {};
+    std::array<bool, 5> used_pet = {};
+    std::array<bool, 5> used_drink = {};
+    std::array<bool, 5> used_hobby = {};
+
+    auto assign = [&](int house, std::string_view color, std::string_view nationality, std::string_view pet, std::string_view drink, std::string_view hobby) -> bool {
+        if (used_color[house]) return false;
+        if (used_nationality[house]) return false;
+        if (used_pet[house]) return false;
+        if (used_drink[house]) return false;
+        if (used_hobby[house]) return false;
+
+        house_color[house] = color;
+        house_nationality[house] = nationality;
+        house_pet[house] = pet;
+        house_drink[house] = drink;
+        house_hobby[house] = hobby;
+
+        used_color[house] = true;
+        used_nationality[house] = true;
+        used_pet[house] = true;
+        used_drink[house] = true;
+        used_hobby[house] = true;
+
+        return true;
+    };
+
+    auto satisfies = [&]() -> bool {
+        // 2. Englishman -> Red
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "English" && house_color[h] != "Red") return false;
+        }
+        // 3. Spaniard owns the dog
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "Spaniard" && house_pet[h] != "Dog") return false;
+        }
+        // 4. The person in the green house drinks coffee.
+        for (int h = 0; h < 5; ++h) {
+            if (house_color[h] == "Green" && house_drink[h] != "Coffee") return false;
+        }
+        // 5. The Ukrainian drinks tea.
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "Ukrainian" && house_drink[h] != "Tea") return false;
+        }
+        // 6. The green house is immediately to the right of the ivory house.
+        for (int h = 1; h < 5; ++h) {
+            if (house_color[h] == "Green" && house_color[h - 1] != "Ivory") return false;
+            if (house_color[h] == "Ivory" && house_color[h - 1] != "Green") return false;
+        }
+        // 7. The snail owner likes to go dancing.
+        for (int h = 0; h < 5; ++h) {
+            if (house_pet[h] == "Snail" && house_hobby[h] != "Dancing") return false;
+        }
+        // 8. The person in the yellow house is a painter.
+        for (int h = 0; h < 5; ++h) {
+            if (house_color[h] == "Yellow" && house_hobby[h] != "Painting") return false;
+        }
+        // 9. The person in the middle house drinks milk.
+        if (house_drink[2] != "Milk") return false;
+        // 10. The Norwegian lives in the first house.
+        if (house_nationality[0] != "Norwegian") return false;
+        // 11. The person who enjoys reading lives in the house next to the person with the fox.
+        for (int h = 0; h < 5; ++h) {
+            if (house_hobby[h] == "Reading") {
+                if (h > 0 && house_pet[h - 1] != "Fox") return false;
+                if (h < 4 && house_pet[h + 1] != "Fox") return false;
+            }
+        }
+        // 12. The painter's house is next to the house with the horse.
+        for (int h = 0; h < 5; ++h) {
+            if (house_hobby[h] == "Painting") {
+                if (h > 0 && house_pet[h - 1] != "Horse") return false;
+                if (h < 4 && house_pet[h + 1] != "Horse") return false;
+            }
+        }
+        // 13. The person who plays football drinks orange juice.
+        for (int h = 0; h < 5; ++h) {
+            if (house_hobby[h] == "Football" && house_drink[h] != "Orange Juice") return false;
+        }
+        // 14. The Japanese person plays chess.
+        for (int h = 0; h < 5; ++h) {
+            if (house_nationality[h] == "Japanese" && house_hobby[h] != "Chess") return false;
+        }
+        // 15. The Norwegian lives next to the blue house.
+        for (int h = 1; h < 5; ++h) {
+            if (house_nationality[h] == "Norwegian") {
+                if (house_color[h - 1] != "Blue") return false;
+            }
+        }
+        return true;
+    };
+
+    std::function<void(int)> backtrack = [&](int house) {
+        if (house == 5) {
+            if (satisfies()) {
+                Solution sol;
+                for (int h = 0; h < 5; ++h) {
+                    if (house_drink[h] == "Water") sol.drinksWater = std::string(house_nationality[h]);
+                    if (house_pet[h] == "Zebra") sol.ownsZebra = std::string(house_nationality[h]);
+                }
+            }
+            return;
+        }
+
+        const std::array<std::string_view, 5>& current_colors = colors;
+        const std::array<std::string_view, 5>& current_nationalities = nationalities;
+        const std::array<std::string_view, 5>& current_pets = pets;
+        const std::array<std::string_view, 5>& current_drinks = drinks;
+        const std::array<std::string_view, 5>& current_hobbies = hobbies;
+
+        for (int c = 0; c < 5; ++c) {
+            if (used_color[c]) continue;
+            for (int n = 0; n < 5; ++n) {
+                if (used_nationality[n]) continue;
+                for (int p = 0; p < 5; ++p) {
+                    if (used_pet[p]) continue;
+                    for (int d = 0; d < 5; ++d) {
+                        if (used_drink[d]) continue;
+                        for (int h = 0; h < 5; ++h) {
+                            if (used_hobby[h]) continue;
+
+                            if (assign(house, current_colors[c], current_nationalities[n],
+                                       current_pets[p], current_drinks[d], current_hobbies[h])) {
+                                backtrack(house + 1);
+                                used_color[house] = false;
+                                used_nationality[house] = false;
+                                used_pet[house] = false;
+                                used_drink[house] = false;
+                                used_hobby[house] = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    backtrack(0);
+    return Solution();
+}
+
+}  // namespace zebra_puzzle
+```
+This looks correct. It covers all constraints and backtracks until a solution is found. The `assign` function is used to set the state, and the recursive function resets the state (unassigns) after exploring a branch.
+
+One small detail: `std::string_view` is standard in C++17. If the environment is older, it might need `std::string`. But `std::string_view` is standard enough for "expert software developer" context unless specified otherwise, and it's more efficient. I'll stick with it.
+
+The solution struct is returned by value. The solver is a class with a public `solve` method.
+
+One check:
+Constraint 6: "Green house is immediately to the right of the ivory house."
+This means `index(Green) == index(Ivory) + 1`.
+My code checks: `if (house_color[h] == "Green" && house_color[h - 1] != "Ivory")`.
+Since h loops 1 to 4, `h-1` is valid.
+Also checks the reverse: `if (house_color[h] == "Ivory" && house_color[h - 1] != "Green")`.
+This ensures strict adjacency and order.
+
+Constraint 15: "Norwegian lives next to the blue house."
+My code: loops for h 1 to 4. Checks if `house_nationality[h] == "Norwegian"`. Then checks `house_color[h - 1] != "Blue"`.
+This only checks the left neighbor.
+If Norwegian is at h=0, the constraint "Norwegian lives next to the blue house" implies Blue is at h=1.
+My loop starts at h=1. So if Norwegian is at 1, it checks h-1=0 for Blue. Correct.
+If Norwegian is at 4, loop doesn't check it. Constraint only applies if Norwegian exists at h>=1.
+Wait, if Norwegian is at 0, he is next to 1. Blue must be at 1.
+My code checks `if (house_nationality[h] == "Norwegian")`. If h=0, loop starts at 1, so h=0 is never checked.
+Is this a bug?
+If Norwegian is at 0, he needs to be next to Blue at 1.
+If Norwegian is at 1, he needs Blue at 0 or 2.
+If Norwegian is at 4, he needs Blue at 3.
+My loop checks h=1,2,3,4.
+If Norwegian is at h, it checks `house_color[h-1]`.
+This checks the left neighbor of the Norwegian.
+It does NOT check the right neighbor.
+So if Norwegian is at 1, and Blue is at 2, the constraint fails.
+If Norwegian is at 4, it doesn't check him at all. If he is at 4, constraint "Norwegian lives next to the blue house" requires Blue at 3. My code checks if Norwegian is at 3, then checks left neighbor (Blue at 2). It doesn't check if Norwegian is at 4.
+So the constraint is incomplete.
+I should also check the right neighbor when iterating over Blue houses?
+Or better, iterate over Norwegian houses and check both neighbors.
+Yes, that's safer.
+
+Corrected Constraint 15 Check:
+```
+for (int h = 0; h < 5; ++h) {
+    if (house_nationality[h] == "Norwegian") {
+        if (h > 0 && house_color[h - 1] != "Blue") return false;
+        if (h < 4 && house_color[h + 1] != "Blue") return false;
+    }
+}
+```
+
+Let's add that.
+
+Also, looking at Constraint 11: "Reader lives next to Fox".
+My code checks if hobby is Reading, then neighbors are Fox.
+This is correct.
+
+Constraint 12: "Painter lives next to Horse".
+My code checks if hobby is Painting, then neighbors are Horse.
+This is correct.
+
+Constraint 13: "Football -> Orange Juice".
+My code checks if hobby is Football, then drink is Orange Juice.
+Correct.
+
+Constraint 14: "Japanese -> Chess".
+My code checks if nationality is Japanese, then hobby is Chess.
+Correct.
+
+Constraint 7: "Snail owner likes to go dancing".
+My code checks if pet is Snail, then hobby is Dancing.
+Correct.
+
+Constraint 8: "Yellow -> Painter".
+My code checks if color is Yellow, then hobby is Painting.
+Correct.
+
+Constraint 9: "Middle -> Milk".
+My code checks if house_drink[2] != "Milk".
+Correct.
+
+Constraint 2: "Englishman -> Red".
+My code checks if nationality is English, then color is Red.
+Correct.
+
+Constraint 3: "Spaniard owns the dog".
+My code checks if nationality is Spaniard, then pet is Dog.
+Correct.
+
+Constraint 4: "Green -> Coffee".
+My code checks if color is Green, then drink is Coffee.
+Correct.
+
+Constraint 5: "Ukrainian -> Tea".
+My code checks if nationality is Ukrainian, then drink is Tea.
+Correct.
+
+Constraint 6: "Green is immediately right of Ivory".
+My code checks adjacency.
+Correct.
+
+Constraint 10: "Norwegian lives in the first house".
+My code checks `house_nationality[0] != "Norwegian"`.
+Correct.
+
+The logic seems solid now.
+
+One final check on the code layout. The user wants `zebra_puzzle.h` and `zebra_puzzle.cpp`.
+
+Header:
+```
+#if !defined(ZEBRA_PUZZLE_H)
+#define ZEBRA_PUZZLE_H
+
+#include <string>
+
+namespace zebra_puzzle {
+
+struct Solution {
+    std::string drinksWater;
+    std::string ownsZebra;
+};
+
+class ZebraPuzzle {
+public:
+    Solution solve();
+};
+
+}  // namespace zebra_puzzle
+
+#endif  // ZEBRA_PUZZLE_H
+```
+

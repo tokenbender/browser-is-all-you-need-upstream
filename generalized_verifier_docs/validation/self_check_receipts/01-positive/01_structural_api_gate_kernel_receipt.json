@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:42:25.528758+00:00",
+  "policy_id": "01-STRUCTURAL-API-GATE",
+  "verifier": "01_structural_api_gate.py",
+  "verifier_source_sha256": "59e548b9bea89fff545eee7a6730e59d15097119889f1eb96715b2c0d4a592f4",
+  "status": "pass",
+  "kernel_results": [
+    {
+      "kernel_id": "01-STRUCTURAL-API-GATE-A",
+      "kernel": 1,
+      "status": "pass",
+      "summary": "VERDICT: PASS (2 symbols)",
+      "facts": {
+        "exit_code": 0,
+        "stdout_sha256": "ba5ea52fb6d9c8ede6518b4045dff404ea9f5d2f92a91dc395f95172f96bfb72",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 193,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/01_structural_api_gate.py",
+        "--test",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/zebra_puzzle_test.cpp",
+        "--header",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/.meta/example.h",
+        "--source",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/.meta/example.cpp",
+        "--receipt",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/01-positive"
+      ],
+      "duration_seconds": 0.003298,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": 1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 0,
+  "duration_seconds": 0.003298,
+  "command": [
+    "/usr/bin/python3",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/01_structural_api_gate.py",
+    "--test",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/zebra_puzzle_test.cpp",
+    "--header",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/.meta/example.h",
+    "--source",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/.meta/example.cpp",
+    "--receipt",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/01-positive"
+  ],
+  "stdout_sha256": "ba5ea52fb6d9c8ede6518b4045dff404ea9f5d2f92a91dc395f95172f96bfb72",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 193,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/.meta/example.h": "0ca0391e0bbf021209a572c8f3657b845e17b371d0765e4e7413c8e0825fa633",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/.meta/example.cpp": "baae708ef020252b817acefb67c90b7afcb76135a3f6eaed4bd74d3ad198c23b",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/Reward_GRPO/multi_env_fixtures/zebra-puzzle/zebra_puzzle_test.cpp": "2b95fb480833ad730748e742145f1789b9eddafc300b977baba80663b3443c9e"
+  },
+  "input_dir_manifests": {}
+}

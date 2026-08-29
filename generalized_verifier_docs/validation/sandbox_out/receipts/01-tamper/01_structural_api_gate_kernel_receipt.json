@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:47:55.570798+00:00",
+  "policy_id": "01-STRUCTURAL-API-GATE",
+  "verifier": "01_structural_api_gate.py",
+  "verifier_source_sha256": "59e548b9bea89fff545eee7a6730e59d15097119889f1eb96715b2c0d4a592f4",
+  "status": "fail",
+  "kernel_results": [
+    {
+      "kernel_id": "01-STRUCTURAL-API-GATE-A",
+      "kernel": -1,
+      "status": "fail",
+      "summary": "VERDICT: FAIL (2/2 symbols)",
+      "facts": {
+        "exit_code": 1,
+        "stdout_sha256": "17554a6dc9a4dea8c1d6b2f9575a33e19d0e77a5a7a8fa054b5f6847494f291c",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 285,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/workspace/generalized_verifier_docs/01_structural_api_gate.py",
+        "--test",
+        "/workspace/Reward_GRPO/multi_env_fixtures/zebra-puzzle/zebra_puzzle_test.cpp",
+        "--header",
+        "/workspace/Reward_GRPO/multi_env_fixtures/clock/.meta/example.h",
+        "--source",
+        "/workspace/Reward_GRPO/multi_env_fixtures/clock/.meta/example.cpp",
+        "--receipt",
+        "/out/receipts/01-tamper"
+      ],
+      "duration_seconds": 0.001319,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": -1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 1,
+  "duration_seconds": 0.001319,
+  "command": [
+    "/usr/bin/python3",
+    "/workspace/generalized_verifier_docs/01_structural_api_gate.py",
+    "--test",
+    "/workspace/Reward_GRPO/multi_env_fixtures/zebra-puzzle/zebra_puzzle_test.cpp",
+    "--header",
+    "/workspace/Reward_GRPO/multi_env_fixtures/clock/.meta/example.h",
+    "--source",
+    "/workspace/Reward_GRPO/multi_env_fixtures/clock/.meta/example.cpp",
+    "--receipt",
+    "/out/receipts/01-tamper"
+  ],
+  "stdout_sha256": "17554a6dc9a4dea8c1d6b2f9575a33e19d0e77a5a7a8fa054b5f6847494f291c",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 285,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/workspace/Reward_GRPO/multi_env_fixtures/clock/.meta/example.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62",
+    "/workspace/Reward_GRPO/multi_env_fixtures/clock/.meta/example.cpp": "f269249dfeae1939942a7f3335d9f058e8e1c0de7e74205d7cb44eb1d5822269",
+    "/workspace/Reward_GRPO/multi_env_fixtures/zebra-puzzle/zebra_puzzle_test.cpp": "2b95fb480833ad730748e742145f1789b9eddafc300b977baba80663b3443c9e"
+  },
+  "input_dir_manifests": {}
+}

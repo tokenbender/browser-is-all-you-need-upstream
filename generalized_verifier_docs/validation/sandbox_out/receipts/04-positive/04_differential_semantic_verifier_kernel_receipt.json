@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:48:33.510977+00:00",
+  "policy_id": "04-DIFFERENTIAL-SEMANTIC-VERIFIER",
+  "verifier": "04_differential_semantic_verifier.py",
+  "verifier_source_sha256": "fb32a8fd1a3e11912e8ff44cc44dc240b585e5086d3165f4b14ab7063604c22a",
+  "status": "pass",
+  "kernel_results": [
+    {
+      "kernel_id": "04-DIFFERENTIAL-SEMANTIC-VERIFIER-A",
+      "kernel": 1,
+      "status": "pass",
+      "summary": "VERDICT: PASS (score 1.0)",
+      "facts": {
+        "exit_code": 0,
+        "stdout_sha256": "6f5b07050e1dad5277de6bf9d714c6875ec356ff658e537b209fb6c7d0a468f3",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 252,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/workspace/generalized_verifier_docs/04_differential_semantic_verifier.py",
+        "--fixture-dir",
+        "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square",
+        "--header",
+        "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square/.meta/example.h",
+        "--source",
+        "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square/.meta/example.cpp",
+        "--receipt",
+        "/out/receipts/04-positive"
+      ],
+      "duration_seconds": 18.763536,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": 1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 0,
+  "duration_seconds": 18.763536,
+  "command": [
+    "/usr/bin/python3",
+    "/workspace/generalized_verifier_docs/04_differential_semantic_verifier.py",
+    "--fixture-dir",
+    "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square",
+    "--header",
+    "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square/.meta/example.h",
+    "--source",
+    "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square/.meta/example.cpp",
+    "--receipt",
+    "/out/receipts/04-positive"
+  ],
+  "stdout_sha256": "6f5b07050e1dad5277de6bf9d714c6875ec356ff658e537b209fb6c7d0a468f3",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 252,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square/.meta/example.h": "68a55a978c9b32731299080e836440b0b951fc60caf1a2c7c8570091c2ea837b",
+    "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square/.meta/example.cpp": "1c4518aa7762df05163a2934a050df1c56201b19c98a5aa146681655b921099e"
+  },
+  "input_dir_manifests": {
+    "/workspace/Reward_GRPO/multi_env_fixtures/crypto-square": {
+      "manifest_sha256": "d8c089bea7c5e3f298367a3e74c1590efed6bc33c578145d4889e145f667e00e",
+      "file_count": 11
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "expect": "LOOP",
+  "source": "empty_full.pkl[25] trial=trial-01 shard=1 task=knapsack tok_limit=True think_chars=80610",
+  "note": "trial-01 knapsack cap-hit: 'wait，我将输出文件。' exact-phrase loop, cut mid-phrase at the 32768 cap",
+  "answer_file": "_empty_answer.txt",
+  "gen_tokens": 32768,
+  "max_tokens": 32768,
+  "fixture": "loop-knapsack-cjk-phrase.txt"
+}

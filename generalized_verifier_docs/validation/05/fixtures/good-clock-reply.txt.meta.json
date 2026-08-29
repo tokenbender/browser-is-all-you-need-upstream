@@ -1,0 +1,6 @@
+{
+  "expect": "OK",
+  "source": "evidence/global_iter14_eval/trial-01/receipts/shard-0/2026-08-26-02-29-51--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-0/cpp/exercises/practice/clock/.aider.chat.history.md (reply followed by '> Applied edit')",
+  "note": "complete whole-file listing reply from a recorded eval turn that aider applied",
+  "fixture": "good-clock-reply.txt"
+}

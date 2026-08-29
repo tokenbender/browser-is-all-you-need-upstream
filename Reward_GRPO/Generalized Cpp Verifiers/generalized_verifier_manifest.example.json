@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "replace-with-pinned-task-id",
+  "source": "replace-with-task-source",
+  "candidate_files": ["implementation.cpp", "implementation.h"],
+  "protected_files": {
+    "CMakeLists.txt": "replace-with-64-lowercase-hex-digest"
+  },
+  "fixture_dir": "/workspace/fixture",
+  "policies": {
+    "G02": [{"command": ["g++", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-Werror", "-c", "implementation.cpp"], "timeout_s": 120, "expected_exit": 0}],
+    "G03": [{"command": ["./trusted-official-suite"], "timeout_s": 120, "expected_exit": 0}],
+    "G04": [{"command": ["./trusted-response-probe"], "timeout_s": 120, "expected_exit": 0}],
+    "G05": [{"command": ["./trusted-boundary-probe"], "timeout_s": 120, "expected_exit": 0}],
+    "G06": [{"command": ["./trusted-hygiene-probe"], "timeout_s": 120, "expected_exit": 0}]
+  },
+  "trajectory": {
+    "turn_limit": 2,
+    "turns": [
+      {"turn": 1, "response_receipt": {"status": "completed", "num_error_outputs": 0, "num_exhausted_context_windows": 0}, "generated_feedback": ""},
+      {"turn": 2, "response_file": "/workspace/response.txt", "response_receipt": {"status": "completed", "num_error_outputs": 0, "num_exhausted_context_windows": 0}, "delivered_feedback": ""}
+    ]
+  }
+}

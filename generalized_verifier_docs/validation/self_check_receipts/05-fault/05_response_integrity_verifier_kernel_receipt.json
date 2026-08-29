@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:43:27.038342+00:00",
+  "policy_id": "05-RESPONSE-INTEGRITY-VERIFIER",
+  "verifier": "05_response_integrity_verifier.py",
+  "verifier_source_sha256": "7620c64e3b96676aade8b16d70fa32ef11d9cacd634f15f4c3d5696ca6eabe31",
+  "status": "fail",
+  "kernel_results": [
+    {
+      "kernel_id": "05-RESPONSE-INTEGRITY-VERIFIER-A",
+      "kernel": -1,
+      "status": "fail",
+      "summary": "VERDICT: LOOP",
+      "facts": {
+        "exit_code": 1,
+        "stdout_sha256": "92f1cb8b468f5f05915f3a231167926a1befb5775f47f78e88479feb34c1583e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 398,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/05_response_integrity_verifier.py",
+        "--response",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/05/fixtures/loop-knapsack-cjk-phrase.txt",
+        "--receipt",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/05-fault"
+      ],
+      "duration_seconds": 0.010967,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": -1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 1,
+  "duration_seconds": 0.010967,
+  "command": [
+    "/usr/bin/python3",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/05_response_integrity_verifier.py",
+    "--response",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/05/fixtures/loop-knapsack-cjk-phrase.txt",
+    "--receipt",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/05-fault"
+  ],
+  "stdout_sha256": "92f1cb8b468f5f05915f3a231167926a1befb5775f47f78e88479feb34c1583e",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 398,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/05/fixtures/loop-knapsack-cjk-phrase.txt": "756ecb0dbc2a23912685342d95111a7b5e1dae84c79f6a0722a9fef4100889a4"
+  },
+  "input_dir_manifests": {}
+}

@@ -1,0 +1,9 @@
+{
+  "expect": "EMPTY",
+  "source": "empty_full.pkl[80] trial=trial-03 shard=0 task=crypto-square tok_limit=False think_chars=72580",
+  "note": "trial-03 crypto-square turn-1: 72.6k chars, complete fenced solution drafted inside THINKING, clean end, ANSWER empty, no cap",
+  "answer_file": "_empty_answer.txt",
+  "gen_tokens": null,
+  "max_tokens": null,
+  "fixture": "empty-crypto-square-solution-in-thinking.txt"
+}

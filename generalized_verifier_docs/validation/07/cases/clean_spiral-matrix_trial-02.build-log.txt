@@ -1,0 +1,14 @@
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /aider/spiral-matrix/build
+Consolidate compiler generated dependencies of target spiral-matrix
+[ 25%] Building CXX object CMakeFiles/spiral-matrix.dir/spiral_matrix_test.cpp.o
+[ 50%] Building CXX object CMakeFiles/spiral-matrix.dir/spiral_matrix.cpp.o
+[ 75%] Building CXX object CMakeFiles/spiral-matrix.dir/test/tests-main.cpp.o
+[100%] Linking CXX executable spiral-matrix
+[100%] Built target spiral-matrix
+===============================================================================
+All tests passed (6 assertions in 6 test cases)
+
+[100%] Built target test_spiral-matrix
+

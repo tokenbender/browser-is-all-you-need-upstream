@@ -1,0 +1,39 @@
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /aider/robot-name/build
+[ 25%] Building CXX object CMakeFiles/robot-name.dir/robot_name_test.cpp.o
+[ 50%] Building CXX object CMakeFiles/robot-name.dir/robot_name.cpp.o
+[ 75%] Building CXX object CMakeFiles/robot-name.dir/test/tests-main.cpp.o
+[100%] Linking CXX executable robot-name
+[100%] Built target robot-name
+===============================================================================
+All tests passed (2004 assertions in 5 test cases)
+
+[100%] Built target test_robot-name
+
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /aider/crypto-square/build
+[ 25%] Building CXX object CMakeFiles/crypto-square.dir/crypto_square_test.cpp.o
+[ 50%] Building CXX object CMakeFiles/crypto-square.dir/crypto_square.cpp.o
+/aider/crypto-square/crypto_square.cpp: In constructor ‘crypto_square::cipher::cipher(const string&)’:
+/aider/crypto-square/crypto_square.cpp:8:35: error: unused parameter ‘text’ [-Werror=unused-parameter]
+    8 | cipher::cipher(std::string const& text) {
+      |                ~~~~~~~~~~~~~~~~~~~^~~~
+cc1plus: all warnings being treated as errors
+make[2]: *** [CMakeFiles/crypto-square.dir/build.make:90: CMakeFiles/crypto-square.dir/crypto_square.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:85: CMakeFiles/crypto-square.dir/all] Error 2
+make: *** [Makefile:91: all] Error 2
+

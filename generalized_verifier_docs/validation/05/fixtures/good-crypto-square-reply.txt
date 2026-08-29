@@ -1,0 +1,113 @@
+crypto_square.h
+```
+#pragma once
+
+#include <cctype>
+#include <string>
+#include <vector>
+
+namespace crypto_square {
+
+class cipher {
+public:
+    cipher(std::string const& text);
+    std::string normalize_plain_text() const;
+    std::size_t size() const;
+    std::vector<std::string> plain_text_segments() const;
+    std::string cipher_text() const;
+    std::string normalized_cipher_text() const;
+
+private:
+    std::string normalized_;
+    std::size_t cols_;
+    std::size_t rows_;
+};
+
+}  // namespace crypto_square
+```
+
+crypto_square.cpp
+```
+#include "crypto_square.h"
+
+#include <algorithm>
+#include <cmath>
+
+namespace crypto_square {
+
+cipher::cipher(std::string const& text) {
+    normalized_ = normalize_plain_text();
+    if (normalized_.empty()) {
+        cols_ = 0;
+        rows_ = 0;
+        return;
+    }
+    cols_ = static_cast<std::size_t>(std::ceil(std::sqrt(normalized_.size())));
+    rows_ = (normalized_.size() + cols_ - 1) / cols_;
+}
+
+std::string cipher::normalize_plain_text() const {
+    std::string result;
+    std::transform(normalized_.begin(), normalized_.end(), std::back_inserter(result),
+                   [](char c) { return std::tolower(c); });
+    result.erase(
+        std::remove_if(result.begin(), result.end(),
+                       [](char c) { return !std::isalnum(c); }),
+        result.end());
+    return result;
+}
+
+std::size_t cipher::size() const { return cols_; }
+
+std::vector<std::string> cipher::plain_text_segments() const {
+    std::vector<std::string> segments;
+    for (std::size_t row = 0; row < rows_; ++row) {
+        std::string segment;
+        for (std::size_t col = 0; col < cols_; ++col) {
+            const std::size_t index = row * cols_ + col;
+            if (index < normalized_.size()) {
+                segment.push_back(normalized_[index]);
+            }
+        }
+        segments.push_back(segment);
+    }
+    return segments;
+}
+
+std::string cipher::cipher_text() const {
+    std::string result;
+    for (std::size_t col = 0; col < cols_; ++col) {
+        for (std::size_t row = 0; row < rows_; ++row) {
+            const std::size_t index = row * cols_ + col;
+            if (index < normalized_.size()) {
+                result.push_back(normalized_[index]);
+            }
+        }
+    }
+    return result;
+}
+
+std::string cipher::normalized_cipher_text() const {
+    std::string result;
+    for (std::size_t row = 0; row < rows_; ++row) {
+        std::string segment;
+        for (std::size_t col = 0; col < cols_; ++col) {
+            const std::size_t index = row * cols_ + col;
+            if (index < normalized_.size()) {
+                segment.push_back(normalized_[index]);
+            } else {
+                segment.push_back(' ');
+            }
+        }
+        if (row == rows_ - 1) {
+            segment.push_back(' ');
+        }
+        result += segment + " ";
+    }
+    result.pop_back();
+    return result;
+}
+
+}  // namespace crypto_square
+```
+

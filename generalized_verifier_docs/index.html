@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generalized Verifier: Evidence-Based Analysis</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 30px; color: #333; background-color: #f4f7f6; }
+        .container { max-width: 1050px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #2c3e50; }
+        h1 { border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 30px;}
+        .section-header { background: #34495e; color: white; padding: 10px 15px; border-radius: 6px; margin-top: 40px; }
+        .mistake-card { border: 1px solid #e1e8ed; border-left: 5px solid #3498db; border-radius: 8px; padding: 20px; margin-bottom: 30px; background: #fafbfc;}
+        .mistake-card.root-cause { border-left-color: #e74c3c; background: #fdfafc; }
+        .mistake-title { margin-top: 0; color: #2980b9; display: flex; align-items: center; justify-content: space-between;}
+        .root-title { margin-top: 0; color: #c0392b; display: flex; align-items: center; justify-content: space-between;}
+        .badge { background: #7f8c8d; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .badge.critical { background: #e74c3c; }
+        .badge.bank { background: #2980b9; }
+        .badge.crypto { background: #8e44ad; }
+        .comparison { display: flex; gap: 20px; margin-top: 15px; }
+        .col { flex: 1; padding: 15px; border-radius: 6px; }
+        .old-ver { background: #ffeaa7; border: 1px solid #fdcb6e; }
+        .new-ver { background: #e8f8f5; border: 1px solid #1abc9c; }
+        .code-box { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 8px; overflow-x: auto; font-family: monospace; font-size: 13px; margin-top: 15px; }
+        pre { margin: 0; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generalized Verifier: Evidence-Based Analysis</h1>
+        <p>This document highlights specific, empirically-proven failure modes observed in the four evaluation trials (e.g., Trial-01 chats, <code>global-direct-iter14-midband-eval-full-chat.html</code>), isolating the root causes, model mistakes, and the required generalized verifier boundaries to resolve them.</p>
+
+        <h2 class="section-header">🚨 Part 1: The Root Causes (Environmental & Contract Defects)</h2>
+        <p>Before evaluating model intelligence, two critical infrastructure defects guaranteed a 0% pass rate on specific tasks. These must be caught by Environmental/Contract Verifiers.</p>
+
+        <div class="mistake-card root-cause">
+            <h2 class="root-title">Root Cause 1: Hidden API Contract in Prompts <span class="badge critical">0/7,680 Outcomes</span></h2>
+            <p><strong>The Reality:</strong> The prompt did not provide function signatures, and the injected `.h` file contained only an empty namespace. The model was forced to invent signatures. This is the ultimate root cause of missing enums, template placement errors, and private constructors (e.g., Bank Account).</p>
+            <div class="comparison">
+                <div class="col old-ver">
+                    <strong>🔴 Old System</strong><br>
+                    Allowed the model to blindly guess the API. When the test harness called an exact signature, it resulted in massive CE (Compile Errors).
+                </div>
+                <div class="col new-ver">
+                    <strong>🟢 Generalized Fix</strong><br>
+                    <strong>Prompt Injection + AST Gate:</strong> The exact API contract must be explicitly provided. An AST Structural Gate then verifies the contract before passing it to C++.
+                </div>
+            </div>
+        </div>
+
+        <div class="mistake-card root-cause">
+            <h2 class="root-title">Root Cause 2: Unwinnable Environment (CMake Boost Defect) <span class="badge critical">Environment</span></h2>
+            <p><strong>The Reality:</strong> Two tasks were fundamentally unwinnable because the CMake configuration contained <code>find_package(Boost REQUIRED)</code>, which aborted the build before compilation even started due to a missing environment dependency.</p>
+            <div class="comparison">
+                <div class="col old-ver">
+                    <strong>🔴 Old System</strong><br>
+                    Treated the CMake abort as a model failure (Compile Error), forcing the RL model to try to fix C++ code to solve a missing OS package.
+                </div>
+                <div class="col new-ver">
+                    <strong>🟢 Generalized Fix</strong><br>
+                    <strong>Environmental Verdict (INVALID):</strong> Perform a CMake dry-run. If configuration fails, return an <code>INVALID</code> environment state to prevent corrupting the RL gradient.
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-header">🧠 Part 2: Behavioral Mistakes & Generalized Verification</h2>
+
+        <div class="mistake-card">
+            <h2 class="mistake-title">Mistake 1: Constructor Visibility <span class="badge bank">Bank Account</span></h2>
+            <p><strong>The Error (Verified in Trial-01):</strong> The model literally wrote <code>// Private constructor to ensure proper initialization</code>, resulting in the error: <code>'Bankaccount::Bankaccount::Bankaccount()' is private within this context</code>.</p>
+            <div class="comparison">
+                <div class="col old-ver">
+                    <strong>🔴 Old Verifier</strong><br>
+                    Relied entirely on the C++ compiler's generic output, obfuscating a simple structural error.
+                </div>
+                <div class="col new-ver">
+                    <strong>🟢 New Verifier (Structural API Gate — generalized)</strong><br>
+                    <code>01_structural_api_gate.py</code>: derives the required API <em>from the official test file</em> (<code>ns::Ident</code> chains), then checks the candidate declares each symbol in the right namespace, as a template when the test uses <code>X&lt;T&gt;</code>, and with a <em>public</em> constructor when the test constructs it. Zero task names in the verifier; feedback is exact: <em>"'…' constructor is private"</em>.
+                    <div class="code-box"><pre>required = required_symbols_from_test(test_code)   # e.g. ns::Type used by the test
+model    = parse_candidate(header_code, cpp_code)  # namespaces + access sections
+if decl.ctor_access and 'public' not in decl.ctor_access:
+    fail(f"'{ident}' constructor is {decl.ctor_access[0]} -- the test "
+         f"constructs '{ns}::{ident}' and needs a public constructor")</pre></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mistake-card">
+            <h2 class="mistake-title">Mistake 2: State Lifecycle & Reset Logic <span class="badge bank">Bank Account</span></h2>
+            <p><strong>The Error:</strong> The model failed to reset the account balance on <code>close()</code>. Turn-1 failures frequently halted on "close semantics."</p>
+            <div class="comparison">
+                <div class="col old-ver">
+                    <strong>🔴 Old Verifier</strong><br>
+                    Used the standard concurrency test suite, which failed cryptically if state leaked between tests.
+                </div>
+                <div class="col new-ver">
+                    <strong>🟢 New Verifier (Metamorphic Testing)</strong><br>
+                    Injects a boundary test to check specific lifecycle transitions (<code>open -> deposit -> close -> open</code>) before running complex harnesses.
+                </div>
+            </div>
+        </div>
+
+        <div class="mistake-card">
+            <h2 class="mistake-title">Mistake 3: CE vs LE Coarse Attribution <span class="badge">Linked List / General</span></h2>
+            <p><strong>The Error:</strong> The model mismatched declarations (header) and definitions (cpp), causing <code>undefined reference</code> errors. The old system flattened 12 failed kernels into a generic "Compile Error."</p>
+            <div class="comparison">
+                <div class="col old-ver">
+                    <strong>🔴 Old Verifier</strong><br>
+                    Single-step build (<code>g++ -o</code>). The RL loop penalized the model for a generic CE, leading it to rewrite logic instead of fixing headers.
+                </div>
+                <div class="col new-ver">
+                    <strong>🟢 New Verifier (Two-Stage Build — real subprocess)</strong><br>
+                    <code>03_two_stage_build_verifier.py</code>: Stage 1 compiles the candidate TU alone (<code>-c</code>), Stage 2 compiles the official test + <code>test/tests-main.cpp</code> against it and links. Classifies <code>CE-1</code> / <code>CE-2</code> / <code>LE</code> (detects <code>undefined reference</code>) / <code>PASS</code>. Task-agnostic by construction: everything comes from <code>--fixture-dir</code> and the candidate paths.
+                    <div class="code-box"><pre># Stage 2 link step:
+rc, err = run([CXX, stem+".o", stem+"_test.o", "tests-main.o", "-o", binary])
+if rc != 0 and "undefined reference" in err:
+    return LE, "LINKER ERROR: declared in the header but never defined. "
+               "Move the definitions into the header."</pre></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mistake-card">
+            <h2 class="mistake-title">Mistake 4: -Werror & Algorithmic Flaws <span class="badge crypto">Crypto Square</span></h2>
+            <p><strong>The Error (Empirical Evidence):</strong> The model successfully defined the API, but consistently failed due to <code>-Werror=unused-parameter ('text')</code>. In Turn 2 repairs, the algorithm was simply wrong (e.g., returning segmented plaintext instead of the cipher, double-space padding issues).</p>
+            <div class="comparison">
+                <div class="col old-ver">
+                    <strong>🔴 Old Verifier</strong><br>
+                    Failed to differentiate between a strict compiler warning failure and a deep algorithmic logic failure.
+                </div>
+                <div class="col new-ver">
+                    <strong>🟢 New Verifier (Differential Semantic Gate — generalized)</strong><br>
+                    <code>04_differential_semantic_verifier.py</code>: builds the fixture's <code>.meta/example.*</code> reference as a <em>positive control</em> (must pass 100%, else the task package is reported broken), then runs the candidate's test binary and reports Catch2 passed/total assertions as <em>partial credit</em> (a gradient), plus a differential verdict: any assertion the reference passes but the candidate fails is a semantic regression. The observed "returns the input essentially unchanged" failure is caught by this differential — a fully generic echo probe is impossible without task knowledge (documented in the module docstring), so no per-task strings are hardcoded.
+                    <div class="code-box"><pre>ref_run  = run_test_binary(ref_binary)    # positive control: must be 100%
+cand_run = run_test_binary(cand_binary)   # partial credit = passed/total
+if ref_run.score == 1.0 and cand_run.score &lt; 1.0:
+    report("semantic regression, not a build problem")</pre></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mistake-card">
+            <h2 class="mistake-title">Mistake 5: Generation Budget Exhaustion (Runaway Thinking) <span class="badge crypto">Crypto Square</span></h2>
+            <p><strong>The Error:</strong> It was <em>not</em> context exhaustion (prompts were only 1.3-7k tokens). The model burned its 32,768 output generation budget meandering inside the <code>THINKING</code> block, or silently hit EOS. 77/83 times, the actual correct solution was sitting fully formed inside the thinking log.</p>
+            <div class="comparison">
+                <div class="col old-ver">
+                    <strong>🔴 Old Verifier</strong><br>
+                    Treated it as a timeout/compile failure. <em>Caution:</em> Simply applying a flat `-1` penalty for truncated rows was proven to <strong>amplify loops (12% → 41%)</strong> during training.
+                </div>
+                <div class="col new-ver">
+                    <strong>🟢 New Verifier (Retry/Masking Strategy)</strong><br>
+                    <strong>For Eval:</strong> Implements "Retry-on-Empty" by parsing the <code>THINKING</code> block to extract the ready solution. <br><strong>For Training:</strong> Applies gradient masking rather than a flat `-1` to avoid amplifying runaway loops.
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-header">⚙️ Conceptual Precision: How the Model Learns</h2>
+        <div class="mistake-card" style="border-left-color: #27ae60; background: #f9fdfa;">
+            <p>It is critical to distinguish between the two separate learning phases in this pipeline:</p>
+            
+            <div class="solution-list" style="border-color: #27ae60; background: #ebf9f1; margin-top: 15px;">
+                <ol>
+                    <li><strong>In-Episode Recovery (The Rollout / Aider Retry):</strong> When the verifier generates textual feedback (e.g., <em>"Constructor is private"</em>), the model reads this text during <strong>Turn-2</strong>. This allows the model to attempt a repair within the same chat trajectory.</li>
+                    <li><strong>GRPO Weight Updates (The Math):</strong> When the trajectory ends, the <strong>gradient update does NOT read the text feedback.</strong> The actual model weights are updated solely based on the <strong>Scalar Reward (+1 or -1)</strong>. The GRPO algorithm calculates the advantage: actions (tokens) that led to +1 are amplified, and actions that led to -1 are suppressed.</li>
+                </ol>
+            </div>
+            <p style="margin-top: 20px; font-size: 1.05em;"><strong>Takeaway:</strong> Textual feedback powers the multi-turn <em>repair</em> (trajectory), but the precise <em>scalar attribution</em> (+1 for valid, -1 for logic failure, masking for exhaustion, INVALID for env failures) is what physically drives the AI's intelligence during backpropagation.</p>
+        </div>
+
+        <h2 class="section-header">✅ Generalization Proof</h2>
+        <div class="mistake-card" style="border-left-color: #1abc9c; background: #f4fdf9;">
+            <p>The rewritten verifiers (<code>01_structural_api_gate.py</code>, <code>03_two_stage_build_verifier.py</code>, <code>04_differential_semantic_verifier.py</code>) contain <strong>zero task names</strong> — all task knowledge enters via inputs (official test file, fixture, reference implementation). Proven on the recorded failures, extracted from the trial receipts by <code>validation/extract_candidates.py</code>:</p>
+            <ol>
+                <li><strong>01 catches all recorded structural failures</strong> (binary-search-tree rows 0–4 <em>"required symbol 'binary_tree' not declared"</em>, bank-account <em>"constructor is private"</em>, kindergarten-garden missing enum/function, zebra-puzzle missing function) <strong>and passes all 6 reference implementations</strong> (0 false positives).</li>
+                <li><strong>03 separates CE from LE on real recordings:</strong> a bst_case row → <code>CE-2</code>; the recorded linked-list <code>undefined reference</code> run → <code>LE</code>; the reference → <code>PASS</code>.</li>
+                <li><strong>04 fails the recorded semantic regressions</strong> (returns-input-unchanged case: score 0.625; garden indexing case: score 0.0) <strong>and passes the references</strong> (score 1.0), with the reference as a positive control.</li>
+                <li><strong>Litmus:</strong> <code>grep -riE "bankaccount|crypto|chillout|cipher|binary_tree|kindergarten|zebra|linked_list|Plants" 0{1,3,4}_*.py</code> → zero hits in verifier logic.</li>
+            </ol>
+            <p>Full evidence — candidate provenance, verdict tables, verbatim outputs, honest limitations: <code>validation/VALIDATION.md</code> (reproduce with <code>bash validation/run_validation.sh</code>; raw transcript in <code>validation/transcript.txt</code>).</p>
+        </div>
+
+    </div>
+</body>
+</html>

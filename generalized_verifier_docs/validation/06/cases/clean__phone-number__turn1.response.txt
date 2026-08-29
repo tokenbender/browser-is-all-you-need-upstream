@@ -1,0 +1,75 @@
+phone_number.h
+```
+#if !defined(PHONE_NUMBER_H)
+#define PHONE_NUMBER_H
+
+#include <string>
+
+namespace phone_number {
+
+class phone_number {
+public:
+    phone_number(const std::string& text);
+    std::string area_code() const;
+    std::string number() const;
+    explicit operator std::string() const;
+
+private:
+    std::string digits_;
+};
+
+}  // namespace phone_number
+
+#endif // PHONE_NUMBER_H
+```
+
+phone_number.cpp
+```
+#include "phone_number.h"
+#include <cctype>
+#include <stdexcept>
+
+namespace phone_number {
+
+phone_number::phone_number(const std::string& text) {
+    std::string cleaned;
+
+    // Remove all non-digit characters
+    for (const char c : text) {
+        if (std::isdigit(c)) {
+            cleaned.push_back(c);
+        }
+    }
+
+    // Remove country code if present
+    if (cleaned.size() > 0 && (cleaned[0] == '1')) {
+        cleaned.erase(cleaned.begin());
+    }
+
+    // Validate length
+    if (cleaned.size() != 10) {
+        throw std::domain_error("Invalid number");
+    }
+
+    // Validate Area Code (index 0) and Exchange Code (index 3)
+    if (cleaned[0] == '0' || cleaned[3] == '0') {
+        throw std::domain_error("Invalid area or exchange code");
+    }
+
+    digits_ = cleaned;
+}
+
+std::string phone_number::area_code() const {
+    return digits_.substr(0, 3);
+}
+
+std::string phone_number::number() const {
+    return digits_;
+}
+
+phone_number::operator std::string() const {
+    return digits_;
+}
+
+}  // namespace phone_number
+```

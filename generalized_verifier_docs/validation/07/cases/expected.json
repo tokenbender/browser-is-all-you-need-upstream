@@ -1,0 +1,114 @@
+[
+  {
+    "case": "eval_unused-parameter",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-0/2026-08-26-02-29-51--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-0/cpp/exercises/practice/crypto-square/.aider.chat.history.md:279",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "unused-parameter",
+    "note": "error: unused parameter 'text' [-Werror=unused-parameter]"
+  },
+  {
+    "case": "eval_missing-include-cstdint",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-1/2026-08-26-02-29-42--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-1/cpp/exercises/practice/spiral-matrix/.aider.chat.history.md:185",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "missing-include",
+    "note": "error: 'uint32_t' was not declared in this scope -> #include <cstdint>"
+  },
+  {
+    "case": "eval_missing-include-unordered_map",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-0/2026-08-26-02-29-51--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-0/cpp/exercises/practice/allergies/.aider.chat.history.md:420",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "missing-include",
+    "note": "error: 'unordered_map' in namespace 'std' does not name a template type"
+  },
+  {
+    "case": "eval_missing-include-string",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-0/2026-08-26-02-29-51--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-0/cpp/exercises/practice/diamond/.aider.chat.history.md:169",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "missing-include",
+    "note": "error: 'string' is not a member of 'std'"
+  },
+  {
+    "case": "eval_return-local-addr",
+    "source": "evidence/global_iter14_eval/trial-02/receipts/shard-1/2026-08-26-03-40-39--global-direct-iter14-fixed26-20260826-020704-trial-02-shard-1/cpp/exercises/practice/robot-name/.aider.chat.history.md:187",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "return-local-addr",
+    "note": "error: reference to local variable 'name' returned"
+  },
+  {
+    "case": "eval_undeclared-identifier",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-0/2026-08-26-02-29-51--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-0/cpp/exercises/practice/clock/.aider.chat.history.md:507",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "undeclared-identifier",
+    "note": "error: 'normalize' was not declared in this scope"
+  },
+  {
+    "case": "eval_private-access",
+    "source": "evidence/global_iter14_eval/trial-03/receipts/shard-0/2026-08-26-02-39-18--global-direct-iter14-fixed26-20260826-020704-trial-03-shard-0/cpp/exercises/practice/complex-numbers/.aider.chat.history.md:305",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "private-access",
+    "note": "error: 'double ...::Complex::real_' is private within this context"
+  },
+  {
+    "case": "eval_constexpr-not-literal",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-1/2026-08-26-02-29-42--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-1/cpp/exercises/practice/zebra-puzzle/.aider.chat.history.md:421",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "constexpr-not-literal",
+    "note": "error: the type '...' of 'constexpr' variable '...' is not literal"
+  },
+  {
+    "case": "eval_unused-variable",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-1/2026-08-26-02-29-42--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-1/cpp/exercises/practice/parallel-letter-frequency/.aider.chat.history.md:275",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "unused-variable",
+    "note": "error: unused variable 'total_letters' [-Werror=unused-variable]"
+  },
+  {
+    "case": "eval_unused-function",
+    "source": "evidence/global_iter14_eval/trial-02/receipts/shard-1/2026-08-26-03-40-39--global-direct-iter14-fixed26-20260826-020704-trial-02-shard-1/cpp/exercises/practice/zebra-puzzle/.aider.chat.history.md:322",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "unused-function",
+    "note": "error: 'bool ...' defined but not used [-Werror=unused-function]"
+  },
+  {
+    "case": "eval_tautological-compare",
+    "source": "evidence/global_iter14_eval/trial-01/receipts/shard-0/2026-08-26-02-29-51--global-direct-iter14-fixed26-20260826-020704-trial-01-shard-0/cpp/exercises/practice/circular-buffer/.aider.chat.history.md:967",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "tautological-compare",
+    "note": "error: self-comparison always evaluates to true"
+  },
+  {
+    "case": "train_row0",
+    "source": "evidence/global_direct_grpo30_audit/bst_case/row0.stderr.txt",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "undeclared-identifier",
+    "note": "recorded training-audit stderr (direct copy)"
+  },
+  {
+    "case": "train_row1",
+    "source": "evidence/global_direct_grpo30_audit/bst_case/row1.stderr.txt",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "undeclared-identifier",
+    "note": "recorded training-audit stderr (direct copy)"
+  },
+  {
+    "case": "train_row2",
+    "source": "evidence/global_direct_grpo30_audit/bst_case/row2.stderr.txt",
+    "expected_verdict": "FAIL",
+    "expected_dominant": "undeclared-identifier",
+    "note": "recorded training-audit stderr (direct copy)"
+  },
+  {
+    "case": "clean_robot-name_trial-03",
+    "source": "evidence/global_iter14_eval/trial-03/receipts/shard-1/2026-08-26-02-39-18--global-direct-iter14-fixed26-20260826-020704-trial-03-shard-1/cpp/exercises/practice/robot-name/.aider.chat.history.md:383",
+    "expected_verdict": "PASS",
+    "expected_dominant": null,
+    "note": "final build block of a recorded passed turn"
+  },
+  {
+    "case": "clean_spiral-matrix_trial-02",
+    "source": "evidence/global_iter14_eval/trial-02/receipts/shard-1/2026-08-26-03-40-39--global-direct-iter14-fixed26-20260826-020704-trial-02-shard-1/cpp/exercises/practice/spiral-matrix/.aider.chat.history.md:438",
+    "expected_verdict": "PASS",
+    "expected_dominant": null,
+    "note": "final build block of a recorded passed turn"
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:49:02.252372+00:00",
+  "policy_id": "06-CANDIDATE-BOUNDARY-VERIFIER",
+  "verifier": "06_candidate_boundary_verifier.py",
+  "verifier_source_sha256": "cd08a96fe16bc5c197e4a4006216e3c85a8eec23ead5b8c138fefd4a765e1078",
+  "status": "fail",
+  "kernel_results": [
+    {
+      "kernel_id": "06-CANDIDATE-BOUNDARY-VERIFIER-A",
+      "kernel": -1,
+      "status": "fail",
+      "summary": "VERDICT: FAIL",
+      "facts": {
+        "exit_code": 1,
+        "stdout_sha256": "9193e04edd91e3930a91bbd8a08d26c850e49c583984ac2ca848182c0bb7d767",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 2489,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/workspace/generalized_verifier_docs/06_candidate_boundary_verifier.py",
+        "--response",
+        "/workspace/generalized_verifier_docs/validation/06/cases/meetup__u1_s477.response.txt",
+        "--editable",
+        "meetup.h",
+        "--editable",
+        "meetup.cpp",
+        "--receipt",
+        "/out/receipts/06-fault"
+      ],
+      "duration_seconds": 0.001777,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": -1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 1,
+  "duration_seconds": 0.001777,
+  "command": [
+    "/usr/bin/python3",
+    "/workspace/generalized_verifier_docs/06_candidate_boundary_verifier.py",
+    "--response",
+    "/workspace/generalized_verifier_docs/validation/06/cases/meetup__u1_s477.response.txt",
+    "--editable",
+    "meetup.h",
+    "--editable",
+    "meetup.cpp",
+    "--receipt",
+    "/out/receipts/06-fault"
+  ],
+  "stdout_sha256": "9193e04edd91e3930a91bbd8a08d26c850e49c583984ac2ca848182c0bb7d767",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 2489,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/workspace/generalized_verifier_docs/validation/06/cases/meetup__u1_s477.response.txt": "54abb6090d0d03549cccf09f015dc2e2d1e787f9bda3bb4acceda58318ea8d14"
+  },
+  "input_dir_manifests": {}
+}

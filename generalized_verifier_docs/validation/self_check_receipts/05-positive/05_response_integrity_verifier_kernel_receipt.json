@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "receipt_format": "check-layer-kernel-receipt/1",
+  "generated_at": "2026-08-28T14:43:26.970611+00:00",
+  "policy_id": "05-RESPONSE-INTEGRITY-VERIFIER",
+  "verifier": "05_response_integrity_verifier.py",
+  "verifier_source_sha256": "7620c64e3b96676aade8b16d70fa32ef11d9cacd634f15f4c3d5696ca6eabe31",
+  "status": "pass",
+  "kernel_results": [
+    {
+      "kernel_id": "05-RESPONSE-INTEGRITY-VERIFIER-A",
+      "kernel": 1,
+      "status": "pass",
+      "summary": "VERDICT: OK",
+      "facts": {
+        "exit_code": 0,
+        "stdout_sha256": "fdad22ff589d12da03b7d2b287b8d96c39dda57cec7c9922385976524ea48b07",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 146,
+        "stderr_bytes": 0
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/05_response_integrity_verifier.py",
+        "--response",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/05/fixtures/good-bank-account-reply.txt",
+        "--receipt",
+        "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/05-positive"
+      ],
+      "duration_seconds": 0.000881,
+      "stdout_log": null,
+      "stderr_log": null
+    }
+  ],
+  "kernel_sum": 1,
+  "maximum_kernel_sum": 1,
+  "exit_code": 0,
+  "duration_seconds": 0.000881,
+  "command": [
+    "/usr/bin/python3",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/05_response_integrity_verifier.py",
+    "--response",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/05/fixtures/good-bank-account-reply.txt",
+    "--receipt",
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/self_check_receipts/05-positive"
+  ],
+  "stdout_sha256": "fdad22ff589d12da03b7d2b287b8d96c39dda57cec7c9922385976524ea48b07",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 146,
+  "stderr_bytes": 0,
+  "input_sha256": {
+    "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/generalized_verifier_docs/validation/05/fixtures/good-bank-account-reply.txt": "109e7b1d19c185d9d8f562bb70c096dcd86250e94f9157a176c4565b61145c49"
+  },
+  "input_dir_manifests": {}
+}
