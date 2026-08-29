@@ -1,0 +1,2 @@
+candidate.cpp:4:5: error: 'uint32_t' was not declared in this scope
+candidate.cpp:1:1: note: 'uint32_t' is defined in header '<cstdint>'; did you forget to '#include <cstdint>'?

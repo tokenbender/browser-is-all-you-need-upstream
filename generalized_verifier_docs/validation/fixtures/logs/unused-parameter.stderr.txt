@@ -1,0 +1,1 @@
+candidate.cpp:3:19: error: unused parameter 'value' [-Werror=unused-parameter]

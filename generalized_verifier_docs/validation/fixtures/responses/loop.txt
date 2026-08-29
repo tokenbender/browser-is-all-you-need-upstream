@@ -1,0 +1,9 @@
+arithmetic.cpp
+```cpp
+namespace demo { int add(int left, int right) { return left + right; } }
+```
+
+修复这个问题。修复这个问题。修复这个问题。修复这个问题。
+修复这个问题。修复这个问题。修复这个问题。修复这个问题。
+修复这个问题。修复这个问题。修复这个问题。修复这个问题。
+修复这个问题。修复这个问题。修复这个问题。修复这个问题。

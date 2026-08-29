@@ -1,0 +1,9 @@
+notes.md
+```markdown
+This file is outside the editable candidate boundary.
+```
+
+arithmetic.cpp
+```cpp
+#include "arithmetic.h"
+```
