@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed verification of the completed Luna Low fixed26 evaluation."""
+
 
 from __future__ import annotations
 
@@ -130,9 +130,9 @@ def main() -> int:
                 require(error_outputs == 0, f"model error output: {label}/{task}")
                 require(malformed == 0, f"malformed response: {label}/{task}")
             elif error_outputs:
-                # With reflections disabled, a malformed first response is a
-                # terminal model miss, not invalid evidence and never grounds
-                # for a replacement completion.
+
+
+
                 require(not all(outcomes), f"malformed output scored as pass: {label}/{task}")
             model_error_outputs += error_outputs
             malformed_responses += malformed
@@ -207,8 +207,8 @@ def main() -> int:
             f"{EXPECTED_LOCAL_REJECTED_PREFLIGHTS} locally rejected preflight(s)",
         )
     else:
-        # Aider's default whole-edit harness can make multiple candidate-model
-        # calls before one compile/test invocation.
+
+
         require(len(call_receipts) > expected_matrix_calls,
                 f"expected more transport than scorer calls: {len(call_receipts)} <= {expected_matrix_calls}")
     total_usage = defaultdict(int)
@@ -218,8 +218,8 @@ def main() -> int:
     for path in call_receipts:
         call = read_json(path)
         if call.get("status") == "rejected":
-            # Preserve and classify a locally rejected preflight instead of
-            # deleting it from the evidence ledger. It is not a model call.
+
+
             leak = call.get("leak_audit", {})
             require(
                 call.get("upstream_http_attempts") == 0

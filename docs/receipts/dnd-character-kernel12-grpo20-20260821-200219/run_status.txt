@@ -1,0 +1,7 @@
+train_status=0
+source_commit=133713036d844268086899342f300c987649ee72
+source_adapter_sha256=f5c298f5554c6f5fa4a27f3329e4a08c6c2fef76834c0f10147a270ede41148d
+data_build_module=Reward_GRPO.dnd_character_grpo
+reward_func=Reward_GRPO.dnd_character_grpo.reward_func
+verifier_gate=dnd-character-strange-12-independent-kernel-gcc13-v1
+thinking=true

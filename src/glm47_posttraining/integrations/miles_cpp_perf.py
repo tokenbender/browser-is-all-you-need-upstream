@@ -1,4 +1,4 @@
-"""Miles data and reward bridge for the PIE C++ performance task."""
+
 
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ def build_miles_cpp_perf_datasets(
     oracle_filter_workers: int = DEFAULT_REWARD_WORKERS,
     force: bool = False,
 ) -> dict[str, Path]:
-    """Write Miles SFT, GRPO, and eval JSONL files from validated C++ task JSON."""
+
 
     source_root = Path(tasks_dir)
     output = Path(output_dir)
@@ -350,7 +350,7 @@ def _write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> Path:
 
 
 async def reward_func(args: Any, sample: Any, **_kwargs: Any) -> dict[str, Any] | list[dict[str, Any]]:
-    """Miles custom reward hook for one sample or a batch of samples."""
+
 
     if isinstance(sample, list):
         return await _score_sample_batch(sample)
@@ -388,7 +388,7 @@ def _score_sample(sample: Any) -> dict[str, Any]:
         task = CppTask.read_json(_resolve_task_path(str(task_path), metadata=metadata))
         breakdown = compute_reward(task, _sample_response(sample), runner=_sandbox_runner)
         return reward_record_from_breakdown(sample, task, breakdown)
-    except Exception as exc:  # pragma: no cover - guards real rollout workers
+    except Exception as exc:
         return _exception_record(sample, metadata, reason="reward_exception", exception=str(exc))
 
 
@@ -402,7 +402,7 @@ def _sandbox_runner(task: CppTask, code: str) -> HarnessResult:
 
 
 def reward_record_from_breakdown(sample: Any, task: CppTask, breakdown: RewardBreakdown) -> dict[str, Any]:
-    """Convert a reward breakdown into the dict carried by Miles's ``Sample.reward``."""
+
 
     harness = breakdown.harness
     record = _base_record(sample, task, score=breakdown.reward, reason=breakdown.reason)
@@ -521,13 +521,13 @@ def _resolve_task_path(task_path: str, *, metadata: dict[str, Any] | None = None
 
 
 def load_miles_debug_samples(path: str | Path) -> list[dict[str, Any]]:
-    """Load scored samples from a Miles debug dump or JSONL sample file."""
+
 
     input_path = Path(path)
     if input_path.suffix == ".pt":
         try:
             import torch
-        except ImportError as exc:  # pragma: no cover - depends on runtime image
+        except ImportError as exc:
             raise ImportError("torch is required to read Miles .pt debug rollout dumps") from exc
         payload = torch.load(input_path, map_location="cpu", weights_only=False)
         samples = payload.get("samples")
@@ -546,7 +546,7 @@ def load_miles_debug_samples(path: str | Path) -> list[dict[str, Any]]:
 
 
 def record_from_debug_sample(sample: dict[str, Any], *, label: str | None = None) -> dict[str, Any]:
-    """Convert one Miles debug sample dict into a C++ eval record."""
+
 
     reward_payload = sample.get("reward")
     if isinstance(reward_payload, dict):
@@ -584,7 +584,7 @@ def write_eval_artifacts(
     debug_samples_path: str | Path,
     output_dir: str | Path,
 ) -> dict[str, Path]:
-    """Write records and an aggregate summary from a Miles debug rollout dump."""
+
 
     samples = load_miles_debug_samples(debug_samples_path)
     records = [record_from_debug_sample(sample, label=label) for sample in samples]
@@ -669,5 +669,5 @@ def main(argv: Sequence[str] | None = None) -> None:
     args.func(args)
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     main()

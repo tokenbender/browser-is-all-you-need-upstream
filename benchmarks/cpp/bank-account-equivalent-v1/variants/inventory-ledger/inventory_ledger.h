@@ -65,4 +65,4 @@ private:
     std::mutex mutex_{};
 };
 
-}  // namespace inventory_ledger
+}

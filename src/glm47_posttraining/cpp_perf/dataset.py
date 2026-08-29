@@ -1,4 +1,4 @@
-"""Build model prompts and targets from validated PIE C++ tasks."""
+
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ DATA_SOURCE = "pie-cpp-perf"
 
 
 def build_prompt(task: CppTask) -> str:
-    """Return the C++ optimization instruction shown to the model."""
+
 
     visible_tests = "\n\n".join(
         f"Input:\n{case.input}\nExpected output:\n{case.expected}" for case in task.unit_tests
@@ -28,7 +28,7 @@ def build_prompt(task: CppTask) -> str:
 
 
 def sft_output(task: CppTask) -> str:
-    """Return the supervised target using the PIE fast solution."""
+
 
     return (
         "<reasoning>The optimized program preserves the tested behavior while reducing work.</reasoning>\n"
@@ -37,7 +37,7 @@ def sft_output(task: CppTask) -> str:
 
 
 def load_tasks(tasks_dir: str | Path) -> list[tuple[Path, CppTask]]:
-    """Load all task JSON files from a directory tree."""
+
 
     root = Path(tasks_dir)
     tasks: list[tuple[Path, CppTask]] = []

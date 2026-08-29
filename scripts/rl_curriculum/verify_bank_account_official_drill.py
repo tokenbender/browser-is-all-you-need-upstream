@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the exact official bank-account drill environment end to end on GCC."""
+
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from tempfile import TemporaryDirectory
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
-from glm47_posttraining.aider_polyglot.bank_account_official_drill import (  # noqa: E402
+from glm47_posttraining.aider_polyglot.bank_account_official_drill import (
     CURRICULUM_NAME,
     OFFICIAL_PROMPT_SHA256,
     REFERENCE,
@@ -24,16 +24,16 @@ from glm47_posttraining.aider_polyglot.bank_account_official_drill import (  # n
     evaluate_files,
     imitation_targets,
 )
-from glm47_posttraining.aider_polyglot.dataset import (  # noqa: E402
+from glm47_posttraining.aider_polyglot.dataset import (
     build_aider_polyglot_datasets,
 )
-from glm47_posttraining.aider_polyglot.parser import parse_whole_file_response  # noqa: E402
-from glm47_posttraining.aider_polyglot.reward import compute_aider_reward  # noqa: E402
-from glm47_posttraining.aider_polyglot.schema import (  # noqa: E402
+from glm47_posttraining.aider_polyglot.parser import parse_whole_file_response
+from glm47_posttraining.aider_polyglot.reward import compute_aider_reward
+from glm47_posttraining.aider_polyglot.schema import (
     AiderPolyglotTask,
     AiderTestResult,
 )
-from verify_bank_account_epoch50_signatures import (  # noqa: E402
+from verify_bank_account_epoch50_signatures import (
     EXPECTED_TESTS as OFFICIAL_TEST_NAMES,
     evaluate as evaluate_official_tests,
     load_harness as load_official_harness,

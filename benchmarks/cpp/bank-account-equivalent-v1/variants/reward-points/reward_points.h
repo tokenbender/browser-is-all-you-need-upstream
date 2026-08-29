@@ -23,4 +23,4 @@ private:
     std::mutex mutex_{};
 };
 
-}  // namespace reward_points
+}

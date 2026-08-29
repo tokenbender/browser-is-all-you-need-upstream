@@ -37,4 +37,4 @@ class PrintSpool {
     std::size_t backlog_{0};
 };
 
-}  // namespace spool
+}

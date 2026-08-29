@@ -1,0 +1,144 @@
+{
+  "checkpoints": [
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "caf538e87a4686692d41f5ad5fa2bdd5637d5d1c4ca31bd68d7b1dbebabf648c",
+      "adapter_path": "/workspace/local-runs/dnd-character-kernel12-grpo20-20260821-200219/checkpoints/grpo_lora_r16/iter_0000004/adapter",
+      "iteration": 4,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "a4acea7124e214c2b3336dbe3a9a0fc3581342b172009992a72e347fef23192a",
+        "adapter_megatron_tp1_pp0.pt": "8c81c86db10aeb7040d2f8849b11c6fe0019f0089256b466343bcc7c28c2008f",
+        "adapter_megatron_tp2_pp0.pt": "2a28e4eac2d34bf9548dbb239885a12d3b5b6dec48985860dcd8eccd0d327218",
+        "adapter_megatron_tp3_pp0.pt": "d97afab2422105dc5bb52555460cd944f26ee7ccebc13123e13a21cd6f5e237b"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    },
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "00807202273aaf4a4b1c29f1a862eece6a73d827dd007743d2ca5e9802ca3848",
+      "adapter_path": "/workspace/local-runs/dnd-character-kernel12-grpo20-20260821-200219/checkpoints/grpo_lora_r16/iter_0000009/adapter",
+      "iteration": 9,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "a293283822b0b765d7799da5e08d54f9b22658eed8e36a6b31fe7e43a7e68f9c",
+        "adapter_megatron_tp1_pp0.pt": "59b9672ef6e3bb3ffd0c6efced12194daef67241124758f5cced3f8481e967fa",
+        "adapter_megatron_tp2_pp0.pt": "9da2d9349d12cc85fcce4a0c8b45733121033d12f64117c72874c5b55f2c1665",
+        "adapter_megatron_tp3_pp0.pt": "ba1e0a10b5e1c9f4fa1fe9c07cc34c66fddb0762adf10a9b61f193edfab03f44"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    },
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "069486fb8e0bfc226c765141db3db27663f31dcee43e83cb09bf2b971dc7c1a1",
+      "adapter_path": "/workspace/local-runs/dnd-character-kernel12-grpo20-20260821-200219/checkpoints/grpo_lora_r16/iter_0000014/adapter",
+      "iteration": 14,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "366fd7358fa83424c6271c0f92cae2ad5d99efcc7f12919c09561d9cca2cd4c9",
+        "adapter_megatron_tp1_pp0.pt": "08deb6126a481f26c6801e27bf8cd3999ba3f389053cba92f7670474a04c0ce8",
+        "adapter_megatron_tp2_pp0.pt": "9033756aa50ee655cc525aa4c1527e9d5b84cdd8ef32e3e02f3cce2a5a3dedc6",
+        "adapter_megatron_tp3_pp0.pt": "24836d54090003595e44cfd5a31ce6efb78897c9a32e6054e6851877ee06e0f9"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    },
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "c9afe1ede8223e154c6efd1f3023ffb74b4a62c1705cae92efd1ebbf0a63d766",
+      "adapter_path": "/workspace/local-runs/dnd-character-kernel12-grpo20-20260821-200219/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+      "iteration": 19,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "8637862ecc8fe1f0ba0772819b03904be78e24988832506ab3c536ce57ba7c20",
+        "adapter_megatron_tp1_pp0.pt": "710bcccbd5cd6f6ca00c0028d4425e60ecea25404d8af13b057e5c8d85fe75e0",
+        "adapter_megatron_tp2_pp0.pt": "1f1dae594f508541f4aff01332be4b1de7f68133963c7c2393cb356b4de880d8",
+        "adapter_megatron_tp3_pp0.pt": "61ed5fc604dfc3f14b5e5accb644760ae916c16ae12801be434b9e4780538fea"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    }
+  ],
+  "data_manifest_path": "/workspace/local-runs/dnd-character-kernel12-grpo20-20260821-200219/data/manifest.json",
+  "data_manifest_sha256": "c6a7de0395d4ef46c65f747c2bfa2a7f497dc42909261541ddc6ba4d9a5364c7",
+  "data_source_tree_sha256": "fe92f9793ce6bfcf678da9c2c83ebc329fed18788788ce871a44bf6b74c8402b",
+  "expected_native_shards": 4,
+  "expected_source_native_shards": 4,
+  "gpus_per_node": 8,
+  "hybrid_manifest_path": "/workspace/local-checkpoints/midband-rl-v2-iter19-hybrid/mtp_strip_manifest.json",
+  "hybrid_manifest_sha256": "1b35527dc59290c161420c026cde118e373e7a1c1b938485e11d998dbb95f8af",
+  "kind": "glm47-aider-grpo-training-gate",
+  "latest_checkpoint": {
+    "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "adapter_model_sha256": "c9afe1ede8223e154c6efd1f3023ffb74b4a62c1705cae92efd1ebbf0a63d766",
+    "adapter_path": "/workspace/local-runs/dnd-character-kernel12-grpo20-20260821-200219/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+    "iteration": 19,
+    "layer_47_tensor_count": 207,
+    "native_shards": {
+      "adapter_megatron_tp0_pp0.pt": "8637862ecc8fe1f0ba0772819b03904be78e24988832506ab3c536ce57ba7c20",
+      "adapter_megatron_tp1_pp0.pt": "710bcccbd5cd6f6ca00c0028d4425e60ecea25404d8af13b057e5c8d85fe75e0",
+      "adapter_megatron_tp2_pp0.pt": "1f1dae594f508541f4aff01332be4b1de7f68133963c7c2393cb356b4de880d8",
+      "adapter_megatron_tp3_pp0.pt": "61ed5fc604dfc3f14b5e5accb644760ae916c16ae12801be434b9e4780538fea"
+    },
+    "tensor_count": 9741,
+    "training_state_files": [
+      "training_state_rank0.pt",
+      "training_state_rank1.pt",
+      "training_state_rank2.pt",
+      "training_state_rank3.pt",
+      "training_state_rank4.pt",
+      "training_state_rank5.pt",
+      "training_state_rank6.pt",
+      "training_state_rank7.pt"
+    ]
+  },
+  "num_rollout": 20,
+  "official_26_role": "explicitly authorized training target",
+  "phase": "full",
+  "run_id": "dnd-character-kernel12-grpo20-20260821-200219",
+  "run_root": "/workspace/local-runs/dnd-character-kernel12-grpo20-20260821-200219",
+  "schema_version": 1,
+  "source_adapter_path": "/workspace/local-checkpoints/midband-rl-v2-iter19-source",
+  "source_adapter_sha256": "f5c298f5554c6f5fa4a27f3329e4a08c6c2fef76834c0f10147a270ede41148d",
+  "source_commit": "133713036d844268086899342f300c987649ee72",
+  "status": "passed",
+  "training_task_count": 8
+}

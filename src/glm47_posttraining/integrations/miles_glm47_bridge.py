@@ -18,19 +18,19 @@ _CORRECT_SAMPLE_LOG_PATCHED = False
 
 
 def register_glm47_bridge() -> None:
-    """Register GLM-4.7-Flash Lite with Megatron Bridge inside Miles.
 
-    Installs post-import hooks only — no heavy imports happen here. This runs
-    at interpreter startup in every gated process via sitecustomize, including
-    Ray's node agents; eagerly importing megatron.bridge/mbridge from those
-    agents stalls `ray start` past its node-start deadline. Each patch fires
-    right after its target module finishes importing, in processes that
-    actually load that module.
-    """
 
-    # Legacy mbridge registry: Miles never imports miles_plugins.mbridge on its
-    # own, and plugin/registry import order is not fixed, so hook both sides;
-    # _MBRIDGE_PATCHED keeps the patch idempotent.
+
+
+
+
+
+
+
+
+
+
+
     _when_imported("mbridge.core.bridge", lambda module: _patch_mbridge_glm47_lite())
     _when_imported("miles_plugins.mbridge", lambda module: _patch_mbridge_glm47_lite())
     _when_imported(
@@ -54,7 +54,7 @@ def _register_glm47_bridge_class() -> None:
         return
 
     try:
-        import megatron.bridge.models.glm.glm47_flash_bridge  # noqa: F401
+        import megatron.bridge.models.glm.glm47_flash_bridge
     except (ImportError, ModuleNotFoundError):
         pass
     else:
@@ -72,7 +72,7 @@ def _register_glm47_bridge_class() -> None:
     from megatron.core.models.gpt.gpt_model import GPTModel
 
     try:
-        import transformer_engine  # noqa: F401
+        import transformer_engine
 
         have_te = True
     except (ImportError, ModuleNotFoundError):
@@ -85,15 +85,15 @@ def _register_glm47_bridge_class() -> None:
         model_type="glm4_moe_lite",
     )
     class GLM47LiteBridge(MegatronModelBridge):
-        """Megatron Bridge provider shim for GLM-4.7-Flash Lite LoRA runs."""
+
 
         def provider_bridge(self, hf_pretrained: PreTrainedCausalLM) -> GPTModelProvider:
             provider = super().provider_bridge(hf_pretrained)
             hf_config = hf_pretrained.config
 
-            # The provider's default_layer_spec builds fused-QKV attention and
-            # uniform MoE, silently ignoring multi_latent_attention and
-            # moe_layer_freq. The heterogeneous block spec honors both.
+
+
+
             provider.transformer_layer_spec = partial(get_gpt_decoder_block_spec, use_transformer_engine=have_te)
 
             provider.normalization = "RMSNorm"
@@ -142,14 +142,14 @@ def _register_glm47_bridge_class() -> None:
 
 
 def _patch_mbridge_glm47_lite() -> None:
-    """Patch Miles' mbridge GLM converter with GLM-specific QK layernorm names."""
+
 
     global _MBRIDGE_PATCHED
     if _MBRIDGE_PATCHED:
         return
 
     try:
-        import miles_plugins.mbridge  # noqa: F401
+        import miles_plugins.mbridge
         from mbridge.core.bridge import _MODEL_REGISTRY
     except (ImportError, ModuleNotFoundError):
         return
@@ -168,16 +168,16 @@ def _patch_mbridge_glm47_lite() -> None:
 
 
 def _patch_shared_outer_expert_adapter_replication() -> None:
-    """Mark shared-outer expert LoRA tensors as EP-replicated in checkpoint metadata.
 
-    ``SharedOuterGroupedExpertAdapter`` keeps its shared LoRA side bit-identical
-    across expert-parallel ranks at runtime (``_make_cross_ep_replicated``), but its
-    ``sharded_state_dict`` delegates the shared side to the generic parallel-linear
-    path, which stamps the same ``replica_id`` on every EP rank. Megatron's
-    sharding-integrity validation then counts EP-world main-replica claims for one
-    shard and rejects the whole checkpoint access pattern before any load or save.
-    Folding the EP rank into ``replica_id`` leaves exactly one main replica.
-    """
+
+
+
+
+
+
+
+
+
 
     global _SHARED_OUTER_CKPT_PATCHED
     if _SHARED_OUTER_CKPT_PATCHED:
@@ -208,9 +208,9 @@ def _patch_shared_outer_expert_adapter_replication() -> None:
             return sharded
         if ep_world <= 1:
             return sharded
-        # Every entry of the shared side is replicated across EP ranks: the
-        # weight tensor and TE _extra_state objects alike must carry the EP
-        # rank in replica_id or validation sees duplicate main replicas.
+
+
+
         for key, entry in sharded.items():
             if not key.startswith(shared_prefix) or not hasattr(entry, "replica_id"):
                 continue
@@ -231,7 +231,7 @@ def _patch_shared_outer_expert_adapter_replication() -> None:
 
 
 def _when_imported(module_name: str, callback) -> None:
-    """Run callback(module) now if imported, else right after its import completes."""
+
 
     import importlib.abc
     import importlib.util
@@ -267,14 +267,14 @@ def _when_imported(module_name: str, callback) -> None:
 
 
 def _patch_sglang_lora_sync_skip_mtp() -> None:
-    """Keep MTP-layer adapter tensors out of the SGLang LoRA sync payload.
 
-    The trainer exports MTP adapters as HF layer indices >= num_layers (layer 47
-    for GLM-4.7-Flash). SGLang serves only the decoder layers and rejects the
-    whole adapter with 'index 47 is out of range', which kills rollout weight
-    sync. MTP adapters keep training on the Megatron side; generation does not
-    execute the MTP head, so dropping them from the rollout payload is lossless.
-    """
+
+
+
+
+
+
+
 
     global _LORA_SYNC_PATCHED
     if _LORA_SYNC_PATCHED:
@@ -289,7 +289,7 @@ def _patch_sglang_lora_sync_skip_mtp() -> None:
 
 
 def _patch_warm_start_optimizer_reload() -> None:
-    """Align optimizer master parameters with a loaded LoRA adapter."""
+
 
     global _WARM_START_OPT_PATCHED
     if _WARM_START_OPT_PATCHED:
@@ -325,18 +325,18 @@ def _apply_warm_start_optimizer_reload(module) -> None:
 
 
 def _stage_rank_adapter_dir(module, adapter_path) -> str | None:
-    """Give every Miles generation a shard it can resolve for this rank.
 
-    Adapter shard names changed across Miles versions — legacy
-    ``tp{t}_pp{p}.pt``, the synth-v1 era's ``tp{t}_pp{p}_ep{e}.pt`` (ep index
-    == global rank), and mainline ``rank{r}.pt`` — while the loader in any
-    given image resolves only its own generation and falls back to fresh init
-    without error. This stages a per-rank directory that links this rank's
-    shard under both the rank-named and legacy names, so whichever resolution
-    the in-image loader uses finds the correct per-rank weights. Returns None
-    when nothing needs staging (legacy tp-only source, or no shards), leaving
-    the original path and the fresh-init gate as the backstop.
-    """
+
+
+
+
+
+
+
+
+
+
+
 
     import re
     import tempfile
@@ -351,7 +351,7 @@ def _stage_rank_adapter_dir(module, adapter_path) -> str | None:
         parallel_state = module.get_parallel_state()
         tp_rank = parallel_state.tp.rank
         pp_rank = parallel_state.pp.rank
-    except Exception as error:  # introspection failed: let the loader try as-is
+    except Exception as error:
         print(f"GLM-4.7 warm start shim: rank introspection unavailable ({error})", flush=True)
         return None
 
@@ -389,16 +389,16 @@ def _stage_rank_adapter_dir(module, adapter_path) -> str | None:
 
 
 def _assert_warm_start_took(model, adapter_path, loaded) -> None:
-    """Fail closed when a requested warm start leaves the actor at fresh init.
 
-    The r3 bank-account run staged an adapter whose native shards used a
-    naming the loader did not resolve; nothing loaded, nothing failed, and one
-    optimizer update was applied to a fresh LoRA. A fresh LoRA is detectable:
-    its B ("linear_out") matrices are all exactly at their zero init, so the
-    adapter contributes nothing to the network. Any warm start that requests
-    an adapter and ends in that state is an error, not a fallback. Opt out for
-    deliberate cold starts with GLM47_ALLOW_COLD_LORA_START=1.
-    """
+
+
+
+
+
+
+
+
+
 
     if not adapter_path:
         return
@@ -437,14 +437,14 @@ def _assert_warm_start_took(model, adapter_path, loaded) -> None:
 
 
 def _patch_colocate_lora_tms_regions() -> None:
-    """Make Miles' resident LoRA DDP buffers compatible with TMS post1.
 
-    ``torch-memory-saver==0.0.9.post1`` rejects nested ``region()`` calls.
-    Miles' colocated LoRA patch asks Megatron to create nested ``param_buffer``
-    and ``grad_buffer`` regions while model construction is already inside the
-    default region. Intercept that patch and allocate the small adapter-only DDP
-    buffers with TMS tracking temporarily disabled instead.
-    """
+
+
+
+
+
+
+
 
     global _LORA_TMS_PATCHED
     if _LORA_TMS_PATCHED:
@@ -483,9 +483,9 @@ def _apply_colocate_lora_tms_region_patch(module) -> None:
         resident_pools = {}
 
         def __init__(self, *args, **kwargs):
-            # Null out Megatron's nested region contexts. The surrounding model
-            # build remains in TMS' default pool, so allocate these resident
-            # adapter buffers in a persistent non-pauseable pool.
+
+
+
             kwargs["disable_param_buffers_cpu_backup"] = False
             kwargs["disable_grad_buffers_cpu_backup"] = False
 
@@ -528,7 +528,7 @@ def _apply_colocate_lora_tms_region_patch(module) -> None:
 
 
 def _patch_colocate_lora_update_tms_scope() -> None:
-    """Keep reloaded NCCL communicators outside the paused TMS region."""
+
 
     global _LORA_UPDATE_TMS_PATCHED
     if _LORA_UPDATE_TMS_PATCHED:
@@ -548,18 +548,18 @@ def _patch_colocate_lora_update_tms_scope() -> None:
 
 
 def _apply_colocate_lora_update_tms_scope(module) -> None:
-    """Run a staged adapter sync and process-group lifecycle in one live pool.
 
-    Miles pauses TMS' ``default`` region before rollout. Its stock update path
-    reloads NCCL process groups while that region is still paused and only then
-    enters ``torch_memory_saver.disable()`` for the adapter gather. In addition,
-    not every adapter parameter consumed by Megatron Bridge is guaranteed to be
-    backed by Miles' resident DDP buffer. Snapshot the adapter parameters before
-    pause, stage them in fresh CUDA storage for export, and restore the original
-    parameter bindings before TMS later wakes the trainer. Keeping the complete
-    transaction in the disabled scope lets TMS dispose the temporary pool only
-    after every staged tensor and process group using it has been released.
-    """
+
+
+
+
+
+
+
+
+
+
+
 
     cls = getattr(module, "MegatronTrainRayActor", None)
     if cls is None or getattr(cls, "_glm47_update_tms_scope_patched", False):
@@ -711,7 +711,7 @@ def _apply_colocate_lora_update_tms_scope(module) -> None:
 
 
 def _snapshot_lora_parameters(model) -> list[tuple[Any, Any, Any]]:
-    """Copy unique adapter parameters to CPU before TMS pauses their storage."""
+
 
     snapshots = []
     seen = set()
@@ -737,7 +737,7 @@ def _is_lora_parameter_name(name: str) -> bool:
 
 
 def _patch_rollout_data_dp_sharding() -> None:
-    """Keep globally carried rewards aligned with each DP rank's sample rows."""
+
 
     global _ROLLOUT_DP_SHARD_PATCHED
     if _ROLLOUT_DP_SHARD_PATCHED:
@@ -754,14 +754,14 @@ def _patch_rollout_data_dp_sharding() -> None:
 
 
 def _apply_rollout_data_dp_sharding(module) -> None:
-    """Apply Miles' saved DP partition to both lengths and raw rewards.
 
-    ``split_train_data_by_dp`` intentionally carries these two vectors globally
-    and stores the balanced row partition beside them. The stock train-side
-    conversion shards ``total_lengths`` but forgets ``raw_reward``. Detailed
-    correct-sample logging then indexes local response arrays with global reward
-    indices and crashes before the optimizer step.
-    """
+
+
+
+
+
+
+
 
     if getattr(module, "_glm47_rollout_dp_shard_patched", False):
         return
@@ -801,7 +801,7 @@ def _apply_rollout_data_dp_sharding(module) -> None:
 
 
 def _patch_correct_sample_logging() -> None:
-    """Give pass@k global rewards and row-wise metrics DP-local rewards."""
+
 
     global _CORRECT_SAMPLE_LOG_PATCHED
     if _CORRECT_SAMPLE_LOG_PATCHED:
@@ -821,7 +821,7 @@ def _patch_correct_sample_logging() -> None:
 
 
 def _apply_correct_sample_logging(module) -> None:
-    """Select the reward view required by each Miles logging consumer."""
+
 
     if getattr(module, "_glm47_correct_sample_log_patched", False):
         return
@@ -867,7 +867,7 @@ def _apply_correct_sample_logging(module) -> None:
 
 
 def _dump_sync_metrics(updater, hf_named_tensors, out_dir) -> None:
-    """Write per-rank fingerprints for each adapter synchronization."""
+
     import hashlib
     import json
     import os as _os
@@ -945,11 +945,11 @@ def _apply_sglang_lora_mtp_filter(module) -> None:
 
     cls._send_lora_params = _send_lora_params
 
-    # Warm starts (--lora-adapter-path) make the SGLang engine pre-load the
-    # adapter from disk at boot, but the actor's _lora_loaded flag starts False,
-    # so the first tensor sync skips the unload and the engine rejects the load
-    # with "already loaded". Mark the adapter as loaded when a warm-start path
-    # is configured so Miles' own unload-then-load branch handles the first sync.
+
+
+
+
+
     original_init = cls.__init__
 
     def __init__(self, *args, **kwargs):
@@ -962,7 +962,7 @@ def _apply_sglang_lora_mtp_filter(module) -> None:
 
 
 def _patch_router_circuit_breaker() -> None:
-    """Configure the colocated router for high-concurrency rollout traffic."""
+
 
     global _ROUTER_CB_PATCHED
     if _ROUTER_CB_PATCHED:
@@ -998,15 +998,15 @@ def _apply_router_cb_patch(module) -> None:
 
 
 def _apply_router_ready_timeout_patch(module) -> None:
-    """Enforce a floor on the router/session-server readiness timeout.
 
-    Miles hardcodes ``timeout=30`` when waiting for the spawned router and
-    session-server children, but those children are fresh interpreters that
-    re-import the sglang/transformers chain; on Modal's cold image filesystem
-    that alone can exceed 30s (observed: healthy router killed mid-import).
-    The child-liveness check inside ``wait_for_server_ready`` still fails
-    fast when the child actually dies.
-    """
+
+
+
+
+
+
+
+
 
     original_wait = getattr(module, "wait_for_server_ready", None)
     if original_wait is None or getattr(module, "_glm47_ready_timeout_patched", False):
@@ -1027,17 +1027,17 @@ def _apply_router_ready_timeout_patch(module) -> None:
 
 
 def _patch_sglang_lora_mem_pool_ordering() -> None:
-    """Feed per-expert LoRA tensors to SGLang's memory pool before shared ones.
 
-    SGLang's ``LoRAMemoryPool.load_lora_weight_to_buffer`` initializes its
-    per-module temp dicts only when the first weight it sees for a module is
-    per-expert. Under the shared-outer contract, fc1 ships a shared 3D lora_A
-    plus per-expert lora_B; if the shared tensor is iterated first, the
-    per-expert branch later re-guards ``temp_B_buffer`` but not
-    ``temp_B_cache_keys`` and the scheduler dies with "'NoneType' object does
-    not support item assignment". Reordering each layer's weights dict
-    per-expert-first makes SGLang's own init path set up all four temp dicts.
-    """
+
+
+
+
+
+
+
+
+
+
 
     global _SGLANG_MEM_POOL_PATCHED
     if _SGLANG_MEM_POOL_PATCHED:

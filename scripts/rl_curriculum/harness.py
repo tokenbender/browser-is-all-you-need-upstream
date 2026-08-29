@@ -1,15 +1,15 @@
-"""Compile/link/run primitive for the circular-state RL curriculum.
 
-Flags are copied verbatim from the polyglot verifier
-(src/glm47_posttraining/aider_polyglot/harness.py):
 
-    -std=c++17 -Wall -Wextra -Werror -pedantic -pthread -I.
 
-Compile and link run as separate steps, matching the benchmark's CMake build and
-keeping randomly suffixed driver temporaries out of diagnostics. The compiler is
-a parameter (REPAIR_CXX) so the same manifests can be re-verified under the
-GCC 13.3 toolchain used inside the training image.
-"""
+
+
+
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ LINK = "link-or-odr"
 RUNTIME = "runtime-or-sanitizer"
 SEMANTIC = "semantic-counterexample"
 
-# Every non-pass outcome is an oracle rejection.
+
 REJECTIONS = (COMPILE, LINK, RUNTIME, SEMANTIC)
 
 
@@ -76,7 +76,7 @@ def reference_files(task: str) -> dict[str, str]:
 
 
 def evaluate(task: str, files: dict[str, str]) -> tuple[str, str]:
-    """Run the task's hidden Catch2 oracle against `files`."""
+
     meta = load_tasks()[task]
     obj = catch_main_object()
     work = pathlib.Path(tempfile.mkdtemp(prefix=f"rlc-{task}-"))
@@ -120,11 +120,11 @@ def evaluate(task: str, files: dict[str, str]) -> tuple[str, str]:
 
 
 def _normalize(text: str, work: pathlib.Path, task: str) -> str:
-    """Canonicalise the scratch directory so diagnostics are run-stable."""
+
     root = f"/aider/{task}"
-    # Longest first: on macOS the resolved path is /private/var/folders/... while
-    # str(work) is /var/folders/..., so replacing the short form first would match
-    # the tail of the long one and leave a /private/aider/... stub behind.
+
+
+
     for variant in sorted({str(work.resolve()), str(work)}, key=len, reverse=True):
         text = text.replace(variant, root)
     return text

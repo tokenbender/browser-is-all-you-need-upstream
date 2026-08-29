@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "release": "phone-number-kernel12-GRPO20",
+  "base_model": {
+    "id": "zai-org/GLM-4.7-Flash",
+    "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
+  },
+  "source_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "checkpoint": "iter_0000014",
+  "adapter": {
+    "path": "checkpoints/grpo_lora_r16/iter_0000014/adapter",
+    "gcs_uri": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000014/adapter/",
+    "huggingface_uri": "https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/tree/main/checkpoints/iter_0000014/adapter",
+    "adapter_model_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+    "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "tensor_count": 9741,
+    "layer_47_tensor_count": 207,
+    "lora_rank": 16,
+    "lora_alpha": 32,
+    "native_shards": {
+      "adapter_megatron_tp0_pp0.pt": "25b58f2b2556cc803b8fffd2dc96a95dea51f2f14a0e4acd04e529e5325a3a59",
+      "adapter_megatron_tp1_pp0.pt": "066d0852df9d262520d8428673d478ce447a3607f5e0af65a8d6674ff30411a3",
+      "adapter_megatron_tp2_pp0.pt": "7bfb092d05e97c6287df581fab4a2b71446bd4bbc4ae07793d586328617208ed",
+      "adapter_megatron_tp3_pp0.pt": "95d46d817a3d2db1b696705b74a901b3505aa12dcf66aaa1a3c15b2611260103"
+    }
+  },
+  "training_data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+  "training_gate_sha256": "8852047494d6834693a622510a3e44eb35e08d3b338ebeec7826bed711b5b99e"
+}

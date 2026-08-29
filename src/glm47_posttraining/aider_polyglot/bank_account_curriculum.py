@@ -1,4 +1,4 @@
-"""Build the execution-grounded bank-account curriculum from pinned Synth-v1 assets."""
+
 
 from __future__ import annotations
 
@@ -97,7 +97,7 @@ def compiler_identity(compiler: str) -> str:
 
 
 def compiler_is_gcc(compiler: str) -> bool:
-    """Identify GNU C++ from predefined macros, independent of executable name."""
+
     result = subprocess.run(
         [compiler, "-dM", "-E", "-x", "c++", "-"],
         input="",
@@ -151,7 +151,7 @@ def load_variants(source_root: str | Path) -> list[Variant]:
     source = Path(source_root).resolve()
     manifest = _source_manifest(source)
     variants: list[Variant] = []
-    for raw_entry in manifest["variants"]:  # type: ignore[index]
+    for raw_entry in manifest["variants"]:
         _require(isinstance(raw_entry, dict), "source variant is not an object")
         entry: dict[str, object] = raw_entry
         variant_id = str(entry["id"])
@@ -160,7 +160,7 @@ def load_variants(source_root: str | Path) -> list[Variant]:
         for name in (header, source_name, test, "PROMPT.md", "CMakeLists.txt"):
             path = root / name
             _require(path.is_file() and not path.is_symlink(), f"missing source asset: {path}")
-            file_record = entry["files"].get(name)  # type: ignore[union-attr]
+            file_record = entry["files"].get(name)
             _require(isinstance(file_record, dict), f"missing source hash record: {path}")
             _require(
                 sha256_path(path) == file_record.get("sha256"),
@@ -240,7 +240,7 @@ def build_mutation(variant: Variant) -> tuple[dict[str, str], str, Stage]:
         match = matches[0]
         files[variant.header] = header[: match.start()] + insertion + header[match.start() :]
         expected = "link-or-odr"
-    else:  # pragma: no cover - the fixed mapping above is exhaustive
+    else:
         raise ValueError(f"unsupported mutation: {mutation}")
     return files, mutation, expected
 

@@ -30,11 +30,11 @@ Only modify the supplied `chrono.h` (`include/fmt/chrono.h`). C++11 only. Return
 The following exact source already sits inside fmt's inline namespace:
 
 ```cpp
-}  // namespace safe_duration_cast
+}
 #endif
 
-// Prevents expansion of a preceding token as a function-style macro.
-// Usage: f FMT_NOMACRO()
+
+
 #define FMT_NOMACRO
 
 namespace detail {
@@ -54,7 +54,7 @@ Use one consistent helper name. Each overload must use this C++11 declaration fo
 
 ```cpp
 template <typename To, typename From,
-          FMT_ENABLE_IF(/* compile-time condition */)>
+          FMT_ENABLE_IF(  )>
 To helper_name(const From& from) {
 ```
 

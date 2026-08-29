@@ -3,9 +3,9 @@ index 7bd4206d..bd26702b 100644
 --- a/include/fmt/chrono.h
 +++ b/include/fmt/chrono.h
 @@ -315,6 +315,22 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
- }  // namespace safe_duration_cast
+ }
  #endif
- 
+
 +namespace detail {
 +
 +template <typename To, typename From>
@@ -20,8 +20,8 @@ index 7bd4206d..bd26702b 100644
 +#endif
 +}
 +
-+}  // namespace detail
++}
 +
- // Prevents expansion of a preceding token as a function-style macro.
- // Usage: f FMT_NOMACRO()
+
+
  #define FMT_NOMACRO

@@ -1,22 +1,22 @@
-"""Episode ladder for the circular-buffer pilot (issue #110, step 2).
 
-Three tiers of initial state over lineage-disjoint ring domains:
 
-  tier 1  atomic repair    complete implementation with exactly one broken
-                           invariant: empty/full ambiguity, overwrite movement,
-                           wraparound, capacity, or size
-  tier 2  partial repo     occupancy and eviction transitions removed
-  tier 3  full solve       every body stubbed; the whole invariant set is open
 
-Starters are expressed as fail-closed edits from the reference: an anchor that
-does not match exactly once raises, so an episode cannot silently ship without
-the defect it claims to carry.
 
-`control` is the "distinct compiling semantic error" the step-3 contract
-requires. It is deliberately a different mechanism from every tier-1 mutation,
-so passing the negative-control check is evidence the oracle discriminates
-rather than merely rejecting anything unusual.
-"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -79,7 +79,7 @@ def control(task, episode):
     CONTROLS[task] = episode
 
 
-# =============================================================== sensor-ring
+
 SR = "telemetry_ring.cpp"
 
 add("sensor-ring/t1-empty-full-ambiguity", "sensor-ring", 1, "empty-full-ambiguity",
@@ -153,7 +153,7 @@ control("sensor-ring", Episode(
               "const int sample = slots_.at((head_ + pending_ - 1) % slots_.size());"),)))
 
 
-# =============================================================== print-spool
+
 PS = "print_spool.cpp"
 
 add("print-spool/t1-empty-full-ambiguity", "print-spool", 1, "empty-full-ambiguity",

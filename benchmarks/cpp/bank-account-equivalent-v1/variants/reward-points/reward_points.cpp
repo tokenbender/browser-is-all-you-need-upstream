@@ -56,4 +56,4 @@ int reward_account::points() {
     return state_.value;
 }
 
-}  // namespace reward_points
+}

@@ -1,0 +1,41 @@
+{
+  "files": [
+    {
+      "name": "run_receipt.txt",
+      "sha256": "93fcab6d7cc3af99a5c10d42561fa96ed4b343582da657370ae86e55eac9aaeb",
+      "size_bytes": 3182
+    },
+    {
+      "name": "vram_usage.csv",
+      "sha256": "7e7da947fb862f3b50b129ab62ff785a59d9129ffaf3a1138b2e6bb1ae8c8b00",
+      "size_bytes": 1618095
+    },
+    {
+      "name": "vram_peak.txt",
+      "sha256": "1cb1526c1ca11ad7ffe3e422d98b336ffeb5b15e77214812a52a74bb56993e67",
+      "size_bytes": 26
+    },
+    {
+      "name": "grpo_training_gate.json",
+      "sha256": "8852047494d6834693a622510a3e44eb35e08d3b338ebeec7826bed711b5b99e",
+      "size_bytes": 7339
+    },
+    {
+      "name": "phone-number-kernel12-grpo20-spot-20260822-102653.checkpoint_manifest.json",
+      "sha256": "2c52cdbbb4761dbd07d0e4a549aa349000d77f0adfa46c997fb3474d6ce79cd2",
+      "size_bytes": 2983
+    },
+    {
+      "name": "phone-number-kernel12-grpo20-spot-20260822-102653.evidence_summary.json",
+      "sha256": "6e57cba9ec01dc8f8a063824e210d6c03fefef447b1a87db9791edca24aecdb1",
+      "size_bytes": 427
+    }
+  ],
+  "schema_version": 1,
+  "skipped": [
+    {
+      "name": "run.log",
+      "reason": "sensitive_content"
+    }
+  ]
+}

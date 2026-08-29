@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Gate-2 checker tests (issue #110): EAGAIN-aware detector, robust load split.
 
-Run: python3 tests/test_check_bank_account_rollout.py
-"""
+
+
+
 
 from __future__ import annotations
 
@@ -76,8 +76,8 @@ def test_named_assertion_still_detected() -> None:
 
 
 def test_modal_max_load_split_is_not_degenerate() -> None:
-    # r3 shape: most records at the maximum load (32), the rest below. The old
-    # (> median) split put zero records in the high bucket.
+
+
     rows = _groups(
         40,
         lambda g, s: _row(
@@ -103,7 +103,7 @@ def test_all_equal_loads_marked_not_computable() -> None:
 
 
 def test_load_correlation_still_fires() -> None:
-    # Failures concentrated at high load must trip the gate.
+
     rows = _groups(
         40,
         lambda g, s: _row(
@@ -124,10 +124,10 @@ def test_r3_ledger_now_detects_what_the_run_missed() -> None:
     rows = [json.loads(line) for line in LEDGER.open()]
     result = MODULE.evaluate_gate(rows)
     check = result["concurrency_load_check"]
-    # The shipped r3 gate reported observed_failures=0 and high_load_records=0
-    # on these exact records; both blind spots are gone. 121 EAGAIN deaths in
-    # clean tests_failed records plus 14 in recoverable-format records whose
-    # recovered parse still reached the test stage.
+
+
+
+
     assert check["observed_failures"] == 135, check["observed_failures"]
     assert check["computable"] is True
     assert check["high_load_records"] > 0 and check["low_load_records"] > 0

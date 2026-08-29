@@ -4,18 +4,18 @@ index 7bd4206d..73f0e093 100644
 +++ b/include/fmt/chrono.h
 @@ -235,7 +235,7 @@ To safe_duration_cast(std::chrono::duration<FromRep, FromPeriod> from,
  }
+
+
+-
++
  
- /**
-- * safe duration_cast between floating point durations
-+ * safe duration cast between floating point durations
-  */
  template <typename To, typename FromRep, typename FromPeriod,
            FMT_ENABLE_IF(std::is_floating_point<FromRep>::value),
 @@ -430,6 +430,34 @@ auto write(OutputIt out, const std::tm& time, const std::locale& loc,
    return write_encoded_tm_str(out, string_view(buf.data(), buf.size()), loc);
  }
- 
-+// Helper for fmt_duration_cast that avoids code duplication.
+
++
 +template <typename To, typename From,
 +          bool Enabled = is_same_arithmetic_type<typename From::rep,
 +                                                 typename To::rep>::value>
@@ -43,8 +43,8 @@ index 7bd4206d..73f0e093 100644
 +  return seconds.count();
 +}
 +
- }  // namespace detail
- 
+ }
+
  FMT_BEGIN_EXPORT
 @@ -478,8 +506,7 @@ inline std::tm localtime(std::time_t time) {
  #if FMT_USE_LOCAL_TIME
@@ -55,11 +55,11 @@ index 7bd4206d..73f0e093 100644
 +  return localtime(detail::to_time_t(std::chrono::current_zone()->to_sys(time)));
  }
  #endif
- 
+
 @@ -523,9 +550,10 @@ inline std::tm gmtime(std::time_t time) {
    return gt.tm_;
  }
- 
+
 +template <typename Duration>
  inline std::tm gmtime(
 -    std::chrono::time_point<std::chrono::system_clock> time_point) {
@@ -67,10 +67,10 @@ index 7bd4206d..73f0e093 100644
 +    std::chrono::time_point<std::chrono::system_clock, Duration> time_point) {
 +  return gmtime(detail::to_time_t(time_point));
  }
- 
+
  namespace detail {
 @@ -1685,7 +1713,7 @@ OutputIt copy_unit(string_view unit, OutputIt out, wchar_t) {
- 
+
  template <typename Char, typename Period, typename OutputIt>
  OutputIt format_duration_unit(OutputIt out) {
 -  if (const char* unit = get_units<Period>())
@@ -81,7 +81,7 @@ index 7bd4206d..73f0e093 100644
 @@ -2094,9 +2122,11 @@ struct formatter<std::chrono::time_point<std::chrono::system_clock, Duration>,
          val -= second;
        }
- 
+
 +      using seconds = std::chrono::duration<std::time_t>;
 +      auto whole_seconds =
 +          detail::fmt_duration_cast<seconds>(epoch);
@@ -90,7 +90,7 @@ index 7bd4206d..73f0e093 100644
 -          &subsecs);
 +          gmtime(whole_seconds.count()), ctx, &subsecs);
      }
- 
+
      return formatter<std::tm, Char>::format(
 @@ -2117,14 +2147,15 @@ struct formatter<std::chrono::local_time<Duration>, Char>
        -> decltype(ctx.out()) {
@@ -110,5 +110,5 @@ index 7bd4206d..73f0e093 100644
 -          ctx, &subsecs);
 +          localtime(whole_seconds.count()), ctx, &subsecs);
      }
- 
+
      return formatter<std::tm, Char>::format(

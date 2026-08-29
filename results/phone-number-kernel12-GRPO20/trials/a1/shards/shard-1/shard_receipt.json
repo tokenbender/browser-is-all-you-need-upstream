@@ -1,0 +1,585 @@
+{
+  "status": "complete",
+  "run_id": "phone-number-iter14-fixed26-thinking-spot-20260822-142309",
+  "shard_index": 1,
+  "selected_tasks": [
+    "knapsack",
+    "linked-list",
+    "meetup",
+    "parallel-letter-frequency",
+    "perfect-numbers",
+    "phone-number",
+    "queen-attack",
+    "robot-name",
+    "space-age",
+    "spiral-matrix",
+    "sublist",
+    "yacht",
+    "zebra-puzzle"
+  ],
+  "model_kind": "adapter",
+  "model_revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+  "adapter_source_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+  "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+  "training_data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+  "training_gate_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "source_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "source_checkpoint": "iter_0000014",
+  "serving_conversion_receipt": {
+    "schema_version": 2,
+    "kind": "glm47-serving-adapter-conversion",
+    "source_adapter_path": "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-142309/adapter-source",
+    "source_adapter_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+    "source_adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "source_tensor_count": 9741,
+    "removed_layer_47_tensor_count": 207,
+    "serving_tensor_count": 9534,
+    "serving_adapter_sha256": "6d0cb2ef3d576e810877db67431cfc0fb15f996f89dbbd6c4713b5a4d3bcff67",
+    "serving_adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "training_data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+    "training_gate_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+    "source_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+    "source_checkpoint": "iter_0000014"
+  },
+  "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+  "polyglot_commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+  "tries": 2,
+  "eval_set_version": "fixed26-contract-v2",
+  "contract_overlay_sha256": "da6626c739f35557c726ce9e8f6c78f50caef924800c9bcff717b800da191fdb",
+  "prompt_test_audit_sha256": "2b6b22f2170685e8072c8cff54dc0d4084324f86e662179f9733c2d2d9ded18c",
+  "contract_overlay": {
+    "schema_version": 1,
+    "kind": "aider-fixed26-contract-overlay",
+    "overlay_version": "fixed26-contract-v2",
+    "root": "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-142309/shards/shard-1/cpp/exercises/practice",
+    "tasks": 13,
+    "records": [
+      {
+        "task": "knapsack",
+        "original_sha256": "69017232ff2b4335ec2ab79bc7470e2d86fa059c3aec2ea4ff51c512142b46e1",
+        "patched_sha256": "5ba39908e24ea536f97d30951cc18030b044c1e14e3bc26260412f3d19207cf7",
+        "was_already_patched": false
+      },
+      {
+        "task": "linked-list",
+        "original_sha256": "97b802c9c2f4dc8505d7b0051694ec747c250c72ad62ac13786c15049f6c95c6",
+        "patched_sha256": "9b53497f95e577e867b4045009a6c42d5d480e1c00a9878a367dc5e1598a2cf6",
+        "was_already_patched": false
+      },
+      {
+        "task": "meetup",
+        "original_sha256": "7fe0003115d9d10a589579c6a7eae523278e09a89bc9f967243ed2679ff1144d",
+        "patched_sha256": "cd96a78630ddc4b18da3d97fc2e52af6b4ba2ef8627afbaca6621f6722df5bba",
+        "was_already_patched": false
+      },
+      {
+        "task": "parallel-letter-frequency",
+        "original_sha256": "2a1c8f08bb586707242baca8ff7f4973233f2a83f2673a3bcda583990c499d86",
+        "patched_sha256": "241b469203880134a8931c9df45f838a817a37430df5f02267ee3cf2ebf57ba5",
+        "was_already_patched": false
+      },
+      {
+        "task": "perfect-numbers",
+        "original_sha256": "8db797c5f8e9c0efbb8c805ddefca892f764b4f3a72dff65c037f4bffb92b1cb",
+        "patched_sha256": "6f06b35f9f78708451c8b5aab69cfeb2f72333abcafff5cd769b59f71d4b1506",
+        "was_already_patched": false
+      },
+      {
+        "task": "phone-number",
+        "original_sha256": "ca1e2c1c43454c151e519a2f784439621c243bb2824715c69a8e0904abc473a5",
+        "patched_sha256": "688f8b8082ed60ea107cbddd6f0418ab512df3ab8c13db5ab39436987a41df3b",
+        "was_already_patched": false
+      },
+      {
+        "task": "queen-attack",
+        "original_sha256": "159a9bda6a12590da669cc838f7203bd98096cd9df7ef02a11e50381413a71a5",
+        "patched_sha256": "c5aa7eb5b38e0434a9f9893384837bdd303eec532d343d43d412954b9514a328",
+        "was_already_patched": false
+      },
+      {
+        "task": "robot-name",
+        "original_sha256": "bbb01d54e892de555eb900b3b93fd3645ad7fcfd09eace353fb6b81e768c4310",
+        "patched_sha256": "b2750750beea61e12bd1828720d21718771bde4b809a62582361be11cc68b2f7",
+        "was_already_patched": false
+      },
+      {
+        "task": "space-age",
+        "original_sha256": "5154666b09c794db3ea85d1bc76a1e8d0ceb036179717efb878e7afa642013bb",
+        "patched_sha256": "d6a3c9b9aefec380d03ce84ab85ffaf50340fb25acf76194f087ebf4b44397a6",
+        "was_already_patched": false
+      },
+      {
+        "task": "spiral-matrix",
+        "original_sha256": "a738351bf8fc8e0a1c790329230a1eb8b25683c13006018f106e86498384ddab",
+        "patched_sha256": "9d5dff44082c7bac9e5ea721a58723f15d353cf9084885a98f7f00390c92bfb3",
+        "was_already_patched": false
+      },
+      {
+        "task": "sublist",
+        "original_sha256": "d0e7c47c2d86fb068f35283ae2ff8609069e7c042e78376f7b5536ee5320e2fe",
+        "patched_sha256": "c5d6288f605c24821622010fc8f9813b5e03f8761fe7274dcc7907d6460e5500",
+        "was_already_patched": false
+      },
+      {
+        "task": "yacht",
+        "original_sha256": "d70d3ee85423118f3ebb1287c501890ec4735a77c8082eab415788142b2bc3b6",
+        "patched_sha256": "6c648bd61b3584393de929b14ab5b63fac6773144feffa2230e634b13566a343",
+        "was_already_patched": false
+      },
+      {
+        "task": "zebra-puzzle",
+        "original_sha256": "475239352eed823e34a2677b65d861d58e0ca37a7da9ae399141c0c95758a8e6",
+        "patched_sha256": "2e747c8282a3ed9bbd1629987886a55cf697d9b94e0bdf1eb66ebc1eee4801f6",
+        "was_already_patched": false
+      }
+    ],
+    "overlay_sha256": "da6626c739f35557c726ce9e8f6c78f50caef924800c9bcff717b800da191fdb",
+    "prompt_test_audit": {
+      "schema_version": 1,
+      "kind": "aider-fixed26-prompt-test-audit",
+      "overlay_version": "fixed26-contract-v2",
+      "root": "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-142309/shards/shard-1/cpp/exercises/practice",
+      "tasks": 13,
+      "reviewed_prompt_test_pairs": 13,
+      "unexplained_deterministic_requirements": 0,
+      "audit_sha256": "2b6b22f2170685e8072c8cff54dc0d4084324f86e662179f9733c2d2d9ded18c",
+      "records": [
+        {
+          "task": "knapsack",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "5ba39908e24ea536f97d30951cc18030b044c1e14e3bc26260412f3d19207cf7",
+          "test_file": "knapsack_test.cpp",
+          "test_sha256": "9eca89078382ca62d666bba13de27a616dccac9a93b4634cb8935ea2db020cfd",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "linked-list",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "9b53497f95e577e867b4045009a6c42d5d480e1c00a9878a367dc5e1598a2cf6",
+          "test_file": "linked_list_test.cpp",
+          "test_sha256": "c63f3a714e7796868842f74e48aa2d4bc9e6ba9ddfbe2eaba4aa55cf6fc46633",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "meetup",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "cd96a78630ddc4b18da3d97fc2e52af6b4ba2ef8627afbaca6621f6722df5bba",
+          "test_file": "meetup_test.cpp",
+          "test_sha256": "2eda2b18b6fb6bf7bd5aa3785b64493a699d6d31a026a3964f8605005f87a83a",
+          "regression_requirements": {
+            "prompt": [
+              "Boost (1.58 or newer) is installed",
+              "Include it with `#include \"boost/date_time/gregorian/gregorian.hpp\"`"
+            ],
+            "test": [
+              "#include <boost/date_time/gregorian/gregorian.hpp>"
+            ]
+          },
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "parallel-letter-frequency",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "241b469203880134a8931c9df45f838a817a37430df5f02267ee3cf2ebf57ba5",
+          "test_file": "parallel_letter_frequency_test.cpp",
+          "test_sha256": "9f0625d18d5ad5a04136c92d3064456a3c3e9e7847f4810f0c75f6d9db49ea5e",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "perfect-numbers",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "6f06b35f9f78708451c8b5aab69cfeb2f72333abcafff5cd769b59f71d4b1506",
+          "test_file": "perfect_numbers_test.cpp",
+          "test_sha256": "fa206f8feaa1f8aa63986db34fc96458b30ab0325c0855fd6659ab7cbcb50be3",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "phone-number",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "688f8b8082ed60ea107cbddd6f0418ab512df3ab8c13db5ab39436987a41df3b",
+          "test_file": "phone_number_test.cpp",
+          "test_sha256": "12aa1d8ef503b67d9be8a6d1b8bc858eabcc88af3db916821ec25dcb3709fee5",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "queen-attack",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "c5aa7eb5b38e0434a9f9893384837bdd303eec532d343d43d412954b9514a328",
+          "test_file": "queen_attack_test.cpp",
+          "test_sha256": "af1f9888860b997aaf1473e07fd03c3bbb6bfc653301bb6c8c91a0a3f86f4d75",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "robot-name",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "b2750750beea61e12bd1828720d21718771bde4b809a62582361be11cc68b2f7",
+          "test_file": "robot_name_test.cpp",
+          "test_sha256": "a61980d1065cad95bba9e8042e46fca8890b782367767a2a0e4b9c856de58fd5",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "space-age",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "d6a3c9b9aefec380d03ce84ab85ffaf50340fb25acf76194f087ebf4b44397a6",
+          "test_file": "space_age_test.cpp",
+          "test_sha256": "9362253be5bc92f9cd4d2e5cee817e9d44ba5a812632304d73c1a81a48d3f216",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "spiral-matrix",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "9d5dff44082c7bac9e5ea721a58723f15d353cf9084885a98f7f00390c92bfb3",
+          "test_file": "spiral_matrix_test.cpp",
+          "test_sha256": "406cce0e7cf16487fdd12df030bbf5fcfe57aeb36078c8eb13b16c1f8267239e",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "sublist",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "c5d6288f605c24821622010fc8f9813b5e03f8761fe7274dcc7907d6460e5500",
+          "test_file": "sublist_test.cpp",
+          "test_sha256": "7120a4a2fa383db1f2f0184c5cb58c46960b39458d37bb3965dfb382ed4f0d00",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "yacht",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "6c648bd61b3584393de929b14ab5b63fac6773144feffa2230e634b13566a343",
+          "test_file": "yacht_test.cpp",
+          "test_sha256": "45af93cc50b53cddf26115d4bbf0c03e3e61939b4c7979d0eb670f8937bbacbb",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "zebra-puzzle",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "2e747c8282a3ed9bbd1629987886a55cf697d9b94e0bdf1eb66ebc1eee4801f6",
+          "test_file": "zebra_puzzle_test.cpp",
+          "test_sha256": "2b95fb480833ad730748e742145f1789b9eddafc300b977baba80663b3443c9e",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        }
+      ]
+    },
+    "prompt_test_audit_sha256": "2b6b22f2170685e8072c8cff54dc0d4084324f86e662179f9733c2d2d9ded18c"
+  },
+  "gpu_ids": "4-7",
+  "gpu_requested": "4x NVIDIA H100 80GB HBM3",
+  "temperature": 0.7,
+  "top_p": 1.0,
+  "max_tokens": 32768,
+  "thinking_disabled": false,
+  "threads": 8,
+  "image": "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo@sha256:5df1c41efb6062a292ac68a49d68ad955d9f8209c182d3fc2f7e8c634ca076a2",
+  "started_at_utc": "2026-08-22T14:38:28.671698+00:00",
+  "completed_at_utc": "2026-08-22T15:12:00.109492+00:00",
+  "server_command": [
+    "sudo",
+    "-n",
+    "docker",
+    "run",
+    "-d",
+    "--name",
+    "sglang-phone-number-iter14-fixed26-thinking-spot-20260822-142309-shard1",
+    "--gpus",
+    "all",
+    "--network",
+    "host",
+    "--ipc",
+    "host",
+    "-e",
+    "CUDA_VISIBLE_DEVICES=4,5,6,7",
+    "-v",
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-142309:/workspace-run",
+    "-v",
+    "/home/gcpuser/eval-assets/model/GLM-4.7-Flash:/workspace-model:ro",
+    "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo@sha256:5df1c41efb6062a292ac68a49d68ad955d9f8209c182d3fc2f7e8c634ca076a2",
+    "python3",
+    "-m",
+    "sglang.launch_server",
+    "--model-path",
+    "/workspace-model",
+    "--tp-size",
+    "4",
+    "--tool-call-parser",
+    "glm47",
+    "--reasoning-parser",
+    "glm45",
+    "--mem-fraction-static",
+    "0.8",
+    "--max-running-requests",
+    "16",
+    "--served-model-name",
+    "glm-4.7-flash-grpo",
+    "--api-key",
+    "local-eval",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "18001",
+    "--enable-lora",
+    "--max-lora-rank",
+    "32",
+    "--lora-backend",
+    "triton",
+    "--lora-target-modules",
+    "q_a_proj",
+    "kv_a_proj_with_mqa",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj",
+    "--experts-shared-outer-loras",
+    "--lora-use-virtual-experts"
+  ],
+  "benchmark_command": [
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-142309/aider-venv/bin/python",
+    "/aider/benchmark/benchmark.py",
+    "phone-number-iter14-fixed26-thinking-spot-20260822-142309-shard-1",
+    "--model",
+    "openai/glm-4.7-flash-grpo",
+    "--edit-format",
+    "whole",
+    "--languages",
+    "cpp",
+    "--tries",
+    "2",
+    "--threads",
+    "8",
+    "--exercises-dir",
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-142309/shards/shard-1",
+    "--read-model-settings",
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-142309/model-settings.yml"
+  ],
+  "adapter_load": {
+    "endpoint": "/load_lora_adapter",
+    "status": 200,
+    "body": "{\"rid\":null,\"http_worker_ipc\":null,\"success\":true,\"error_message\":\"\",\"loaded_adapters\":{\"glm-4.7-flash-grpo\":\"/workspace-run/adapter-serving\"}}"
+  },
+  "lora_activation_probe": {
+    "status": "diverged",
+    "with_lora": {
+      "content": "",
+      "logprobs": [
+        -0.475117,
+        -2e-06,
+        0.0,
+        -1e-06,
+        -0.013548,
+        0.0,
+        -3.1e-05,
+        -0.038447,
+        -0.207031,
+        -2.7e-05,
+        -3.8e-05,
+        -1e-06,
+        -1e-06,
+        -1.035668,
+        -0.589803,
+        -0.00034,
+        -0.007067,
+        -1e-05,
+        -0.009472,
+        -7e-06,
+        -0.004147,
+        -0.000232,
+        -0.406826,
+        -5e-06,
+        -0.029971,
+        -0.816314,
+        -0.021502,
+        -0.001008,
+        -0.21572,
+        -0.013099,
+        -0.872897,
+        -1e-06,
+        -9e-06,
+        0.0,
+        -0.0,
+        0.0,
+        -2e-06,
+        -0.332157,
+        -0.202096,
+        -0.851132,
+        -0.201837,
+        -0.018547,
+        -3e-06,
+        -0.000925,
+        -0.000203,
+        -7.2e-05,
+        -0.977646,
+        -0.0
+      ]
+    },
+    "without_lora": {
+      "content": "",
+      "logprobs": [
+        -0.202105,
+        -5e-06,
+        -0.0,
+        -1.3e-05,
+        -0.010858,
+        -0.0,
+        -3.9e-05,
+        -0.037521,
+        -0.083708,
+        -4.2e-05,
+        -0.001119,
+        -4e-06,
+        -4e-06,
+        -0.5988,
+        -0.442324,
+        -0.000558,
+        -0.011994,
+        -1.1e-05,
+        -0.015584,
+        -1.1e-05,
+        -0.018447,
+        -0.00051,
+        -0.441421,
+        -1.3e-05,
+        -0.030038,
+        -0.851873,
+        -1e-06,
+        -8e-06,
+        -0.0,
+        -7.4e-05,
+        -0.252357,
+        -0.440505,
+        -0.000112,
+        -0.002221,
+        -2.2e-05,
+        -0.000568,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.250261,
+        -0.000177,
+        -6.1e-05,
+        -0.134717,
+        -2.8e-05,
+        -0.001747,
+        -2e-06,
+        -2e-06
+      ]
+    }
+  },
+  "stats_stdout": "\u2500 /aider/tmp.benchmarks/2026-08-22-14-40-57--phone-number-iter14-fixed26-thin\u2026 \u2500\n- dirname: 2026-08-22-14-40-57--phone-number-iter14-fixed26-thinking-spot-20260822-142309-shard-1\n  test_cases: 13\n  model: openai/glm-4.7-flash-grpo\n  edit_format: whole\n  commit_hash: 5dc9490\n  pass_rate_1: 53.8\n  pass_rate_2: 69.2\n  pass_num_1: 7\n  pass_num_2: 9\n  percent_cases_well_formed: 100.0\n  error_outputs: 7\n  num_malformed_responses: 0\n  num_with_malformed_responses: 0\n  user_asks: 52\n  lazy_comments: 0\n  syntax_errors: 0\n  indentation_errors: 0\n  exhausted_context_windows: 7\n  prompt_tokens: 202758\n  completion_tokens: 145904\n  test_timeouts: 0\n  total_tests: 13\n  command: aider --model openai/glm-4.7-flash-grpo\n  date: 2026-08-22\n  versions: 0.86.3.dev\n  seconds_per_case: 522.3\n  total_cost: 0.0000\n\ncosts: $0.0000/test-case, $0.00 total, $0.00 projected\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n",
+  "validation": {
+    "terminal_tasks": 13,
+    "terminal_attempts": 19,
+    "maximum_attempts": 26,
+    "short_circuited_after_first_pass": 7,
+    "pass_at_1": 7,
+    "pass_at_k": 9,
+    "well_formed_tasks": 13,
+    "malformed_responses": 0,
+    "error_outputs": 7,
+    "context_exhaustions": 7,
+    "test_timeouts": 0,
+    "prompt_tokens": 202758,
+    "completion_tokens": 145904,
+    "unique_testcases": 13,
+    "testcases": [
+      "knapsack",
+      "linked-list",
+      "meetup",
+      "parallel-letter-frequency",
+      "perfect-numbers",
+      "phone-number",
+      "queen-attack",
+      "robot-name",
+      "space-age",
+      "spiral-matrix",
+      "sublist",
+      "yacht",
+      "zebra-puzzle"
+    ],
+    "outcomes": {
+      "knapsack": [
+        true
+      ],
+      "linked-list": [
+        false,
+        true
+      ],
+      "meetup": [
+        false,
+        false
+      ],
+      "parallel-letter-frequency": [
+        true
+      ],
+      "perfect-numbers": [
+        true
+      ],
+      "phone-number": [
+        true
+      ],
+      "queen-attack": [
+        true
+      ],
+      "robot-name": [
+        false,
+        true
+      ],
+      "space-age": [
+        true
+      ],
+      "spiral-matrix": [
+        false,
+        false
+      ],
+      "sublist": [
+        false,
+        false
+      ],
+      "yacht": [
+        true
+      ],
+      "zebra-puzzle": [
+        false,
+        false
+      ]
+    },
+    "result_sha256": {
+      "knapsack": "cccdb4475dfd872ae1e5fb5ecc26927f47ba00eeaef640717a606b987ad3f507",
+      "linked-list": "af7306193f26109bea9c59dd9be6226fe5bc7883bb02b92d5e8812c69876ac8c",
+      "meetup": "5ad6d34d4ffbaef4d5c35fd554507c926b32e51d310936e983d0c8ecb21fbc3f",
+      "parallel-letter-frequency": "b7883b2fd79989f5527c0258d4b2d60f3abc14dac342d1178777971797f6f8cc",
+      "perfect-numbers": "8c6024f7f504a6fc7fb1cd06cd2a8e5d29db7a112c26292a185bc3c4f5bca2df",
+      "phone-number": "f1c3710f5fafd5f51ae31bf245ed8b3785f44dd84ce6115e0c807401b16d9677",
+      "queen-attack": "166fdcbb19a5c8fbd13ebe9280e6a9dd392930c8ec59eb261c8bba94454cbf7b",
+      "robot-name": "a676e1895fd2aec564834e4909c925e30ddbab81e38ef1d9cc44f820fa08a055",
+      "space-age": "d1a07fea9840faa6d5e2f25625278792e9096776f178448bf1d5cefedcc8acaf",
+      "spiral-matrix": "33d7816d279c5590b280e261c389713c24aff3e0ff056878ea28469a44c3f8ed",
+      "sublist": "5017330b825f0b9a3b447781b14ce2b3fe3e048b6f3e7fd678739545407076ab",
+      "yacht": "899272b2dc3034f027dfed0578e9626cc76aa11fd3d5ffeb79c29c5901e9d159",
+      "zebra-puzzle": "51339179b83ff5f2c11c69e7238f9b583bc73ecc9bb0f69734ba81ebd8cf4269"
+    }
+  }
+}

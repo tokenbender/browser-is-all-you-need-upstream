@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
-"""Fairness overlay for the Aider fixed-26 C++ evaluation set.
 
-The fixed-26 prompt is built from ``.docs/instructions.md`` plus the two editable
-starter files. The test file is never shown to the model, and every starter
-header is an empty stub, so the required namespace/class/method names have to be
-guessed. Several are unguessable (``bank-account`` lives in namespace
-``Bankaccount``; ``clock`` lives in ``date_independent``). The harness also
-appends "Only use standard libraries, don't suggest installing any packages",
-which is false for the two Boost exercises.
 
-This module appends a stated interface contract and build-environment section to
-each exercise's ``instructions.md``. It states *what the tests call* -- names,
-signatures, exception types, and the build constraints -- and never states how to
-implement anything.
 
-Every edit is pinned to the sha256 of the original ``instructions.md``. If
-upstream polyglot-benchmark text ever changes, application fails loudly instead
-of silently producing a different benchmark.
 
-Usage:
-  aider_fixed26_contract_overlay.py apply <root> [--check]
-  aider_fixed26_contract_overlay.py manifest <root>
-  aider_fixed26_contract_overlay.py audit <root>
 
-``<root>`` is a directory containing the 26 exercise directories (i.e. a
-``cpp/exercises/practice`` tree, or the self-eval ``pristine`` tree).
-"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -39,9 +39,9 @@ KIND = "aider-fixed26-contract-overlay"
 OVERLAY_VERSION = "fixed26-contract-v2"
 MARKER = "## C++ interface contract"
 
-# sha256 of each pristine .docs/instructions.md as shipped by
-# Aider-AI/polyglot-benchmark @ 7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f.
-ORIGINAL_SHA256: dict[str, str] = {}  # populated from originals.json beside this file
+
+
+ORIGINAL_SHA256: dict[str, str] = {}
 
 _COMMON = """
 ## Build environment
@@ -95,10 +95,10 @@ def _section(stem: str, decl: str, *, notes: str = "", header_only: bool = False
     return out.rstrip() + "\n"
 
 
-# --------------------------------------------------------------------------
-# Per-task contracts. Declarations state the public API the tests exercise;
-# private members and any implementation detail are deliberately omitted.
-# --------------------------------------------------------------------------
+
+
+
+
 
 CONTRACTS: dict[str, str] = {
     "all-your-base": _section(
@@ -648,7 +648,7 @@ def apply(root: Path, *, check_only: bool = False) -> dict[str, object]:
         "tasks": len(records),
         "records": records,
         "overlay_sha256": sha256_text(
-            "".join(r["patched_sha256"] for r in records)  # type: ignore[misc]
+            "".join(r["patched_sha256"] for r in records)
         ),
     }
 
@@ -695,7 +695,7 @@ _REGRESSION_REQUIREMENTS: dict[str, dict[str, list[str]]] = {
 
 
 def audit(root: Path, *, require_all: bool = False) -> dict[str, object]:
-    """Fail closed unless all 26 reviewed prompt/test pairs match the pinned contract."""
+
 
     tests = load_test_hashes()
     present = sorted(path.name for path in root.iterdir() if path.is_dir())

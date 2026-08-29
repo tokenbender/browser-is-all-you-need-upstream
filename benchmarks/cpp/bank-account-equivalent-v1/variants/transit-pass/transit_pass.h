@@ -21,4 +21,4 @@ private:
     std::mutex mutex_{};
 };
 
-}  // namespace transit_pass
+}

@@ -56,4 +56,4 @@ int wallet_account::balance() {
     return value_;
 }
 
-}  // namespace secure_wallet
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply issue #110 hard gates to a no-update bank-account reward JSONL."""
+
 
 from __future__ import annotations
 
@@ -15,8 +15,8 @@ EXPECTED_SAMPLES = 8
 EXPECTED_GROUPS = 40
 MINIMUM_MIXED_FRACTION = 0.30
 HIGH_LOAD_RATE_DELTA = 0.10
-# Mirrors THREAD_EXHAUSTION_MARKERS in glm47_posttraining.aider_polyglot.harness;
-# this script stays stdlib-only so it can audit pulled JSONLs anywhere.
+
+
 THREAD_EXHAUSTION_MARKERS = (
     "resource temporarily unavailable",
     "thread constructor failed",
@@ -100,9 +100,9 @@ def evaluate_gate(
         if not isinstance(load, int) or load < 1:
             raise ValueError("reward_worker_load is missing from a reward record")
         text = _log_text(row)
-        # A concurrency failure is either the named assertion or a pthread
-        # EAGAIN abort, which kills the grader before any FAILED line can
-        # print (issue #110 r3: the assertion-only grep saw 0 of 121 deaths).
+
+
+
         concurrency_failure = (
             "FAILED: concurrent_transactions" in text or _is_thread_exhaustion(text)
         )
@@ -110,10 +110,10 @@ def evaluate_gate(
 
     loads = [load for load, _ in concurrency_rows]
     load_threshold = statistics.median(loads)
-    # Bucket with >= / < so a modal maximum load cannot empty the high bucket
-    # (r3: median 32 was also the max, leaving 0 high-load records and making
-    # the correlation check vacuous). The check is computable only when both
-    # buckets are populated; all-equal loads are surfaced, not silently passed.
+
+
+
+
     low = [failed for load, failed in concurrency_rows if load < load_threshold]
     high = [failed for load, failed in concurrency_rows if load >= load_threshold]
     load_check_computable = bool(low) and bool(high)

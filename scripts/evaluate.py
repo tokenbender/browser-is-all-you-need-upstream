@@ -273,7 +273,7 @@ def filter_rows_by_task_ids(rows: list[dict[str, Any]], allowed_task_ids: set[st
 def limit_generations_by_task_count(
     generations: list[dict[str, Any]], max_tasks: int
 ) -> list[dict[str, Any]]:
-    """Keep every sample for the first ``max_tasks`` task ids in a replay file."""
+
 
     selected: set[str] = set()
     limited: list[dict[str, Any]] = []
@@ -475,7 +475,7 @@ def output_text(output: Any) -> str:
 
 
 def sglang_engine_kwargs(engine_kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Return kwargs accepted by the installed SGLang ServerArgs class."""
+
 
     try:
         from sglang.srt.server_args import ServerArgs

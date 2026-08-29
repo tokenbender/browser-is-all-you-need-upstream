@@ -1,0 +1,166 @@
+{
+  "status": "complete",
+  "run_id": "phone-number-iter14-fixed26-thinking-spot-20260822-172835",
+  "benchmark": "aider-polyglot-cpp-grpo-eval",
+  "parallel_topology": "2x TP4 on one GCP a3-highgpu-8g (8x H100)",
+  "model_kind": "adapter",
+  "model_revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+  "adapter_source": "phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000014/adapter",
+  "source_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "source_checkpoint": "iter_0000014",
+  "adapter_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+  "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+  "training_data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+  "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+  "polyglot_commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+  "temperature": 0.7,
+  "top_p": 1.0,
+  "max_tokens": 32768,
+  "thinking_disabled": false,
+  "tries": 2,
+  "eval_set_version": "fixed26-contract-v2",
+  "contract_overlay_sha256": "470bc0eef40759207b87932896107de4b6f9959401fa4c0f5a59adddfc8cb115",
+  "prompt_test_audit_sha256": "8f539ff0fac78b0a1db60b2f75020222f2b8a79a39f004c6071fae00a82c6556",
+  "lora_activation_verified": true,
+  "image": "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo@sha256:5df1c41efb6062a292ac68a49d68ad955d9f8209c182d3fc2f7e8c634ca076a2",
+  "validation": {
+    "terminal_tasks": 26,
+    "terminal_attempts": 41,
+    "maximum_attempts": 52,
+    "short_circuited_after_first_pass": 11,
+    "pass_at_1": 11,
+    "pass_at_k": 15,
+    "well_formed_tasks": 26,
+    "malformed_responses": 0,
+    "error_outputs": 12,
+    "context_exhaustions": 12,
+    "test_timeouts": 0,
+    "prompt_tokens": 517945,
+    "completion_tokens": 280236,
+    "unique_testcases": 26,
+    "testcases": [
+      "all-your-base",
+      "allergies",
+      "bank-account",
+      "binary-search-tree",
+      "circular-buffer",
+      "clock",
+      "complex-numbers",
+      "crypto-square",
+      "diamond",
+      "dnd-character",
+      "gigasecond",
+      "grade-school",
+      "kindergarten-garden",
+      "knapsack",
+      "linked-list",
+      "meetup",
+      "parallel-letter-frequency",
+      "perfect-numbers",
+      "phone-number",
+      "queen-attack",
+      "robot-name",
+      "space-age",
+      "spiral-matrix",
+      "sublist",
+      "yacht",
+      "zebra-puzzle"
+    ],
+    "outcomes": {
+      "all-your-base": [
+        true
+      ],
+      "allergies": [
+        false,
+        true
+      ],
+      "bank-account": [
+        false,
+        true
+      ],
+      "binary-search-tree": [
+        false,
+        false
+      ],
+      "circular-buffer": [
+        true
+      ],
+      "clock": [
+        false,
+        false
+      ],
+      "complex-numbers": [
+        false,
+        false
+      ],
+      "crypto-square": [
+        false,
+        false
+      ],
+      "diamond": [
+        false,
+        false
+      ],
+      "dnd-character": [
+        false,
+        false
+      ],
+      "gigasecond": [
+        false,
+        false
+      ],
+      "grade-school": [
+        true
+      ],
+      "kindergarten-garden": [
+        false,
+        false
+      ],
+      "knapsack": [
+        true
+      ],
+      "linked-list": [
+        false,
+        true
+      ],
+      "meetup": [
+        false,
+        false
+      ],
+      "parallel-letter-frequency": [
+        false,
+        true
+      ],
+      "perfect-numbers": [
+        true
+      ],
+      "phone-number": [
+        true
+      ],
+      "queen-attack": [
+        true
+      ],
+      "robot-name": [
+        true
+      ],
+      "space-age": [
+        true
+      ],
+      "spiral-matrix": [
+        true
+      ],
+      "sublist": [
+        false,
+        false
+      ],
+      "yacht": [
+        true
+      ],
+      "zebra-puzzle": [
+        false,
+        false
+      ]
+    }
+  },
+  "completed_at_utc": "2026-08-22T18:54:13.024956+00:00"
+}

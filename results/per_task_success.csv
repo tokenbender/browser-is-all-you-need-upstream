@@ -25,58 +25,6 @@ GLM-4.7-Flash base,spiral-matrix,0,0,0,4,0.0
 GLM-4.7-Flash base,sublist,0,0,0,4,0.0
 GLM-4.7-Flash base,yacht,1,2,1,3,0.3333333333333333
 GLM-4.7-Flash base,zebra-puzzle,0,0,0,4,0.0
-"Synth v1, epoch 50",all-your-base,4,4,0,0,
-"Synth v1, epoch 50",allergies,2,3,1,2,0.5
-"Synth v1, epoch 50",bank-account,2,2,0,2,0.0
-"Synth v1, epoch 50",binary-search-tree,0,2,2,4,0.5
-"Synth v1, epoch 50",circular-buffer,1,2,1,3,0.3333333333333333
-"Synth v1, epoch 50",clock,0,0,0,4,0.0
-"Synth v1, epoch 50",complex-numbers,0,1,1,4,0.25
-"Synth v1, epoch 50",crypto-square,0,0,0,4,0.0
-"Synth v1, epoch 50",diamond,1,1,0,3,0.0
-"Synth v1, epoch 50",dnd-character,0,0,0,4,0.0
-"Synth v1, epoch 50",gigasecond,3,4,1,1,1.0
-"Synth v1, epoch 50",grade-school,3,3,0,1,0.0
-"Synth v1, epoch 50",kindergarten-garden,0,0,0,4,0.0
-"Synth v1, epoch 50",knapsack,4,4,0,0,
-"Synth v1, epoch 50",linked-list,0,0,0,4,0.0
-"Synth v1, epoch 50",meetup,0,0,0,4,0.0
-"Synth v1, epoch 50",parallel-letter-frequency,0,1,1,4,0.25
-"Synth v1, epoch 50",perfect-numbers,2,2,0,2,0.0
-"Synth v1, epoch 50",phone-number,1,2,1,3,0.3333333333333333
-"Synth v1, epoch 50",queen-attack,4,4,0,0,
-"Synth v1, epoch 50",robot-name,1,1,0,3,0.0
-"Synth v1, epoch 50",space-age,3,4,1,1,1.0
-"Synth v1, epoch 50",spiral-matrix,0,1,1,4,0.25
-"Synth v1, epoch 50",sublist,3,3,0,1,0.0
-"Synth v1, epoch 50",yacht,4,4,0,0,
-"Synth v1, epoch 50",zebra-puzzle,0,0,0,4,0.0
-"SFT v5, Aider-format",all-your-base,0,0,0,4,0.0
-"SFT v5, Aider-format",allergies,1,3,2,3,0.6666666666666666
-"SFT v5, Aider-format",bank-account,0,2,2,4,0.5
-"SFT v5, Aider-format",binary-search-tree,0,1,1,4,0.25
-"SFT v5, Aider-format",circular-buffer,0,0,0,4,0.0
-"SFT v5, Aider-format",clock,0,0,0,4,0.0
-"SFT v5, Aider-format",complex-numbers,0,0,0,4,0.0
-"SFT v5, Aider-format",crypto-square,0,1,1,4,0.25
-"SFT v5, Aider-format",diamond,0,1,1,4,0.25
-"SFT v5, Aider-format",dnd-character,0,2,2,4,0.5
-"SFT v5, Aider-format",gigasecond,1,1,0,3,0.0
-"SFT v5, Aider-format",grade-school,3,4,1,1,1.0
-"SFT v5, Aider-format",kindergarten-garden,0,0,0,4,0.0
-"SFT v5, Aider-format",knapsack,3,3,0,1,0.0
-"SFT v5, Aider-format",linked-list,2,3,1,2,0.5
-"SFT v5, Aider-format",meetup,0,0,0,4,0.0
-"SFT v5, Aider-format",parallel-letter-frequency,2,2,0,2,0.0
-"SFT v5, Aider-format",perfect-numbers,1,1,0,3,0.0
-"SFT v5, Aider-format",phone-number,0,1,1,4,0.25
-"SFT v5, Aider-format",queen-attack,3,4,1,1,1.0
-"SFT v5, Aider-format",robot-name,2,2,0,2,0.0
-"SFT v5, Aider-format",space-age,4,4,0,0,
-"SFT v5, Aider-format",spiral-matrix,1,1,0,3,0.0
-"SFT v5, Aider-format",sublist,1,3,2,3,0.6666666666666666
-"SFT v5, Aider-format",yacht,0,2,2,4,0.5
-"SFT v5, Aider-format",zebra-puzzle,0,0,0,4,0.0
 Luna,all-your-base,0,0,0,4,0.0
 Luna,allergies,0,2,2,4,0.5
 Luna,bank-account,1,4,3,3,1.0
@@ -103,3 +51,81 @@ Luna,spiral-matrix,2,3,1,2,0.5
 Luna,sublist,0,4,4,4,1.0
 Luna,yacht,0,2,2,4,0.5
 Luna,zebra-puzzle,1,3,2,3,0.6666666666666666
+"SFT v5, Aider-format",all-your-base,0,0,0,4,0.0
+"SFT v5, Aider-format",allergies,1,3,2,3,0.6666666666666666
+"SFT v5, Aider-format",bank-account,0,2,2,4,0.5
+"SFT v5, Aider-format",binary-search-tree,0,1,1,4,0.25
+"SFT v5, Aider-format",circular-buffer,0,0,0,4,0.0
+"SFT v5, Aider-format",clock,0,0,0,4,0.0
+"SFT v5, Aider-format",complex-numbers,0,0,0,4,0.0
+"SFT v5, Aider-format",crypto-square,0,1,1,4,0.25
+"SFT v5, Aider-format",diamond,0,1,1,4,0.25
+"SFT v5, Aider-format",dnd-character,0,2,2,4,0.5
+"SFT v5, Aider-format",gigasecond,1,1,0,3,0.0
+"SFT v5, Aider-format",grade-school,3,4,1,1,1.0
+"SFT v5, Aider-format",kindergarten-garden,0,0,0,4,0.0
+"SFT v5, Aider-format",knapsack,3,3,0,1,0.0
+"SFT v5, Aider-format",linked-list,2,3,1,2,0.5
+"SFT v5, Aider-format",meetup,0,0,0,4,0.0
+"SFT v5, Aider-format",parallel-letter-frequency,2,2,0,2,0.0
+"SFT v5, Aider-format",perfect-numbers,1,1,0,3,0.0
+"SFT v5, Aider-format",phone-number,0,1,1,4,0.25
+"SFT v5, Aider-format",queen-attack,3,4,1,1,1.0
+"SFT v5, Aider-format",robot-name,2,2,0,2,0.0
+"SFT v5, Aider-format",space-age,4,4,0,0,
+"SFT v5, Aider-format",spiral-matrix,1,1,0,3,0.0
+"SFT v5, Aider-format",sublist,1,3,2,3,0.6666666666666666
+"SFT v5, Aider-format",yacht,0,2,2,4,0.5
+"SFT v5, Aider-format",zebra-puzzle,0,0,0,4,0.0
+"Synth v1, epoch 50",all-your-base,4,4,0,0,
+"Synth v1, epoch 50",allergies,2,3,1,2,0.5
+"Synth v1, epoch 50",bank-account,2,2,0,2,0.0
+"Synth v1, epoch 50",binary-search-tree,0,2,2,4,0.5
+"Synth v1, epoch 50",circular-buffer,1,2,1,3,0.3333333333333333
+"Synth v1, epoch 50",clock,0,0,0,4,0.0
+"Synth v1, epoch 50",complex-numbers,0,1,1,4,0.25
+"Synth v1, epoch 50",crypto-square,0,0,0,4,0.0
+"Synth v1, epoch 50",diamond,1,1,0,3,0.0
+"Synth v1, epoch 50",dnd-character,0,0,0,4,0.0
+"Synth v1, epoch 50",gigasecond,3,4,1,1,1.0
+"Synth v1, epoch 50",grade-school,3,3,0,1,0.0
+"Synth v1, epoch 50",kindergarten-garden,0,0,0,4,0.0
+"Synth v1, epoch 50",knapsack,4,4,0,0,
+"Synth v1, epoch 50",linked-list,0,0,0,4,0.0
+"Synth v1, epoch 50",meetup,0,0,0,4,0.0
+"Synth v1, epoch 50",parallel-letter-frequency,0,1,1,4,0.25
+"Synth v1, epoch 50",perfect-numbers,2,2,0,2,0.0
+"Synth v1, epoch 50",phone-number,1,2,1,3,0.3333333333333333
+"Synth v1, epoch 50",queen-attack,4,4,0,0,
+"Synth v1, epoch 50",robot-name,1,1,0,3,0.0
+"Synth v1, epoch 50",space-age,3,4,1,1,1.0
+"Synth v1, epoch 50",spiral-matrix,0,1,1,4,0.25
+"Synth v1, epoch 50",sublist,3,3,0,1,0.0
+"Synth v1, epoch 50",yacht,4,4,0,0,
+"Synth v1, epoch 50",zebra-puzzle,0,0,0,4,0.0
+"Phone Number kernel12 GRPO20, iter 14",all-your-base,4,4,0,0,
+"Phone Number kernel12 GRPO20, iter 14",allergies,2,4,2,2,1.0
+"Phone Number kernel12 GRPO20, iter 14",bank-account,2,4,2,2,1.0
+"Phone Number kernel12 GRPO20, iter 14",binary-search-tree,0,0,0,4,0.0
+"Phone Number kernel12 GRPO20, iter 14",circular-buffer,3,3,0,1,0.0
+"Phone Number kernel12 GRPO20, iter 14",clock,1,2,1,3,0.3333333333333333
+"Phone Number kernel12 GRPO20, iter 14",complex-numbers,0,3,3,4,0.75
+"Phone Number kernel12 GRPO20, iter 14",crypto-square,0,0,0,4,0.0
+"Phone Number kernel12 GRPO20, iter 14",diamond,0,0,0,4,0.0
+"Phone Number kernel12 GRPO20, iter 14",dnd-character,1,2,1,3,0.3333333333333333
+"Phone Number kernel12 GRPO20, iter 14",gigasecond,0,0,0,4,0.0
+"Phone Number kernel12 GRPO20, iter 14",grade-school,4,4,0,0,
+"Phone Number kernel12 GRPO20, iter 14",kindergarten-garden,0,0,0,4,0.0
+"Phone Number kernel12 GRPO20, iter 14",knapsack,4,4,0,0,
+"Phone Number kernel12 GRPO20, iter 14",linked-list,0,2,2,4,0.5
+"Phone Number kernel12 GRPO20, iter 14",meetup,0,0,0,4,0.0
+"Phone Number kernel12 GRPO20, iter 14",parallel-letter-frequency,3,4,1,1,1.0
+"Phone Number kernel12 GRPO20, iter 14",perfect-numbers,4,4,0,0,
+"Phone Number kernel12 GRPO20, iter 14",phone-number,4,4,0,0,
+"Phone Number kernel12 GRPO20, iter 14",queen-attack,3,4,1,1,1.0
+"Phone Number kernel12 GRPO20, iter 14",robot-name,2,3,1,2,0.5
+"Phone Number kernel12 GRPO20, iter 14",space-age,3,3,0,1,0.0
+"Phone Number kernel12 GRPO20, iter 14",spiral-matrix,2,2,0,2,0.0
+"Phone Number kernel12 GRPO20, iter 14",sublist,1,1,0,3,0.0
+"Phone Number kernel12 GRPO20, iter 14",yacht,2,4,2,2,1.0
+"Phone Number kernel12 GRPO20, iter 14",zebra-puzzle,0,0,0,4,0.0

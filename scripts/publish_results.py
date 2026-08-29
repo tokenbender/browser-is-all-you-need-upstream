@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Log canonical PIE C++ post-training evidence to W&B."""
+
 
 from __future__ import annotations
 

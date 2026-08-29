@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Infra classification tests for the aider sandbox harness (issue #110).
 
-Run: PYTHONPATH=src python3 tests/test_harness_infra.py
 
-Covers the EAGAIN thread-exhaustion classification and the parameterized
-docker pids budget, and replays both against the committed r3 forensics
-ledger so the classifier is proven on the exact records that motivated it.
-"""
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -16,12 +16,12 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "src"))
 
-from glm47_posttraining.aider_polyglot.harness import (  # noqa: E402
+from glm47_posttraining.aider_polyglot.harness import (
     SANDBOX_PIDS_LIMIT,
     _is_thread_exhaustion,
     is_test_stage_infrastructure_failure,
 )
-from glm47_posttraining.cpp_perf.sandbox import docker_base_args  # noqa: E402
+from glm47_posttraining.cpp_perf.sandbox import docker_base_args
 
 EAGAIN_LOG = (
     "terminate called after throwing an instance of 'std::system_error'\n"
@@ -47,9 +47,9 @@ def test_thread_exhaustion_detection() -> None:
 
 
 def test_test_stage_infrastructure_rule() -> None:
-    # No failed assertion before the abort: the sandbox robbed a probable pass.
+
     assert is_test_stage_infrastructure_failure(EAGAIN_LOG)
-    # An assertion already failed: the semantic verdict stands, record is valid.
+
     assert not is_test_stage_infrastructure_failure(EAGAIN_AFTER_ASSERT_LOG)
     assert not is_test_stage_infrastructure_failure(SEMANTIC_LOG)
     assert not is_test_stage_infrastructure_failure(PASS_LOG)
@@ -61,7 +61,7 @@ def test_docker_pids_limit_parameter() -> None:
     assert default_args[default_args.index("--pids-limit") + 1] == "128"
     oracle_args = docker_base_args("/tmp/x", pids_limit=SANDBOX_PIDS_LIMIT)
     assert oracle_args[oracle_args.index("--pids-limit") + 1] == str(SANDBOX_PIDS_LIMIT)
-    # The oracle budget must clear the 1,000-thread suite with process headroom.
+
     assert SANDBOX_PIDS_LIMIT >= 1100
 
 
@@ -76,9 +76,9 @@ def test_classifier_against_r3_ledger() -> None:
                 robbed += 1
             elif _is_thread_exhaustion(test_log):
                 semantic_after_eagain += 1
-    # The r3 forensics ground truth: 80 rollouts died with zero failed
-    # assertions (now infra-invalid) and 41 failed an assertion first (still
-    # valid semantic failures).
+
+
+
     assert robbed == 80, robbed
     assert semantic_after_eagain == 41, semantic_after_eagain
 

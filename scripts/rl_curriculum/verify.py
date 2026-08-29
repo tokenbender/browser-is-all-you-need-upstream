@@ -1,16 +1,16 @@
-"""Prove the issue #110 step-3 oracle contract, then emit the manifests.
 
-For every task the oracle must accept its reference and reject:
-  * the starter the policy is handed,
-  * the intended failure mutation,
-  * a distinct compiling semantic error.
 
-Also enforces lineage disjointness from the held-out `circular-buffer` target:
-no fixed26 family name and no symbol from the Exercism circular_buffer API may
-appear in any prompt, starter, or oracle.
 
-    python3 scripts/rl_curriculum/verify.py
-"""
+
+
+
+
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -32,8 +32,8 @@ FIXED26 = [
     "robot-name", "space-age", "spiral-matrix", "sublist", "yacht", "zebra-puzzle",
 ]
 
-# Symbols owned by the held-out target's public API. Reusing any of them would
-# make the curriculum a renamed copy rather than a disjoint domain.
+
+
 TARGET_SYMBOLS = ["circular_buffer", "overwrite(", "domain_error"]
 
 
@@ -109,7 +109,7 @@ def main() -> int:
                 "control_rejected": control_ok,
             })
 
-    # Lineage disjointness across everything the policy can see.
+
     blob = json.dumps([
         prompt_for(t, tasks[t]) for t in tasks
     ] + [

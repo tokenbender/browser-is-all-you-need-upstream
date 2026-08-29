@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
-"""Issue #110 T1 — r3 rollout forensics.
 
-Regenerates every number in README.md from the committed ledgers:
 
-    python3 docs/worklogs/issue110-r3-rollout-forensics/analysis.py
 
-Inputs (sha256-pinned below, all derived from the durable GCS run prefix
-issue110-bankacct-grpo-r3-20260816t090200z):
-  gate_records.jsonl  — 320 admission-gate reward records (verbatim GCS copy)
-  eval_records.jsonl  — 64 reward records extracted from rollout_dumps/grpo_eval_0.pt
-  train_records.jsonl — 256 reward records extracted from rollout_dumps/grpo_0.pt
-  gate.json           — gate verdict (verbatim GCS copy)
-  heldout-result.json — fixed26 bank-account single-attempt result (verbatim GCS copy)
 
-Source .pt provenance:
-  rollout_dumps/grpo_0.pt      sha256 87c14287e8f32320a007c3808929f4e1cb59b130b7a28a2c1ceca4d0e2713d3e
-  rollout_dumps/grpo_eval_0.pt sha256 7b61d970cbda8b4b2fa2658caa07e53171d49887ed28216be358997fddb354b8
-Extraction: torch.load(...)["samples"][i]["reward"], sorted by (problem_id,
-sample_index), one JSON object per line with sorted keys.
-"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def load_jsonl(name: str) -> list[dict]:
 
 
 def classify(r: dict) -> str:
-    """Failure mechanism, refined by whether an assertion failed before EAGAIN."""
+
     if not r["format_valid"]:
         return "format"
     if r["compile_error"]:
@@ -67,9 +67,9 @@ def classify(r: dict) -> str:
     eagain = EAGAIN_MARK in test_log or "system_error" in test_log
     asserted = "FAILED:" in test_log
     if eagain and not asserted:
-        return "infra-robbed"  # zero failed assertions, killed by thread-spawn EAGAIN
+        return "infra-robbed"
     if eagain:
-        return "semantic+eagain"  # already failing before the EAGAIN abort
+        return "semantic+eagain"
     if r["timeout"]:
         return "timeout"
     return "semantic"
@@ -92,7 +92,7 @@ def main() -> None:
     heldout = json.load(open(HERE / "heldout-result.json"))
     assert (len(gate_records), len(eval_records), len(train_records)) == (320, 64, 256)
 
-    # ---- F2: EAGAIN prevalence in the admission gate -------------------------
+
     cls = Counter(classify(r) for r in gate_records)
     print("== Gate (320 no-update rollouts): failure mechanism ==")
     print(table(cls, 320))
@@ -110,7 +110,7 @@ def main() -> None:
     rewards = Counter(r["reward"] for r in gate_records if classify(r) == "infra-robbed")
     print(f"reward assigned to infra-robbed rollouts: {dict(rewards)} (compile failure = -0.5)\n")
 
-    # ---- F3: both halves of hard gate 2 were vacuous -------------------------
+
     print("== Gate-2 vacuity ==")
     named = sum(
         1
@@ -137,7 +137,7 @@ def main() -> None:
         print(f"  {label}: EAGAIN {e}/{len(part)} = {e / len(part):.1%} of test-stage rollouts")
     print("  -> not graded by recorded load: hard thread/pid ceiling, not load-proportional flake\n")
 
-    # ---- Gate counterfactual: does admission survive EAGAIN invalidation? ----
+
     groups: dict[str, list[str]] = defaultdict(list)
     for r in gate_records:
         groups[r["problem_id"]].append(classify(r))
@@ -154,7 +154,7 @@ def main() -> None:
         "(threshold 30% -> admission still passes)\n"
     )
 
-    # ---- F1: eval_0 is the pre-update policy ---------------------------------
+
     print("== eval dump identity ==")
     gate_val = sorted(
         (r for r in gate_records if r["split"] == "validation"),
@@ -173,7 +173,7 @@ def main() -> None:
         "(eval at rollout 0); no post-update validation exists in the artifacts\n"
     )
 
-    # ---- F5: per-kind reality -------------------------------------------------
+
     print("== Per-kind mechanism table (gate rollouts; n per cell: train 64, validation 16) ==")
     per = defaultdict(Counter)
     for r in gate_records:
@@ -201,7 +201,7 @@ def main() -> None:
         )
     print()
 
-    # ---- F4: training-batch contamination ------------------------------------
+
     print("== Training batch (256 samples, the single optimizer update) ==")
     tcls = Counter(classify(r) for r in train_records)
     print(table(tcls, 256))
@@ -231,7 +231,7 @@ def main() -> None:
         "(each scored 0.0 -> negative advantage against in-group passes)\n"
     )
 
-    # ---- F6: heldout ----------------------------------------------------------
+
     print("== Held-out fixed26 attempt ==")
     print(
         f"pass@1={heldout['pass_at_1']} failure_class={heldout['failure_class']} "

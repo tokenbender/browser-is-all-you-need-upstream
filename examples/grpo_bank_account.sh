@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Execution-grounded bank-account curriculum profile on the trusted GRPO runner.
+
 
 set -euo pipefail
 

@@ -1,4 +1,4 @@
-"""Score generated C++ optimization candidates."""
+
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ def score_generation(
     image: str,
     cpu: str,
 ) -> dict[str, Any]:
-    """Score one generated answer and flatten key harness fields."""
+
 
     def runner(candidate_task: CppTask, code: str):
         return run_in_sandbox(candidate_task, code, image=image, cpu=cpu)

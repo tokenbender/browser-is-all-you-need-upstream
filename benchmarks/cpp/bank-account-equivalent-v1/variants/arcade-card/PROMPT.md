@@ -51,7 +51,7 @@ public:
     void revoke();
     int credits();
 };
-}  // namespace arcade_card
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

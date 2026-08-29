@@ -51,7 +51,7 @@ public:
     void lock();
     int token_count();
 };
-}  // namespace workshop_tokens
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

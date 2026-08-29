@@ -51,7 +51,7 @@ public:
     void end();
     int quantity();
 };
-}  // namespace inventory_ledger
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

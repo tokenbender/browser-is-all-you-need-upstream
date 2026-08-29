@@ -51,7 +51,7 @@ public:
     void suspend();
     int funds();
 };
-}  // namespace transit_pass
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

@@ -1,0 +1,15 @@
+{
+  "assets": {
+    "api_bridge.cpp": "c839e0393e8b2b9e63757b48f2c12141f17a2d25b41e57280671332816298bd2",
+    "api_caller.cpp": "6b6a64a26ccb5e4de41f26c548332fb29c2a3252932c3079e0657cd4eafc11d4",
+    "instructions.md": "688f8b8082ed60ea107cbddd6f0418ab512df3ab8c13db5ab39436987a41df3b",
+    "official_cases.json.gz": "58430881357688284a6be929d071576288328a17176fa353f945106d7a7e66c0",
+    "public_api.json": "c9b93685c65b10805bc525bb5a4c4fd60e12ef44e01f33c0e6503dac704ff606",
+    "source_provenance.json": "b4540b9efd203f7a9d9164ff5287126d8d4f8d8c576ea231d8032a053c2ea0e7"
+  },
+  "schema_version": 1,
+  "starter": {
+    "phone_number.cpp": "553c9bc9c79d619428a4a757c56c9d9dcfc2fc1eaf4f08530c8b5ac21d3acee8",
+    "phone_number.h": "9177465a5f56ef5aff907a8691fa8a563a318022130f8b2d6c8037d6a90fc38d"
+  }
+}

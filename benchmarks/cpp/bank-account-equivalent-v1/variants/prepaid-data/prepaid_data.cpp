@@ -54,4 +54,4 @@ int data_wallet::remaining_megabytes() {
     return value_;
 }
 
-}  // namespace prepaid_data
+}

@@ -51,7 +51,7 @@ public:
     void disable();
     int remaining_units();
 };
-}  // namespace energy_reserve
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

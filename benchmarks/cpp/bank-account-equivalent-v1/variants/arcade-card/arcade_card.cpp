@@ -56,4 +56,4 @@ void player_card::require_positive(int amount) {
     }
 }
 
-}  // namespace arcade_card
+}

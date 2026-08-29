@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a deterministic, checksum-bound archive of the Aider shadow corpus."""
+
 
 from __future__ import annotations
 

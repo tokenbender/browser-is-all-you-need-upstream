@@ -56,4 +56,4 @@ int patron_account::credit() {
     return value_;
 }
 
-}  // namespace library_credit
+}

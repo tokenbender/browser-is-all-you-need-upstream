@@ -1,0 +1,70 @@
+name: crypto-square-final-aider-8x2
+
+workdir: .
+
+resources:
+  cloud: gcp
+  region: us-central1
+  instance_type: a3-highgpu-8g
+  image_id: projects/deeplearning-platform-release/global/images/common-cu129-ubuntu-2204-nvidia-580-v20260804
+  accelerators: H100:8
+  network_tier: best
+  disk_size: 500
+  disk_tier: high
+  use_spot: true
+  job_recovery:
+    strategy: FAILOVER
+    max_restarts_on_errors: 0
+  autostop:
+    idle_minutes: 10
+    down: true
+  labels:
+    managed-by: skypilot
+    workload: crypto-square-aider-8x2
+
+envs:
+  EVAL_RUN_ID: null
+  EVAL_SOURCE_RUN_ID: null
+  EVAL_SOURCE_CHECKPOINT: iter_0000019
+  EVAL_EXPECTED_ADAPTER_SHA256: null
+  EVAL_EXPECTED_ADAPTER_CONFIG_SHA256: 0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e
+  EVAL_EXPECTED_TRAINING_MANIFEST_SHA256: null
+
+file_mounts:
+  ~/eval-assets/model/GLM-4.7-Flash:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/model/GLM-4.7-Flash
+    mode: COPY
+
+
+setup: |
+  set -euo pipefail
+  : "${EVAL_SOURCE_RUN_ID:?EVAL_SOURCE_RUN_ID is required}"
+  : "${EVAL_SOURCE_CHECKPOINT:?EVAL_SOURCE_CHECKPOINT is required}"
+  : "${EVAL_EXPECTED_ADAPTER_SHA256:?EVAL_EXPECTED_ADAPTER_SHA256 is required}"
+  : "${EVAL_EXPECTED_ADAPTER_CONFIG_SHA256:?EVAL_EXPECTED_ADAPTER_CONFIG_SHA256 is required}"
+  : "${EVAL_EXPECTED_TRAINING_MANIFEST_SHA256:?EVAL_EXPECTED_TRAINING_MANIFEST_SHA256 is required}"
+  source_root="gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/${EVAL_SOURCE_RUN_ID}"
+  mkdir -p ~/eval-assets/adapter ~/eval-assets/training
+  gcloud storage cp     "${source_root}/checkpoints/grpo_lora_r16/${EVAL_SOURCE_CHECKPOINT}/adapter/adapter_model.bin"     ~/eval-assets/adapter/adapter_model.bin
+  gcloud storage cp     "${source_root}/checkpoints/grpo_lora_r16/${EVAL_SOURCE_CHECKPOINT}/adapter/adapter_config.json"     ~/eval-assets/adapter/adapter_config.json
+  gcloud storage cp "${source_root}/data/manifest.json" ~/eval-assets/training/manifest.json
+  export EXPECTED_GPU_COUNT=8
+  export EXPECTED_GPU_MODEL=H100
+  export EXPECTED_GPU_MEMORY_MIB=80000
+  bash eval-job22-contractv2/gcp_h100_host_setup.sh
+  sudo apt-get update
+  sudo apt-get install -y --no-install-recommends git cmake make g++ curl python3-venv software-properties-common
+  sudo add-apt-repository -y ppa:deadsnakes/ppa
+  sudo apt-get update
+  sudo apt-get install -y --no-install-recommends python3.12 python3.12-venv
+  sudo git clone https://github.com/Aider-AI/aider.git /aider
+  sudo git -C /aider checkout --detach 5dc9490bb35f9729ef2c95d00a19ccd30c26339c
+  sudo git clone https://github.com/Aider-AI/polyglot-benchmark.git /aider/tmp.benchmarks/polyglot-benchmark
+  sudo git -C /aider/tmp.benchmarks/polyglot-benchmark checkout --detach 7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f
+  sudo chown -R "${USER}:${USER}" /aider
+  gcloud auth print-access-token | sudo docker login --username oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev >/dev/null
+  sudo docker pull us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo@sha256:5df1c41efb6062a292ac68a49d68ad955d9f8209c182d3fc2f7e8c634ca076a2
+
+run: |
+  set -euo pipefail
+  python3 Reward_GRPO/crypto_square_aider_8x2_eval.py

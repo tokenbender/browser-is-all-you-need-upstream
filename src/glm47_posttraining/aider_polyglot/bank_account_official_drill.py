@@ -1,4 +1,4 @@
-"""Build the exact official fixed26 bank-account self-imitation RL environment."""
+
 
 from __future__ import annotations
 
@@ -318,7 +318,7 @@ def episodes() -> list[Episode]:
 
 
 def imitation_response(episode: Episode) -> str:
-    """Return the smallest whole-file response that reaches the proved reference."""
+
 
     changed = [
         name
@@ -339,7 +339,7 @@ def imitation_response(episode: Episode) -> str:
 
 
 def imitation_targets() -> dict[str, str]:
-    """Map every authorized drill task to an executable passing SFT target."""
+
 
     return {
         f"bank-account-official--{episode.episode_kind}": imitation_response(episode)

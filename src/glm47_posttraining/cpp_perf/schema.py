@@ -1,4 +1,4 @@
-"""Data models for C++ optimization tasks and harness results."""
+
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ LINE_CONTINUATION_BLANK_GAP_RE = re.compile(
 
 
 class TestCase(BaseModel):
-    """One stdin/stdout correctness check."""
+
 
     __test__ = False
 
@@ -25,7 +25,7 @@ class TestCase(BaseModel):
 
 
 class TestCoverage(BaseModel):
-    """Coverage metadata for the reference/oracle test suite."""
+
 
     __test__ = False
 
@@ -34,7 +34,7 @@ class TestCoverage(BaseModel):
 
 
 class ReferencePerformance(BaseModel):
-    """Reference performance for the best known correct solution."""
+
 
     metric: Literal["runtime_cpu_ns", "cpu_time_ns", "legacy_cpu_time"] = "runtime_cpu_ns"
     value: int = Field(gt=0)
@@ -43,14 +43,14 @@ class ReferencePerformance(BaseModel):
 
 
 class BuildConfig(BaseModel):
-    """Candidate compile command metadata."""
+
 
     cmd: str = "g++ -O3 -std=c++20 candidate.cpp -o candidate"
     timeout_s: int = Field(default=10, gt=0)
 
 
 class CppTask(BaseModel):
-    """A runnable PIE-derived C++ performance optimization task."""
+
 
     model_config = ConfigDict(extra="forbid")
 
@@ -70,7 +70,7 @@ class CppTask(BaseModel):
     @field_validator("prompt_code", "oracle_solution")
     @classmethod
     def _repair_preprocessor_line_continuations(cls, source: str) -> str:
-        """Remove exporter-added blank lines that split a trailing backslash."""
+
 
         return LINE_CONTINUATION_BLANK_GAP_RE.sub(r"\1", source)
 
@@ -100,7 +100,7 @@ class CppTask(BaseModel):
 
 
 class HarnessResult(BaseModel):
-    """Result of compiling, testing, and measuring one candidate."""
+
 
     compile_error: bool = False
     timeout: bool = False

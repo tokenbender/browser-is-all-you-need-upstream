@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "checkpoint_label": "phone-number-kernel12-GRPO20-iter14",
+  "source_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "source_checkpoint": "iter_0000014",
+  "expected_adapter_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+  "expected_data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+  "contract": "fixed26-contract-v2",
+  "trials": ["a1", "a2", "a3", "a4"],
+  "trial_receipts": [
+    "../trials/a1/run_receipt.json",
+    "../trials/a2/run_receipt.json",
+    "../trials/a3/run_receipt.json",
+    "../trials/a4/run_receipt.json"
+  ]
+}

@@ -1,0 +1,303 @@
+
+
+
+name: dnd-character-midband-grpo20
+
+workdir: .
+
+num_nodes: 1
+
+resources:
+  infra: gcp/us-central1
+  instance_type: a3-highgpu-8g
+  accelerators: H100:8
+  image_id: docker:ghcr.io/tokenbender/glm47-runtime@sha256:b4f67ba1519bf276fe1dcb6fcb457600e4a256bc0d5c3011fcbd9cc05f240d43
+  use_spot: false
+  disk_size: 500
+  disk_tier: high
+  autostop:
+    idle_minutes: 30
+    down: true
+    wait_for: jobs
+  labels:
+    managed-by: skypilot
+    workload: dnd-character-midband-grpo20
+
+envs:
+  MILES_RUN_ID: null
+  GLM47_SOURCE_COMMIT: null
+  GLM47_RUNTIME_IMAGE: docker:ghcr.io/tokenbender/glm47-runtime@sha256:b4f67ba1519bf276fe1dcb6fcb457600e4a256bc0d5c3011fcbd9cc05f240d43
+  GLM47_MODEL_REVISION: 7dd20894a642a0aa287e9827cb1a1f7f91386b67
+  MILES_HF_CHECKPOINT: /workspace/local-models/GLM-4.7-Flash
+  MILES_REF_LOAD_DIR: /workspace/local-checkpoints/GLM-4.7-Flash_torch_dist_tp4_pp1_ep8
+  MILES_LORA_SOURCE_ADAPTER_PATH: /workspace/local-checkpoints/midband-rl-v2-iter19-source
+  MILES_LORA_ADAPTER_PATH: /workspace/local-checkpoints/midband-rl-v2-iter19-hybrid
+  MILES_AUTO_PREPARE_GRPO_ADAPTER: "0"
+  MILES_EXPECTED_SOURCE_ADAPTER_SHA256: f5c298f5554c6f5fa4a27f3329e4a08c6c2fef76834c0f10147a270ede41148d
+  MILES_EXPECTED_SOURCE_NATIVE_SHARDS: "4"
+  MILES_EXPECTED_NATIVE_SHARDS: "4"
+  MILES_CPP_TASKS_DIR: /root/sky_workdir/Reward_GRPO
+  MILES_DATA_BUILD_MODULE: Reward_GRPO.dnd_character_grpo
+  MILES_DATA_CURRICULUM: dnd-character-v1
+  MILES_CUSTOM_RM_PATH: Reward_GRPO.dnd_character_grpo.reward_func
+  MILES_REWARD_PREFLIGHT_MODULE: Reward_GRPO.dnd_character_grpo
+  MILES_EXPECTED_DATASET_KIND: aider-polyglot-cpp-shadow-grpo
+  MILES_EXPECTED_TRAIN_COUNT: "8"
+  MILES_EVAL_NAME: dnd_character_strange_monitor
+  MILES_NUM_ROLLOUT: "20"
+  MILES_ROLLOUT_BATCH_SIZE: "8"
+  MILES_N_SAMPLES_PER_PROMPT: "32"
+  MILES_GLOBAL_BATCH_SIZE: "256"
+  MILES_SAVE_INTERVAL: "5"
+  MILES_EVAL_INTERVAL: "-1"
+  MILES_SEQ_LENGTH: "12288"
+  MILES_MAX_TOKENS_PER_GPU: "12288"
+  MILES_ROLLOUT_MAX_RESPONSE_LEN: "8192"
+  MILES_EVAL_MAX_RESPONSE_LEN: "8192"
+  MILES_ROLLOUT_TEMPERATURE: "0.7"
+  MILES_ROLLOUT_STOP_TOKEN_IDS: "154820 154827 154829"
+  MILES_ROLLOUT_SKIP_SPECIAL_TOKENS: "1"
+  MILES_GRPO_ROLLOUT_SHUFFLE: "1"
+  MILES_LR: "3e-5"
+  MILES_LR_DECAY_STYLE: constant
+  MILES_LR_WARMUP_FRACTION: "0.1"
+  MILES_NO_REF: "0"
+  MILES_USE_KL_LOSS: "1"
+  MILES_KL_LOSS_COEF: "0.1"
+  MILES_RECOMPUTE_GRANULARITY: full
+  MILES_LORA_BASE_CPU_BACKUP: "1"
+  MILES_CPP_INCLUDE_LOGS: "1"
+  GLM47_CPP_REWARD_WORKERS: "24"
+  GLM47_CPP_SANDBOX_BACKEND: docker
+  GLM47_CPP_SANDBOX_IMAGE: glm47-aider-polyglot-cpp:latest
+  GLM47_CPP_SANDBOX_UNSHARE_NET: "1"
+  MILES_RAY_SCOPED_CLEANUP: "1"
+  MILES_RAY_PORT: "6479"
+  MILES_RAY_DASHBOARD_PORT: "8280"
+  MILES_RAY_AGENT_LISTEN_PORT: "52415"
+  MILES_RAY_AGENT_GRPC_PORT: "52416"
+  MILES_RAY_RUNTIME_ENV_AGENT_PORT: "52417"
+  MILES_RAY_METRICS_EXPORT_PORT: "52418"
+  MILES_RAY_SUBMIT_RETRIES: "5"
+  WANDB_MODE: online
+  MILES_WANDB_PROJECT: glm47-dnd-character-midband-grpo
+  MILES_WANDB_JOB_TYPE: grpo20
+  WANDB_JOB_TYPE: grpo20
+  WANDB_TAGS: dnd-character,midband-rl-v2,gcp,skypilot,8xh100,thinking,strange-verifiers
+
+secrets:
+  WANDB_API_KEY: null
+
+api_server_access: false
+
+config:
+  docker:
+    run_options:
+    - --volume=/var/run/docker.sock:/var/run/docker.sock
+    - --volume=/tmp:/tmp
+
+file_mounts:
+  /workspace/models:
+    source: gs://skypilot-filemounts-ubuntu-f0048940-17eetwow
+    mode: MOUNT_CACHED
+    type: MODEL_CHECKPOINT_RO
+    config:
+      mount_cached:
+        vfs_cache_max_size: 100G
+  /workspace/assets:
+    source: gs://skypilot-filemounts-ubuntu-f0048940-4e9fav0c
+    mode: MOUNT_CACHED
+    type: DATASET_RO
+    config:
+      mount_cached:
+        vfs_cache_max_size: 25G
+  /workspace/runs:
+    source: gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq
+    mode: MOUNT_CACHED
+    type: MODEL_CHECKPOINT_RW
+    config:
+      mount_cached:
+        vfs_cache_max_size: 200G
+
+setup: |
+  set -euo pipefail
+  : "${MILES_RUN_ID:?MILES_RUN_ID is required}"
+  : "${GLM47_SOURCE_COMMIT:?GLM47_SOURCE_COMMIT is required}"
+
+  if [ -L src/Reward_GRPO ]; then
+    test "$(readlink src/Reward_GRPO)" = "../Reward_GRPO"
+  elif [ -e src/Reward_GRPO ]; then
+    echo "src/Reward_GRPO exists but is not the expected experiment-package link" >&2
+    exit 2
+  else
+    ln -s ../Reward_GRPO src/Reward_GRPO
+  fi
+  PYTHONPATH=src python3 -c 'import Reward_GRPO.dnd_character_grpo'
+
+  python3 -m pip install --no-deps -e .
+  python3 scripts/check_runtime.py
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::=--force-confold install -y --no-install-recommends docker.io rsync
+
+  mapfile -t gpu_names < <(nvidia-smi --query-gpu=name --format=csv,noheader)
+  test "${#gpu_names[@]}" -eq 8
+  for gpu_name in "${gpu_names[@]}"; do [[ "${gpu_name}" == *H100* ]]; done
+  command -v docker >/dev/null
+  test -S /var/run/docker.sock
+  docker info >/dev/null
+
+  mkdir -p /workspace/local-models /workspace/local-checkpoints /workspace/local-runs
+  rsync -a /workspace/models/GLM-4.7-Flash/ "${MILES_HF_CHECKPOINT}/"
+  test "$(tr -d '[:space:]' < "${MILES_HF_CHECKPOINT}/MODEL_REVISION")" = "${GLM47_MODEL_REVISION}"
+  rsync -a /workspace/runs/shared/GLM-4.7-Flash_torch_dist_tp4_pp1_ep8/ "${MILES_REF_LOAD_DIR}/"
+  test -f "${MILES_REF_LOAD_DIR}/latest_checkpointed_iteration.txt"
+
+  source_adapter=/workspace/runs/execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter
+  test "$(sha256sum "${source_adapter}/adapter_model.bin" | awk '{print $1}')" = "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}"
+  test "$(find "${source_adapter}" -maxdepth 1 -type f -name 'adapter_megatron_*.pt' | wc -l)" -eq "${MILES_EXPECTED_SOURCE_NATIVE_SHARDS}"
+  mkdir -p "${MILES_LORA_SOURCE_ADAPTER_PATH}"
+  rsync -a "${source_adapter}/" "${MILES_LORA_SOURCE_ADAPTER_PATH}/"
+  test "$(sha256sum "${MILES_LORA_SOURCE_ADAPTER_PATH}/adapter_model.bin" | awk '{print $1}')" = "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}"
+
+  if [ ! -f "${MILES_LORA_ADAPTER_PATH}/mtp_strip_manifest.json" ]; then
+    test ! -e "${MILES_LORA_ADAPTER_PATH}" || test -z "$(find "${MILES_LORA_ADAPTER_PATH}" -mindepth 1 -print -quit)"
+    python3 scripts/prepare_grpo_adapter.py \
+      --include-native \
+      --expected-native-shards "${MILES_EXPECTED_SOURCE_NATIVE_SHARDS}" \
+      --expected-source-sha256 "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}" \
+      "${MILES_LORA_SOURCE_ADAPTER_PATH}" "${MILES_LORA_ADAPTER_PATH}"
+  fi
+  grep -q "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}" "${MILES_LORA_ADAPTER_PATH}/mtp_strip_manifest.json"
+
+  python3 -m glm47_posttraining.integrations.miles_aider_polyglot build-image --image "${GLM47_CPP_SANDBOX_IMAGE}"
+  PYTHONPATH=src python3 -m Reward_GRPO.dnd_character_grpo preflight
+  test -w /workspace/runs
+  echo DND_CHARACTER_GRPO20_SETUP_READY
+
+run: |
+  set -euo pipefail
+  mapfile -t gpu_names < <(nvidia-smi --query-gpu=name --format=csv,noheader)
+  test "${#gpu_names[@]}" -eq 8
+  for gpu_name in "${gpu_names[@]}"; do [[ "${gpu_name}" == *H100* ]]; done
+  test "$(sha256sum "${MILES_LORA_SOURCE_ADAPTER_PATH}/adapter_model.bin" | awk '{print $1}')" = "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}"
+  grep -q "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}" "${MILES_LORA_ADAPTER_PATH}/mtp_strip_manifest.json"
+  test -f "${MILES_HF_CHECKPOINT}/config.json"
+  test -f "${MILES_REF_LOAD_DIR}/latest_checkpointed_iteration.txt"
+  docker image inspect "${GLM47_CPP_SANDBOX_IMAGE}" >/dev/null
+
+  run_root="/workspace/local-runs/${MILES_RUN_ID}"
+  artifact_root="/workspace/runs/${MILES_RUN_ID}"
+  test ! -e "${run_root}"
+  test ! -e "${artifact_root}"
+  mkdir -p "${run_root}" "${artifact_root}"
+  preserve_artifacts() {
+    rsync -a --no-links "${run_root}/" "${artifact_root}/" || true
+  }
+  preserve_periodically() {
+    while true; do
+      sleep 60
+      preserve_artifacts
+    done
+  }
+  preserve_pid=""
+  cleanup() {
+    if [ -n "${preserve_pid}" ]; then
+      kill "${preserve_pid}" >/dev/null 2>&1 || true
+      wait "${preserve_pid}" >/dev/null 2>&1 || true
+      preserve_pid=""
+    fi
+    preserve_artifacts
+  }
+  trap cleanup EXIT
+  preserve_periodically &
+  preserve_pid=$!
+
+  export MILES_RUN_ROOT="${run_root}"
+  export MILES_CPP_DATA_DIR="${run_root}/data"
+  export GLM47_EXPERIMENT_ID="${MILES_RUN_ID}"
+  export MILES_WANDB_GROUP="${MILES_RUN_ID}"
+  export MILES_WANDB_RUN_ID="${MILES_RUN_ID}"
+  export WANDB_RUN_GROUP="${MILES_RUN_ID}"
+  export MILES_APPLY_CHAT_TEMPLATE_KWARGS='{"enable_thinking": true}'
+
+  PYTHONPATH=src python3 -m Reward_GRPO.dnd_character_grpo \
+    build-data \
+    --tasks-dir Reward_GRPO \
+    --out "${MILES_CPP_DATA_DIR}" \
+    --curriculum dnd-character-v1 \
+    --profile dnd-character-midband-grpo20 \
+    --run-id "${MILES_RUN_ID}" \
+    --force
+
+  set +e
+  bash examples/grpo.sh
+  train_status=$?
+  set -e
+
+  final_adapter=""
+  if [ "${train_status}" -eq 0 ]; then
+    final_adapter="${run_root}/checkpoints/grpo_lora_r16/iter_0000019/adapter"
+    test -f "${final_adapter}/adapter_model.bin"
+    test "$(find "${final_adapter}" -maxdepth 1 -type f -name 'adapter_megatron_*.pt' | wc -l)" -eq "${MILES_EXPECTED_NATIVE_SHARDS}"
+    test -f "${run_root}/grpo_lora_r16/grpo_training_gate.json"
+    ADAPTER_PATH="${final_adapter}" python3 - <<'PY'
+  import hashlib
+  import json
+  import os
+  from pathlib import Path
+  import torch
+
+  root = Path(os.environ["ADAPTER_PATH"])
+  files = [root / "adapter_model.bin", *sorted(root.glob("adapter_megatron_*.pt"))]
+  checked = 0
+  nonfinite = []
+  for path in files:
+      state = torch.load(path, map_location="cpu", weights_only=False)
+      stack = [(path.name, state)]
+      while stack:
+          label, value = stack.pop()
+          if isinstance(value, torch.Tensor):
+              checked += 1
+              if not torch.isfinite(value).all().item():
+                  nonfinite.append(label)
+          elif isinstance(value, dict):
+              stack.extend((f"{label}.{key}", item) for key, item in value.items())
+          elif isinstance(value, (list, tuple)):
+              stack.extend((f"{label}[{index}]", item) for index, item in enumerate(value))
+  if nonfinite:
+      raise SystemExit(f"non-finite tensors: {nonfinite[:20]}")
+  model = root / "adapter_model.bin"
+  receipt = {
+      "status": "passed",
+      "adapter_model_sha256": hashlib.sha256(model.read_bytes()).hexdigest(),
+      "files_checked": [path.name for path in files],
+      "tensors_checked": checked,
+      "nonfinite_tensors": 0,
+  }
+  (root / "finiteness_receipt.json").write_text(
+      json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+  )
+  print("DND_CHARACTER_FINAL_ADAPTER_FINITE", json.dumps(receipt, sort_keys=True))
+  PY
+  fi
+
+  kill "${preserve_pid}" >/dev/null 2>&1 || true
+  wait "${preserve_pid}" >/dev/null 2>&1 || true
+  preserve_pid=""
+  rsync -a --no-links "${run_root}/" "${artifact_root}/"
+  test -f "${artifact_root}/grpo_lora_r16/run.log"
+  if [ -n "${final_adapter}" ]; then
+    test -f "${artifact_root}/checkpoints/grpo_lora_r16/iter_0000019/adapter/finiteness_receipt.json"
+  fi
+  {
+    echo "train_status=${train_status}"
+    echo "source_commit=${GLM47_SOURCE_COMMIT}"
+    echo "source_adapter_sha256=${MILES_EXPECTED_SOURCE_ADAPTER_SHA256}"
+    echo "data_build_module=${MILES_DATA_BUILD_MODULE}"
+    echo "reward_func=${MILES_CUSTOM_RM_PATH}"
+    echo "verifier_gate=dnd-character-strange-12-independent-kernel-gcc13-v1"
+    echo "thinking=true"
+  } > "${artifact_root}/run_status.txt"
+  echo "DND_CHARACTER_GRPO20_ARTIFACTS_PRESERVED ${artifact_root}"
+  trap - EXIT
+  exit "${train_status}"

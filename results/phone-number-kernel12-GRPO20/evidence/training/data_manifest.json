@@ -1,0 +1,51 @@
+{
+  "composition": {
+    "categories": {
+      "phone-number-strange": 8
+    },
+    "families": {
+      "phone-number": 8
+    }
+  },
+  "counts": {
+    "available_shadow": 8,
+    "monitor": 8,
+    "train": 8,
+    "validation": 0
+  },
+  "files": {
+    "grpo_train": "grpo/train.jsonl",
+    "train_monitor": "eval/train_monitor.jsonl",
+    "validation": "eval/validation.jsonl"
+  },
+  "kind": "aider-polyglot-cpp-shadow-grpo",
+  "profile": "phone-number-dnd-grpo20",
+  "prompt_sha256": [
+    "23413261ef3fcb16a6000ab02a5d1cef794848bee2f96164b3ceaf7e7b0cd0ca",
+    "2558d9372476171e6eb1f388ca5f778c96891d731ea035d2fb23c645f928abaa",
+    "3cbd5ea119d5744400d115eae00a819691b170debb9a6bc73345b306981d0735",
+    "5a75cd34dd15cbc42ee2419c136e4952d9770e15a3f7c5dd59e45cf2807b3b62",
+    "99daac0c5afcf394af503ae55c0d188713530a2e19c8906d000d769e4833a8f5",
+    "a0e7eefb754b98a96e9a7b68e04007476d76a6e2f1da1fee7574f3b6828cdd41",
+    "e09613d9117a1e53e0044fa5a781f8bda3ec8f360653db1a4556cd524fd41294",
+    "f6aa7e4737af162c34c5fab6a6ef533bf081b674b4db39adb6c4345d02533663"
+  ],
+  "run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "schema_version": 5,
+  "source_manifest_kind": "aider-polyglot-cpp-shadow-rubrics",
+  "source_manifest_sha256": "6c23b8f53d932078c2cf49af346496618b15344f42c420fb710df11dfd65a87f",
+  "source_root": "official:Aider-AI/polyglot-benchmark@7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/phone-number",
+  "source_tree_sha256": "4b9e277c616ff6984ced34c985aaae5b5b3d66365736de809f53890d081c80b3",
+  "split_contract": {
+    "imitation_role": "none",
+    "monitor": "training-task trend monitor only",
+    "official_26": "explicitly authorized training target",
+    "official_task_id_overlap": [
+      "phone-number"
+    ],
+    "reference_answers_packaged": false,
+    "source_reference_answers_packaged": false,
+    "train": "manifest-declared executable shadow tasks",
+    "validation": "training-task monitor fallback; not checkpoint-selection evidence"
+  }
+}

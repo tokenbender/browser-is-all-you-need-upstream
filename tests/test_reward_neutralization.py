@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Infra-invalid samples must carry zero GRPO advantage (issue #110).
 
-Run: PYTHONPATH=src python3 tests/test_reward_neutralization.py
-"""
+
+
+
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "src"))
 
-from glm47_posttraining.integrations.miles_aider_polyglot import (  # noqa: E402
+from glm47_posttraining.integrations.miles_aider_polyglot import (
     neutralize_infrastructure_scores,
 )
 
@@ -37,12 +37,12 @@ def test_invalid_samples_move_to_group_mean() -> None:
     neutralize_infrastructure_scores(records)
     group_scores = [r["score"] for r in records]
     anchor = records[3]["score"]
-    # Anchor equals the valid members' mean, so the group mean equals the
-    # anchor and the invalid sample's group-normalized advantage is zero.
+
+
     assert abs(anchor - (1.0 + 0.0 - 0.5) / 3) < 1e-12
     assert abs(sum(group_scores) / len(group_scores) - anchor) < 1e-12
     assert records[3]["score_neutralized"] is True
-    # The audited reward value is untouched.
+
     assert records[3]["reward"] == 0.0
 
 
@@ -57,7 +57,7 @@ def test_all_invalid_group_collapses_to_uniform() -> None:
     records = [_record("p1", i, 0.0, infra=True) for i in range(4)]
     neutralize_infrastructure_scores(records)
     scores = {r["score"] for r in records}
-    assert scores == {0.0}  # identical scores: no advantage, no gradient
+    assert scores == {0.0}
 
 
 def test_groups_are_isolated() -> None:

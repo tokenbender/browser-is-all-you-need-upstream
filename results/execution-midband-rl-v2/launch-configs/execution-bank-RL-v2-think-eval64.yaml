@@ -1,6 +1,6 @@
-# Twenty-update, high-KL exact-task GRPO run for issue #111. Infra owns
-# provisioning, local staging, preservation, and teardown; training and reward
-# semantics remain in examples/, scripts/, and src/.
+
+
+
 name: execution-bank-RL-v2-think-eval64
 
 workdir: .

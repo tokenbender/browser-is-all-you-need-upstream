@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recompute Fixed26 statistics from the archived task-level result records."""
+
 
 from __future__ import annotations
 
@@ -38,6 +38,11 @@ EXPECTED = {
         "trials": ["a1", "a2", "a3", "a4"],
         "pass_at_1": [6, 5, 5, 9],
         "multi_turn": [18, 16, 15, 18],
+    },
+    "Phone Number kernel12 GRPO20, iter 14": {
+        "trials": ["a1", "a2", "a3", "a4"],
+        "pass_at_1": [11, 12, 11, 11],
+        "multi_turn": [15, 15, 15, 16],
     },
 }
 
@@ -125,6 +130,18 @@ def load_luna() -> dict[str, dict[str, tuple[bool, bool]]]:
         require(task not in trials[trial], f"duplicate Luna row {trial}/{task}")
         trials[trial][task] = (turn_1, cumulative)
     return dict(trials)
+
+
+def load_phone_number() -> dict[str, dict[str, tuple[bool, bool]]]:
+    base = ROOT / "phone-number-kernel12-GRPO20" / "trials"
+    trials = {}
+    for trial in EXPECTED["Phone Number kernel12 GRPO20, iter 14"]["trials"]:
+        payload = json.loads((base / trial / "run_receipt.json").read_text())
+        trials[trial] = {
+            task: (outcomes[0], any(outcomes))
+            for task, outcomes in payload["validation"]["outcomes"].items()
+        }
+    return trials
 
 
 def percentile(sorted_values: list[float], probability: float) -> float:
@@ -249,42 +266,61 @@ def fmt(value: float, digits: int = 2) -> str:
     return text.rstrip("0").rstrip(".")
 
 
-def write_markdown(statistics_payload: dict) -> None:
-    lines = [
-        "# Fixed26 statistics",
-        "",
-        "| Result | Pass@1 trials | Pass@1 mean, SD, range, 95% CI (out of 26) | Multi turn with feedback (turn=2) trials | Multi turn mean, SD, range, 95% CI (out of 26) | Conditional turn-2 recovery |",
-        "| --- | --- | --- | --- | --- | --- |",
-    ]
-    for name, values in statistics_payload["results"].items():
-        first = values["pass_at_1"]
-        multi = values["multi_turn_with_feedback_turn_2"]
-        recovery = values["conditional_turn_2_recovery"]
-        intervals = values["bootstrap_95_percent_intervals"]
-        lines.append(
-            "| "
-            + " | ".join(
-                [
-                    name,
-                    ", ".join(map(str, first["scores"])),
-                    f"{fmt(first['mean'])}/26; SD {fmt(first['sample_standard_deviation'])}; "
-                    f"range {first['range'][0]}-{first['range'][1]}; "
-                    f"CI {fmt(intervals['pass_at_1_mean_score'][0])}-{fmt(intervals['pass_at_1_mean_score'][1])}",
-                    ", ".join(map(str, multi["scores"])),
-                    f"{fmt(multi['mean'])}/26; SD {fmt(multi['sample_standard_deviation'])}; "
-                    f"range {multi['range'][0]}-{multi['range'][1]}; "
-                    f"CI {fmt(intervals['multi_turn_mean_score'][0])}-{fmt(intervals['multi_turn_mean_score'][1])}",
-                    f"{recovery['recoveries']}/{recovery['turn_1_failures']} "
-                    f"({fmt(100 * recovery['rate'], 1)}%); "
-                    f"CI {fmt(100 * intervals['conditional_turn_2_recovery_rate'][0], 1)}-"
-                    f"{fmt(100 * intervals['conditional_turn_2_recovery_rate'][1], 1)}%",
-                ]
-            )
-            + " |"
+def markdown_row(name: str, values: dict) -> str:
+    first = values["pass_at_1"]
+    multi = values["multi_turn_with_feedback_turn_2"]
+    recovery = values["conditional_turn_2_recovery"]
+    intervals = values["bootstrap_95_percent_intervals"]
+    return (
+        "| "
+        + " | ".join(
+            [
+                name,
+                ", ".join(map(str, first["scores"])),
+                f"{fmt(first['mean'])}/26; SD {fmt(first['sample_standard_deviation'])}; "
+                f"range {first['range'][0]}-{first['range'][1]}; "
+                f"CI {fmt(intervals['pass_at_1_mean_score'][0])}-{fmt(intervals['pass_at_1_mean_score'][1])}",
+                ", ".join(map(str, multi["scores"])),
+                f"{fmt(multi['mean'])}/26; SD {fmt(multi['sample_standard_deviation'])}; "
+                f"range {multi['range'][0]}-{multi['range'][1]}; "
+                f"CI {fmt(intervals['multi_turn_mean_score'][0])}-{fmt(intervals['multi_turn_mean_score'][1])}",
+                f"{recovery['recoveries']}/{recovery['turn_1_failures']} "
+                f"({fmt(100 * recovery['rate'], 1)}%); "
+                f"CI {fmt(100 * intervals['conditional_turn_2_recovery_rate'][0], 1)}-"
+                f"{fmt(100 * intervals['conditional_turn_2_recovery_rate'][1], 1)}%",
+            ]
         )
+        + " |"
+    )
+
+
+def write_markdown(statistics_payload: dict) -> None:
+    lines = ["# Fixed26 statistics", ""]
+    groups = [
+        ("Reference evaluations", ["GLM-4.7-Flash base", "Luna"]),
+        (
+            "Post-training evaluations",
+            [
+                "SFT v5, Aider-format",
+                "Synth v1, epoch 50",
+                "Phone Number kernel12 GRPO20, iter 14",
+            ],
+        ),
+    ]
+    for heading, names in groups:
+        lines.extend(
+            [
+                f"## {heading}",
+                "",
+                "| Result | Pass@1 trials | Pass@1 mean, SD, range, 95% CI (out of 26) | Multi turn with feedback (turn=2) trials | Multi turn mean, SD, range, 95% CI (out of 26) | Conditional turn-2 recovery |",
+                "| --- | --- | --- | --- | --- | --- |",
+            ]
+        )
+        for name in names:
+            lines.append(markdown_row(name, statistics_payload["results"][name]))
+        lines.append("")
     lines.extend(
         [
-            "",
             "The 95% intervals use 100,000 deterministic task-clustered bootstrap replicates "
             "(seed 20260805). Each replicate resamples the 26 task IDs and preserves all four "
             "outcomes for each selected task. The 104 task-trial records are not treated as "
@@ -301,13 +337,14 @@ def write_markdown(statistics_payload: dict) -> None:
 def main() -> None:
     datasets = {
         "GLM-4.7-Flash base": load_base(),
-        "Synth v1, epoch 50": load_archived_trials(
-            "synth-v1-ep50-9.5-mean", EXPECTED["Synth v1, epoch 50"]["trials"]
-        ),
+        "Luna": load_luna(),
         "SFT v5, Aider-format": load_archived_trials(
             "sft-v5-aiderfmt-1117-4trials", EXPECTED["SFT v5, Aider-format"]["trials"]
         ),
-        "Luna": load_luna(),
+        "Synth v1, epoch 50": load_archived_trials(
+            "synth-v1-ep50-9.5-mean", EXPECTED["Synth v1, epoch 50"]["trials"]
+        ),
+        "Phone Number kernel12 GRPO20, iter 14": load_phone_number(),
     }
     summaries = {}
     task_rows = []

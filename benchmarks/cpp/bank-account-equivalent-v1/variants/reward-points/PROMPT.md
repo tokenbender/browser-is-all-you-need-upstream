@@ -51,7 +51,7 @@ public:
     void close();
     int points();
 };
-}  // namespace reward_points
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

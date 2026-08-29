@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate and verify the issue #110 bank-account execution curriculum."""
+
 
 from __future__ import annotations
 
@@ -13,10 +13,10 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
-from glm47_posttraining.aider_polyglot.bank_account_curriculum import (  # noqa: E402
+from glm47_posttraining.aider_polyglot.bank_account_curriculum import (
     build_bank_account_curriculum,
 )
-from glm47_posttraining.aider_polyglot.dataset import (  # noqa: E402
+from glm47_posttraining.aider_polyglot.dataset import (
     build_aider_polyglot_datasets,
 )
 

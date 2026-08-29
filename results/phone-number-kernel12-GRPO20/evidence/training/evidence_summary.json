@@ -1,0 +1,19 @@
+{
+  "checkpoint_file_count": 15,
+  "experiment_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "metric_count": 1440,
+  "metric_event_count": 121,
+  "reward_outcome_count": 4,
+  "sample_rows_logged": {
+    "eval": 160,
+    "rollout": 5000
+  },
+  "sample_rows_total": {
+    "eval": 160,
+    "rollout": 5120
+  },
+  "schema_version": 1,
+  "sync_record_count": 0,
+  "sync_summary": {},
+  "timing_status": "unverified"
+}

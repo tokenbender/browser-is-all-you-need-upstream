@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Regenerate the headroom and variance findings from atomic-ledger.jsonl.
 
-    python3 docs/worklogs/synth-v1-failure-coverage/analysis.py
 
-Two questions, both answered from the ledger alone:
 
-  headroom  Is GRPO sharpening latent capability or building new capability?
-  variance  Is the healthcheck trial's 16/26 multi-turn a real effect?
-"""
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ HEALTHCHECK = "healthcheck-20260815"
 
 
 def fisher(a: int, b: int, c: int, d: int) -> float:
-    """Two-sided Fisher exact test on a 2x2 table."""
+
     n = a + b + c + d
     observed = comb(a + b, a) * comb(c + d, c) / comb(n, a + c)
     total = 0.0
@@ -66,8 +66,8 @@ def headroom(ep50) -> None:
             f"  headroom {union - mean:.2f}  always {always}  never {never}"
         )
 
-    # A GRPO group yields zero advantage when all samples agree. Shrink the
-    # observed rate so 0/5 and 5/5 are not asserted as probability 0 and 1.
+
+
     useful = 0.0
     for task in tasks:
         passes = sum(1 for t in trials if first.get((t, task)))
@@ -80,7 +80,7 @@ def variance(ep50) -> None:
     print("\n== variance ==")
     causal = [r for r in ep50 if r["evidence_grade"] == "causal" and len(r["turns"]) > 1]
 
-    # Does context exhaustion on the feedback turn explain non-recovery?
+
     tab = collections.Counter()
     for r in causal:
         if r["turns"][0]["outcome"] != "fail":
@@ -114,8 +114,8 @@ def variance(ep50) -> None:
     print(f"  conditional recovery: healthcheck {hr}/{hf}  archived {ar}/{af}"
           f"  Fisher p={fisher(hr, hf - hr, ar, af - ar):.3f}   <-- confounded")
 
-    # The denominator is itself a random draw: tasks the archived trials never
-    # failed on turn 1 become near-free recoveries when healthcheck does fail them.
+
+
     failed_t1 = {r["task_id"] for r in ep50 if r["trial"] in ARCHIVED
                  and r["turns"][0]["outcome"] == "fail"}
     stripped = [r for r in ep50 if r["trial"] == HEALTHCHECK and len(r["turns"]) > 1

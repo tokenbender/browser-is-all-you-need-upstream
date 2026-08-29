@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "effective-fixed26-evaluation-configuration",
+  "base_model": "zai-org/GLM-4.7-Flash@7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+  "adapter_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+  "source_checkpoint": "iter_0000014",
+  "runtime_image": "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo@sha256:5df1c41efb6062a292ac68a49d68ad955d9f8209c182d3fc2f7e8c634ca076a2",
+  "hardware": "one GCP a3-highgpu-8g, split into two TP4 shards",
+  "contract": "fixed26-contract-v2",
+  "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+  "polyglot_commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+  "contract_overlay_sha256": "470bc0eef40759207b87932896107de4b6f9959401fa4c0f5a59adddfc8cb115",
+  "prompt_test_audit_sha256": "8f539ff0fac78b0a1db60b2f75020222f2b8a79a39f004c6071fae00a82c6556",
+  "trials": 4,
+  "tries": 2,
+  "temperature": 0.7,
+  "top_p": 1.0,
+  "max_tokens": 32768,
+  "thinking": true,
+  "threads_per_shard": 8
+}

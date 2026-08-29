@@ -1,4 +1,4 @@
-"""Pinned fixed-26 Aider C++ evaluation for a provenance-gated GRPO adapter."""
+
 
 from __future__ import annotations
 

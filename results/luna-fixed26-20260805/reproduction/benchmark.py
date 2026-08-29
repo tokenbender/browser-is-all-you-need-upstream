@@ -27,7 +27,7 @@ from rich.console import Console
 
 from aider import models, sendchat
 from aider.coders import Coder, base_coder
-from aider.dump import dump  # noqa: F401
+from aider.dump import dump
 from aider.io import InputOutput
 
 BENCHMARK_DNAME = Path(os.environ.get("AIDER_BENCHMARK_DIR", "tmp.benchmarks"))
@@ -46,33 +46,33 @@ def find_latest_benchmark_dir():
         print("Error: No benchmark directories found under tmp.benchmarks.")
         sys.exit(1)
 
-    # Get current time and 24 hours ago
+
     now = datetime.datetime.now()
     day_ago = now - datetime.timedelta(days=1)
 
-    # Filter directories by name pattern YYYY-MM-DD-HH-MM-SS--
+
     recent_dirs = []
     for d in benchmark_dirs:
         try:
-            # Extract datetime from directory name
-            date_str = d.name[:19]  # Takes YYYY-MM-DD-HH-MM-SS
+
+            date_str = d.name[:19]
             dir_date = datetime.datetime.strptime(date_str, "%Y-%m-%d-%H-%M-%S")
             if dir_date >= day_ago:
                 recent_dirs.append(d)
         except ValueError:
-            # Skip directories that don't match the expected format
+
             continue
 
     if not recent_dirs:
         print("Error: No benchmark directories found from the last 24 hours.")
         sys.exit(1)
 
-    # Find directory with most recently modified .md file
+
     latest_dir = None
     latest_time = 0
 
     for d in recent_dirs:
-        # Look for .md files in subdirectories
+
         for md_file in d.glob("*/exercises/practice/*/.*.md"):
             if md_file.is_file():
                 mtime = md_file.stat().st_mtime
@@ -94,7 +94,7 @@ def show_stats(dirnames, graphs, stats_languages=None):
         row = summarize_results(dirname, stats_languages)
         raw_rows.append(row)
 
-    # return
+
 
     seen = dict()
     rows = []
@@ -120,16 +120,16 @@ def show_stats(dirnames, graphs, stats_languages=None):
         seen[kind] = row.dir_name
         rows.append(vars(row))
 
-    repeat_hi = repeat_lo = repeat_avg = None  # noqa: F841
+    repeat_hi = repeat_lo = repeat_avg = None
 
     df = pd.DataFrame.from_records(rows)
-    # df.sort_values(by=["model", "edit_format"], inplace=True)
 
-    # dump(df)
+
+
     if graphs:
-        # plot_timing(df)
-        # plot_outcomes(df, repeats, repeat_hi, repeat_lo, repeat_avg)
-        # plot_outcomes_claude(df)
+
+
+
         plot_refactoring(df)
 
 
@@ -256,13 +256,13 @@ def main(
     assert BENCHMARK_DNAME.exists() and BENCHMARK_DNAME.is_dir(), BENCHMARK_DNAME
 
     def get_exercise_dirs(base_dir, languages=None):
-        """Get all exercise directories for specified languages (or all if none specified)"""
+
         base_dir = Path(base_dir)
 
-        # Get available language dirs
+
         lang_dirs = [d for d in base_dir.iterdir() if d.is_dir()]
 
-        # Filter to requested languages if specified
+
         if languages:
             requested = set(lang.strip().lower() for lang in languages.split(","))
             lang_dirs = [d for d in lang_dirs if d.name.lower() in requested]
@@ -271,7 +271,7 @@ def main(
                 print(f"No matching language directories found for: {languages}")
                 return []
 
-        # Get all exercise dirs under exercises/practice for each language
+
         exercise_dirs = []
         for lang_dir in lang_dirs:
             practice_dir = lang_dir / "exercises" / "practice"
@@ -306,7 +306,7 @@ def main(
 
     if not dirname.exists():
         print(f"Copying {original_dname} -> {dirname} ...")
-        # Only copy the practice subdirs with exercises
+
         os.makedirs(dirname, exist_ok=True)
         for lang_dir in original_dname.iterdir():
             if not lang_dir.is_dir():
@@ -344,7 +344,7 @@ def main(
     if num_tests > 0:
         test_dnames = test_dnames[:num_tests]
 
-    # Don't give up when benchmarking
+
     LONG_TIMEOUT = 24 * 60 * 60
     sendchat.RETRY_TIMEOUT = LONG_TIMEOUT
     base_coder.RETRY_TIMEOUT = LONG_TIMEOUT
@@ -539,8 +539,8 @@ def summarize_results(dirname, stats_languages=None):
     if not res.completed_tests:
         return
 
-    # if res.completed_tests < 133:
-    #    return
+
+
 
     console = Console(highlight=False)
     console.rule(title=str(dirname))
@@ -558,7 +558,7 @@ def summarize_results(dirname, stats_languages=None):
     for i in range(tries):
         pass_rate = 100 * passed_tests[i] / res.completed_tests
         percents[i] = pass_rate
-        # console.print(f"{pass_rate:.1f}% correct after try {i+1}")
+
         setattr(res, f"pass_rate_{i + 1}", f"{pass_rate:.1f}")
         setattr(res, f"pass_num_{i + 1}", passed_tests[i])
 
@@ -625,7 +625,7 @@ def summarize_results(dirname, stats_languages=None):
 
     console.rule()
 
-    # print(json.dumps(vars(res), indent=4, sort_keys=True))
+
     return res
 
 
@@ -707,14 +707,14 @@ def run_test_real(
     if results_fname.exists():
         try:
             res = json.loads(results_fname.read_text())
-            # if res.get("test_timeouts", 0) > 0:
-            #    print(f"{results_fname} test timeouts, redoing...")
-            # else:
+
+
+
             return res
         except JSONDecodeError:
             print(f"{results_fname} failed to parse, redoing...")
 
-    # Read solution and test files from config
+
     fnames = []
     config_file = testdir / ".meta/config.json"
     if not config_file.exists():
@@ -723,12 +723,12 @@ def run_test_real(
     with open(config_file) as f:
         config = json.loads(f.read())
 
-    # Get file sets from config
+
     test_files = config.get("files", {}).get("test", [])
     example_files = config.get("files", {}).get("example", [])
     solution_files = set(config.get("files", {}).get("solution", []))
 
-    # Forcibly ignore certain files not covered by test_files and example_files
+
     ignore_files = set(
         [
             "CMakeLists.txt",
@@ -736,24 +736,24 @@ def run_test_real(
         ]
     )
 
-    # Add all files under .meta and .docs directories
+
     ignore_files.update(str(p.relative_to(testdir)) for p in testdir.glob(".meta/**/*"))
     ignore_files.update(str(p.relative_to(testdir)) for p in testdir.glob(".docs/**/*"))
 
-    # Also ignore test & example files
+
     ignore_files.update(test_files)
     ignore_files.update(example_files)
 
-    # Remove any ignore files from the solution set that LLM will edit
+
     solution_files.difference_update(ignore_files)
 
-    # Copy all solution files
+
     for file_path in solution_files:
         src = testdir / Path(file_path)
         if src.exists():
             fnames.append(src)
-            # restore the original file, in case we interrupted a prev run
-            # Find the original file in the language-specific practice dir
+
+
             lang_part = str(testdir).split("/exercises/practice/")[0]
             original_fname = (
                 original_dname
@@ -769,9 +769,9 @@ def run_test_real(
         else:
             print(f"Warning: Solution file not found: {src}")
 
-    # The config is converted to a set above, while the absolute benchmark
-    # directory contains the run label. Sort by task-relative path so identical
-    # tasks produce byte-identical Aider messages across independent runs.
+
+
+
     fnames.sort(key=lambda path: str(path.relative_to(testdir)))
 
     file_list = " ".join(fname.name for fname in fnames)
@@ -794,7 +794,7 @@ def run_test_real(
         chat_history_file=history_fname,
     )
 
-    # weak_model_name = model_name
+
     weak_model_name = None
 
     main_model = models.Model(
@@ -837,19 +837,19 @@ def run_test_real(
         suggest_shell_commands=False,
         ignore_mentions=ignore_files,
     )
-    # Strict evaluation contract: one model completion per scored attempt.
-    # Reflections include edit-format/application retries, so disable them in
-    # addition to auto-lint. A failed first completion must remain a failed
-    # Pass@1 attempt; only the outer `tries` loop may provide test feedback.
+
+
+
+
     coder.max_reflections = 0
-    # Do not spend an auxiliary model call summarizing long feedback histories.
-    # The upstream context is sufficient for the full conversation, and strict
-    # one-shot accounting permits only the candidate completion itself.
+
+
+
     coder.summarizer.max_tokens = 1_000_000
     dump(coder.ignore_mentions)
 
     coder.show_announcements()
-    coder.get_file_mentions = lambda x: set()  # No loading of any other files
+    coder.get_file_mentions = lambda x: set()
 
     timeouts = 0
 
@@ -880,7 +880,7 @@ def run_test_real(
 
         if not no_aider:
             pat = r"^[+]? *[#].* [.][.][.] "
-            # Count the number of lines that match pat in response
+
             dump(response)
             lazy_comments += len(re.findall(pat, response, re.MULTILINE))
             dump(lazy_comments)
@@ -894,9 +894,9 @@ def run_test_real(
         try:
             errors = run_unit_tests(original_dname, testdir, history_fname, test_files)
         except subprocess.TimeoutExpired:
-            # try:
-            #    errors = run_unit_tests(original_dname, testdir, history_fname, test_files)
-            # except subprocess.TimeoutExpired:
+
+
+
             errors = "Tests timed out!"
             timeouts += 1
 
@@ -919,8 +919,8 @@ def run_test_real(
         instructions = errors
         instructions += prompts.test_failures.format(file_list=file_list)
 
-    # Clean up build directories after all attempts
-    # Rust target/debug
+
+
     target_dir = testdir / "target" / "debug"
     if target_dir.exists():
         try:
@@ -931,7 +931,7 @@ def run_test_real(
             if verbose:
                 print(f"Failed to clean up Rust target/debug directory: {e}")
 
-    # Java build directories
+
     java_build_dir = testdir / "build"
     if java_build_dir.exists():
         try:
@@ -942,7 +942,7 @@ def run_test_real(
             if verbose:
                 print(f"Failed to clean up Java build directory: {e}")
 
-    # Node.js node_modules directories
+
     node_modules_dir = testdir / "node_modules"
     if node_modules_dir.exists():
         try:
@@ -969,7 +969,7 @@ def run_test_real(
         num_malformed_responses=coder.num_malformed_responses,
         syntax_errors=syntax_errors,
         indentation_errors=indentation_errors,
-        lazy_comments=lazy_comments,  # Add the count of pattern matches to the results
+        lazy_comments=lazy_comments,
         reasoning_effort=reasoning_effort,
         prompt_tokens=coder.total_tokens_sent,
         completion_tokens=coder.total_tokens_received,
@@ -999,7 +999,7 @@ def run_unit_tests(original_dname, testdir, history_fname, test_files):
         "AIDER_CPP_TEST_COMMAND", "/aider/benchmark/cpp-test.sh"
     )
 
-    # Map of file extensions to test commands
+
     TEST_COMMANDS = {
         ".py": ["pytest"],
         ".rs": ["cargo", "test", "--", "--include-ignored"],
@@ -1009,10 +1009,10 @@ def run_unit_tests(original_dname, testdir, history_fname, test_files):
         ".java": ["./gradlew", "test"],
     }
 
-    # Get unique file extensions from test files
+
     extensions = {Path(f).suffix for f in test_files}
 
-    # Find matching test command
+
     command = None
     for ext in extensions:
         if ext in TEST_COMMANDS:
@@ -1022,7 +1022,7 @@ def run_unit_tests(original_dname, testdir, history_fname, test_files):
     if not command:
         raise ValueError(f"No test command found for files with extensions: {extensions}")
 
-    # Copy test files from original directory
+
     for file_path in test_files:
         src = original_dname / Path(*testdir.parts[-4:]) / file_path
         dst = testdir / file_path
@@ -1031,7 +1031,7 @@ def run_unit_tests(original_dname, testdir, history_fname, test_files):
             os.makedirs(dst.parent, exist_ok=True)
             shutil.copy(src, dst)
 
-    # Remove @Disabled annotations from Java test files
+
     for file_path in test_files:
         if file_path.endswith(".java"):
             test_file = testdir / file_path
@@ -1067,7 +1067,7 @@ def run_unit_tests(original_dname, testdir, history_fname, test_files):
 
 
 def cleanup_test_output(output, testdir):
-    # remove timing info, to avoid randomizing the response to GPT
+
     res = re.sub(r"\bin \d+\.\d+s\b", "", output)
     res = res.replace(str(testdir), str(testdir.name))
     return res

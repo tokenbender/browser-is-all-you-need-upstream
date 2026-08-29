@@ -41,4 +41,4 @@ bool PrintSpool::full() const { return backlog_ == ring_.size(); }
 
 bool PrintSpool::idle() const { return backlog_ == 0; }
 
-}  // namespace spool
+}

@@ -1,0 +1,82 @@
+{
+  "checkpoint_root": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16",
+  "files": [
+    {
+      "path": "iter_0000019/adapter/adapter_config.json",
+      "sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "size_bytes": 256
+    },
+    {
+      "path": "iter_0000019/adapter/adapter_megatron_tp0_pp0.pt",
+      "sha256": "4a13e6fed22992a5c4d5f247df2f858257e5d998106986ce5ca626906a7f23d3",
+      "size_bytes": 70252105
+    },
+    {
+      "path": "iter_0000019/adapter/adapter_megatron_tp1_pp0.pt",
+      "sha256": "0ffa1cb09ac1e4dd9bc763e80bae86709e63c9039238a7cc3b4215d198649d43",
+      "size_bytes": 70252105
+    },
+    {
+      "path": "iter_0000019/adapter/adapter_megatron_tp2_pp0.pt",
+      "sha256": "d5f18c832a69d4d74b7a7541b6770ffaeae81504581a7efeba441f6013fbd641",
+      "size_bytes": 70252105
+    },
+    {
+      "path": "iter_0000019/adapter/adapter_megatron_tp3_pp0.pt",
+      "sha256": "ad39f497108d396eff25e637a81cb085de38ff6725c9826689931926b3a0e2db",
+      "size_bytes": 70252105
+    },
+    {
+      "path": "iter_0000019/adapter/adapter_model.bin",
+      "sha256": "394b1b732c4983c87085516ec4e1da58bba9661869a4329fa5093bb27f9e7bd6",
+      "size_bytes": 485940769
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank0.pt",
+      "sha256": "d7654cfc9177127c3b35fd16bcc285513358bbbe74415572d78404ea6b1cf95f",
+      "size_bytes": 2107
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank1.pt",
+      "sha256": "1249026923ee8300b68fe570d43d6238249ba9b9de647b0df2c8ce1affe276aa",
+      "size_bytes": 2107
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank2.pt",
+      "sha256": "1aaada85a02713ce6c85b9332137e71b70c5ef5ea88c9058d587732d5306a575",
+      "size_bytes": 2107
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank3.pt",
+      "sha256": "0ad6e17542f4353fc72f9dd5ab7f0594cb4abb114bc8b95a9e81a5e5cb824678",
+      "size_bytes": 2107
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank4.pt",
+      "sha256": "868ff46603fc3dc7cb204f8886de4e4c7b1116fb9387842e90f86e764def8d8b",
+      "size_bytes": 2107
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank5.pt",
+      "sha256": "545f663345fa1e197ad6ef1406db3473047fb9c446d66f614f130f514e9475ea",
+      "size_bytes": 2107
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank6.pt",
+      "sha256": "9a3e7508d3fb9848193e2ac00f270a5b9392d28fa53448f18d35318c0cb9b43b",
+      "size_bytes": 2107
+    },
+    {
+      "path": "iter_0000019/adapter/training_state_rank7.pt",
+      "sha256": "acf5ac2de4b91fefbe34bf6991f85e354606a73e1b9c439408e20e5d22bfdf1d",
+      "size_bytes": 2107
+    },
+    {
+      "path": "rollout/global_dataset_state_dict_9.pt",
+      "sha256": "55270a9c37d9decb363131b0e05f94c8287ea6d3aa87d5c6f823f0854c1618fb",
+      "size_bytes": 1573
+    }
+  ],
+  "latest_iteration": "iter_0000019",
+  "schema_version": 1
+}

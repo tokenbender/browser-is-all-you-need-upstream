@@ -113,8 +113,8 @@ def test_base_shard_skips_lora_startup_and_records_base_identity() -> None:
 
 
 def test_adapter_requests_select_the_lora_and_base_requests_do_not() -> None:
-    """SGLang applies a loaded LoRA only when the request names it (colon syntax or an
-    explicit lora_path body field); a plain model name silently serves base weights."""
+
+
     text = EVAL_APP.read_text(encoding="utf-8")
     assert 'LORA_NAME = "glm-4.7-flash-grpo"' in text
     assert "lora_path: {lora_name}" in text

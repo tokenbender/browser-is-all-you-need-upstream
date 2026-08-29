@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "effective-training-configuration",
+  "source": "evidence/training/run_receipt.txt plus W&B config",
+  "run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "source_commit": "0521ea26b7f0329cbf3dc5d244a85efe57152098",
+  "base_model": "zai-org/GLM-4.7-Flash@7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+  "source_adapter_sha256": "c9afe1ede8223e154c6efd1f3023ffb74b4a62c1705cae92efd1ebbf0a63d766",
+  "data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+  "hardware": {"nodes": 1, "gpus_per_node": 8, "gpu": "H100"},
+  "parallelism": {"tensor": 4, "pipeline": 1, "context": 1, "expert": 8, "expert_tensor": 1},
+  "optimization": {
+    "num_rollout": 20,
+    "rollout_batch_size": 8,
+    "samples_per_prompt": 32,
+    "global_batch_size": 256,
+    "micro_batch_size": 1,
+    "learning_rate": 0.00003,
+    "lr_decay_style": "constant",
+    "lr_warmup_fraction": 0.1,
+    "kl_loss_coef": 0.1,
+    "seed": 1234,
+    "rollout_seed": 42
+  },
+  "sequence": {"sequence_length": 12288, "max_tokens_per_gpu": 12288, "rollout_max_response_length": 8192, "eval_max_response_length": 8192},
+  "lora": {"rank": 16, "alpha": 32},
+  "sampling": {"temperature": 0.7, "top_p": 1.0, "thinking": true},
+  "save_interval": 5,
+  "saved_iterations": [4, 9, 14, 19]
+}

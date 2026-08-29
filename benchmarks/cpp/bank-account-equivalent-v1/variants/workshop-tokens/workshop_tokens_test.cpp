@@ -48,7 +48,7 @@ private:
     bool failed_{false};
 };
 
-}  // namespace
+}
 
 int main() {
     check_suite checks;

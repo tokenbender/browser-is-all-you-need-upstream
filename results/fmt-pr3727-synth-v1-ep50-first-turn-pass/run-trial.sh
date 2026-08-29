@@ -63,7 +63,7 @@ else
     fi
     cat <<'EOF'
 
-####
+
 
 See the testing errors above.
 The tests are correct, don't try and change them.

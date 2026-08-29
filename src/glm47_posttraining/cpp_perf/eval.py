@@ -1,4 +1,4 @@
-"""Evaluation aggregation for C++ performance-RL runs."""
+
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ UPLIFT_METRICS = ("correct_and_faster_rate", "mean_best_reward")
 
 
 def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
-    """Read newline-delimited JSON records."""
+
 
     records: list[dict[str, Any]] = []
     with Path(path).open("r", encoding="utf-8") as handle:
@@ -23,7 +23,7 @@ def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
 
 
 def write_json(path: str | Path, payload: object) -> Path:
-    """Write formatted JSON."""
+
 
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -32,7 +32,7 @@ def write_json(path: str | Path, payload: object) -> Path:
 
 
 def aggregate_eval_records(records: Iterable[dict[str, Any]], *, label: str) -> dict[str, Any]:
-    """Aggregate per-sample reward records into task-level uplift metrics."""
+
 
     rows = list(records)
     by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -89,7 +89,7 @@ def aggregate_eval_records(records: Iterable[dict[str, Any]], *, label: str) -> 
 
 
 def compare_eval_summaries(summaries: Iterable[dict[str, Any]]) -> dict[str, Any]:
-    """Compare model summaries and identify the best label for primary metrics."""
+
 
     rows = list(summaries)
     if not rows:

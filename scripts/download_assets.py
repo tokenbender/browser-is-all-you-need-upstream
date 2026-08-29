@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download the canonical dataset and adapters from Hugging Face."""
+
 
 from __future__ import annotations
 

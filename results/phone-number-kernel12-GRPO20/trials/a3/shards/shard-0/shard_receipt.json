@@ -1,0 +1,612 @@
+{
+  "status": "complete",
+  "run_id": "phone-number-iter14-fixed26-thinking-spot-20260822-172835",
+  "shard_index": 0,
+  "selected_tasks": [
+    "all-your-base",
+    "allergies",
+    "bank-account",
+    "binary-search-tree",
+    "circular-buffer",
+    "clock",
+    "complex-numbers",
+    "crypto-square",
+    "diamond",
+    "dnd-character",
+    "gigasecond",
+    "grade-school",
+    "kindergarten-garden"
+  ],
+  "model_kind": "adapter",
+  "model_revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+  "adapter_source_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+  "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+  "training_data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+  "training_gate_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "source_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "source_checkpoint": "iter_0000014",
+  "serving_conversion_receipt": {
+    "schema_version": 2,
+    "kind": "glm47-serving-adapter-conversion",
+    "source_adapter_path": "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-172835/adapter-source",
+    "source_adapter_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+    "source_adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "source_tensor_count": 9741,
+    "removed_layer_47_tensor_count": 207,
+    "serving_tensor_count": 9534,
+    "serving_adapter_sha256": "6d0cb2ef3d576e810877db67431cfc0fb15f996f89dbbd6c4713b5a4d3bcff67",
+    "serving_adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "training_data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+    "training_gate_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+    "source_run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+    "source_checkpoint": "iter_0000014"
+  },
+  "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+  "polyglot_commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+  "tries": 2,
+  "eval_set_version": "fixed26-contract-v2",
+  "contract_overlay_sha256": "470bc0eef40759207b87932896107de4b6f9959401fa4c0f5a59adddfc8cb115",
+  "prompt_test_audit_sha256": "8f539ff0fac78b0a1db60b2f75020222f2b8a79a39f004c6071fae00a82c6556",
+  "contract_overlay": {
+    "schema_version": 1,
+    "kind": "aider-fixed26-contract-overlay",
+    "overlay_version": "fixed26-contract-v2",
+    "root": "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-172835/shards/shard-0/cpp/exercises/practice",
+    "tasks": 13,
+    "records": [
+      {
+        "task": "all-your-base",
+        "original_sha256": "082c4a397183b21c36963c34fec9818c8ad33339dab7ed2d4097e42fbed28b58",
+        "patched_sha256": "fe66de314418461eb1501ee5ea81e07fa30be6c699d809fa8fb8f8bf83aacf9b",
+        "was_already_patched": false
+      },
+      {
+        "task": "allergies",
+        "original_sha256": "90b620aa23a92e538dd1654ca72ba48a932a653e9806708d8c482e685e0551ec",
+        "patched_sha256": "45bd52fffb876f73e0bc00eee0346f8b5e4ff7df4e627367a3b0cf33efeca24a",
+        "was_already_patched": false
+      },
+      {
+        "task": "bank-account",
+        "original_sha256": "ad0c5ba4f4feaf16a2b0224b6da0f521fcfc683c30b57d2d061feab02a936535",
+        "patched_sha256": "130ae84dca29927b614b6a7939b9aa6456c22283f16f34572a3a40147d612cce",
+        "was_already_patched": false
+      },
+      {
+        "task": "binary-search-tree",
+        "original_sha256": "103ea444961a5ecd8c0afec176ece97d006e05574725a41dd284b266a09531ad",
+        "patched_sha256": "2f1d0baf071032cf174dc7a365567b10c49271281d34626b10d867eecbe3afec",
+        "was_already_patched": false
+      },
+      {
+        "task": "circular-buffer",
+        "original_sha256": "9032880507316b54b8fecebb2a9e7e34cfb04a3e430e8a3488fba2050b6466ed",
+        "patched_sha256": "8501cd0234269a91f04d4c0c8aa1f7a1ee7896db4fd365a2743c5928df769134",
+        "was_already_patched": false
+      },
+      {
+        "task": "clock",
+        "original_sha256": "65338ed438fa4f485cacc0dcc6fb75aa0c15ef2613e12a0762f7a3e99f09cf7d",
+        "patched_sha256": "878669626ebe9c4e368e358e79e2ad94ab95dec3760a74afdce9869b14c9fe37",
+        "was_already_patched": false
+      },
+      {
+        "task": "complex-numbers",
+        "original_sha256": "60949140b676a34a7884c23fe931fa9e40e0710e2acc66d9f0303a8fcdb261cc",
+        "patched_sha256": "32d74988f93a781b3b27fc6750f4f41bcdf7b4d462904389d409e9ad606063fb",
+        "was_already_patched": false
+      },
+      {
+        "task": "crypto-square",
+        "original_sha256": "1c64e2087dfbcfc0fafe2aa84009c24967c55d2533379e190ff5cc8aef987a63",
+        "patched_sha256": "e29180eb18038f1a08d4644ebd96473611347047c8958ebc00ca7571ece55625",
+        "was_already_patched": false
+      },
+      {
+        "task": "diamond",
+        "original_sha256": "ff20bbc2d91cf1ffb8b35ffbe4715867a8e0fdec29a83bf8d9ef8a18da2d9d68",
+        "patched_sha256": "ce7fe9496fec60c825795f3d1aaf3534f4abb3ecf7a506720b5cf47171b8a23e",
+        "was_already_patched": false
+      },
+      {
+        "task": "dnd-character",
+        "original_sha256": "289bfe2a6471256fd95171707a3a432b7af35ee1b63c01dfa2cf1a613f3118b4",
+        "patched_sha256": "ffe687063cba8152035fd35c859651f8d28d44db8ec5967b39e7145883360d74",
+        "was_already_patched": false
+      },
+      {
+        "task": "gigasecond",
+        "original_sha256": "41be679e435364e98ee71647be589530b2f3ee593185e627c973fd107f9794a7",
+        "patched_sha256": "a5091b4e100fa80f65fbdefe6f60fd0afbb1f59a4960bd6cd2ac8c27dfdaad0e",
+        "was_already_patched": false
+      },
+      {
+        "task": "grade-school",
+        "original_sha256": "8dc7133cd5f0564717108757c27ad96ebadf44f03b5fde5c35b826aaeb0b4e0f",
+        "patched_sha256": "f913000d110e10de2f182ee1470765fbca95d916a8cf2735b379fc05fbf58001",
+        "was_already_patched": false
+      },
+      {
+        "task": "kindergarten-garden",
+        "original_sha256": "0deebfb40706725b72884a95230b3f3a84ed8a16652eb0fdd405ce5516ceacbc",
+        "patched_sha256": "b2904fa9d65d1f52e5b9f03910bf5e1b4ddeb9894db1b2fcc6ee3b71275251e3",
+        "was_already_patched": false
+      }
+    ],
+    "overlay_sha256": "470bc0eef40759207b87932896107de4b6f9959401fa4c0f5a59adddfc8cb115",
+    "prompt_test_audit": {
+      "schema_version": 1,
+      "kind": "aider-fixed26-prompt-test-audit",
+      "overlay_version": "fixed26-contract-v2",
+      "root": "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-172835/shards/shard-0/cpp/exercises/practice",
+      "tasks": 13,
+      "reviewed_prompt_test_pairs": 13,
+      "unexplained_deterministic_requirements": 0,
+      "audit_sha256": "8f539ff0fac78b0a1db60b2f75020222f2b8a79a39f004c6071fae00a82c6556",
+      "records": [
+        {
+          "task": "all-your-base",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "fe66de314418461eb1501ee5ea81e07fa30be6c699d809fa8fb8f8bf83aacf9b",
+          "test_file": "all_your_base_test.cpp",
+          "test_sha256": "58c7d05e6eaa314346388159cd980886f4b2108bb6f47523a9270bb4e86ce4a3",
+          "regression_requirements": {
+            "prompt": [
+              "must raise `std::invalid_argument`",
+              "representing zero must return an empty vector"
+            ],
+            "test": [
+              "TEST_CASE(\"empty_list\")",
+              "TEST_CASE(\"single_zero\")",
+              "TEST_CASE(\"multiple_zeros\")",
+              "TEST_CASE(\"first_base_is_one\")",
+              "TEST_CASE(\"first_base_is_zero\")",
+              "TEST_CASE(\"invalid_positive_digit\")",
+              "TEST_CASE(\"second_base_is_one\")",
+              "TEST_CASE(\"second_base_is_zero\")"
+            ]
+          },
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "allergies",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "45bd52fffb876f73e0bc00eee0346f8b5e4ff7df4e627367a3b0cf33efeca24a",
+          "test_file": "allergies_test.cpp",
+          "test_sha256": "1eb815ad37a6792bba827c994d0db4cc0edaa57c4428271bef002901e43da798",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "bank-account",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "130ae84dca29927b614b6a7939b9aa6456c22283f16f34572a3a40147d612cce",
+          "test_file": "bank_account_test.cpp",
+          "test_sha256": "3696b9383f62ab639ad0a26610410fb662b6b927f2fe1dee956b849ff8dcf5c8",
+          "regression_requirements": {
+            "prompt": [
+              "A newly opened account has a zero balance.",
+              "the previous balance is not retained."
+            ],
+            "test": [
+              "TEST_CASE(\"Reopened account does not retain balance\""
+            ]
+          },
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "binary-search-tree",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "2f1d0baf071032cf174dc7a365567b10c49271281d34626b10d867eecbe3afec",
+          "test_file": "binary_search_tree_test.cpp",
+          "test_sha256": "79ff6a886a42d7691ec0240f9ea08191016f1042a752da9c2809a3da24c361e5",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "circular-buffer",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "8501cd0234269a91f04d4c0c8aa1f7a1ee7896db4fd365a2743c5928df769134",
+          "test_file": "circular_buffer_test.cpp",
+          "test_sha256": "e96c023cf3ac88ded69a5306655cb4b9097da219642fcb99b58d84bdf59f8e80",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "clock",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "878669626ebe9c4e368e358e79e2ad94ab95dec3760a74afdce9869b14c9fe37",
+          "test_file": "clock_test.cpp",
+          "test_sha256": "beb75d18d0db5458d7c6e38f506b503a497a6200c0169d2bdc6a913df8254d69",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "complex-numbers",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "32d74988f93a781b3b27fc6750f4f41bcdf7b4d462904389d409e9ad606063fb",
+          "test_file": "complex_numbers_test.cpp",
+          "test_sha256": "0bb911210fddcfe066825d5b562ca6efbf21d45386e62aebfd4693ad1b82897b",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "crypto-square",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "e29180eb18038f1a08d4644ebd96473611347047c8958ebc00ca7571ece55625",
+          "test_file": "crypto_square_test.cpp",
+          "test_sha256": "3770199d92bda7e4551742ac2d5a30a1970318f18f92f29088f9704a6e67a676",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "diamond",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "ce7fe9496fec60c825795f3d1aaf3534f4abb3ecf7a506720b5cf47171b8a23e",
+          "test_file": "diamond_test.cpp",
+          "test_sha256": "235fc2baac052df9b1efd981d93924b37a738dc85e5b056547a78eeb8840da3f",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "dnd-character",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "ffe687063cba8152035fd35c859651f8d28d44db8ec5967b39e7145883360d74",
+          "test_file": "dnd_character_test.cpp",
+          "test_sha256": "0b90c2acf77f99986d73b5559e694a06627a53acf6034acf8c4b461ba7125f56",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "gigasecond",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "a5091b4e100fa80f65fbdefe6f60fd0afbb1f59a4960bd6cd2ac8c27dfdaad0e",
+          "test_file": "gigasecond_test.cpp",
+          "test_sha256": "84c71cf09c62390ae799d6ea456ce1770f9b30051dcf3ebf26f0b26c58888f26",
+          "regression_requirements": {
+            "prompt": [
+              "Boost (1.58 or newer) is installed",
+              "Include it with `#include \"boost/date_time/posix_time/posix_time.hpp\"`"
+            ],
+            "test": [
+              "#include \"boost/date_time/posix_time/posix_time.hpp\""
+            ]
+          },
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "grade-school",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "f913000d110e10de2f182ee1470765fbca95d916a8cf2735b379fc05fbf58001",
+          "test_file": "grade_school_test.cpp",
+          "test_sha256": "3a6f4266831b6d31b022e764bed44d1c02cfa10f7629f91053c02e0d53b29871",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        },
+        {
+          "task": "kindergarten-garden",
+          "classification": "prompt_test_aligned",
+          "review_disposition": "reviewed_allowlist",
+          "prompt_sha256": "b2904fa9d65d1f52e5b9f03910bf5e1b4ddeb9894db1b2fcc6ee3b71275251e3",
+          "test_file": "kindergarten_garden_test.cpp",
+          "test_sha256": "1a35fe4528cf3577739c95df36daafac894e5e554cf51481ebf8c475f683bcfd",
+          "regression_requirements": {},
+          "unexplained_deterministic_requirements": 0
+        }
+      ]
+    },
+    "prompt_test_audit_sha256": "8f539ff0fac78b0a1db60b2f75020222f2b8a79a39f004c6071fae00a82c6556"
+  },
+  "gpu_ids": "0-3",
+  "gpu_requested": "4x NVIDIA H100 80GB HBM3",
+  "temperature": 0.7,
+  "top_p": 1.0,
+  "max_tokens": 32768,
+  "thinking_disabled": false,
+  "threads": 8,
+  "image": "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo@sha256:5df1c41efb6062a292ac68a49d68ad955d9f8209c182d3fc2f7e8c634ca076a2",
+  "started_at_utc": "2026-08-22T18:11:54.618985+00:00",
+  "completed_at_utc": "2026-08-22T18:54:13.021903+00:00",
+  "server_command": [
+    "sudo",
+    "-n",
+    "docker",
+    "run",
+    "-d",
+    "--name",
+    "sglang-phone-number-iter14-fixed26-thinking-spot-20260822-172835-shard0",
+    "--gpus",
+    "all",
+    "--network",
+    "host",
+    "--ipc",
+    "host",
+    "-e",
+    "CUDA_VISIBLE_DEVICES=0,1,2,3",
+    "-v",
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-172835:/workspace-run",
+    "-v",
+    "/home/gcpuser/eval-assets/model/GLM-4.7-Flash:/workspace-model:ro",
+    "us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-full-v5-unadmitted-grpo@sha256:5df1c41efb6062a292ac68a49d68ad955d9f8209c182d3fc2f7e8c634ca076a2",
+    "python3",
+    "-m",
+    "sglang.launch_server",
+    "--model-path",
+    "/workspace-model",
+    "--tp-size",
+    "4",
+    "--tool-call-parser",
+    "glm47",
+    "--reasoning-parser",
+    "glm45",
+    "--mem-fraction-static",
+    "0.8",
+    "--max-running-requests",
+    "16",
+    "--served-model-name",
+    "glm-4.7-flash-grpo",
+    "--api-key",
+    "local-eval",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "18000",
+    "--enable-lora",
+    "--max-lora-rank",
+    "32",
+    "--lora-backend",
+    "triton",
+    "--lora-target-modules",
+    "q_a_proj",
+    "kv_a_proj_with_mqa",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj",
+    "--experts-shared-outer-loras",
+    "--lora-use-virtual-experts"
+  ],
+  "benchmark_command": [
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-172835/aider-venv/bin/python",
+    "/aider/benchmark/benchmark.py",
+    "phone-number-iter14-fixed26-thinking-spot-20260822-172835-shard-0",
+    "--model",
+    "openai/glm-4.7-flash-grpo",
+    "--edit-format",
+    "whole",
+    "--languages",
+    "cpp",
+    "--tries",
+    "2",
+    "--threads",
+    "8",
+    "--exercises-dir",
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-172835/shards/shard-0",
+    "--read-model-settings",
+    "/home/gcpuser/glm47-eval-workspace/eval-phone-number-iter14-fixed26-thinking-spot-20260822-172835/model-settings.yml"
+  ],
+  "adapter_load": {
+    "endpoint": "/load_lora_adapter",
+    "status": 200,
+    "body": "{\"rid\":null,\"http_worker_ipc\":null,\"success\":true,\"error_message\":\"\",\"loaded_adapters\":{\"glm-4.7-flash-grpo\":\"/workspace-run/adapter-serving\"}}"
+  },
+  "lora_activation_probe": {
+    "status": "diverged",
+    "with_lora": {
+      "content": "",
+      "logprobs": [
+        -0.475364,
+        -1e-06,
+        0.0,
+        -2e-06,
+        -0.020641,
+        0.0,
+        -3.9e-05,
+        -0.037492,
+        -0.207027,
+        -2.3e-05,
+        -2.3e-05,
+        -1e-06,
+        -1e-06,
+        -1.204335,
+        -0.601364,
+        -0.000435,
+        -0.007047,
+        -1.2e-05,
+        -0.015566,
+        -8e-06,
+        -0.00415,
+        -0.000249,
+        -0.407349,
+        -6e-06,
+        -0.029967,
+        -0.816241,
+        -0.020066,
+        -0.000676,
+        -0.215721,
+        -0.014159,
+        -0.87808,
+        -2e-06,
+        -8e-06,
+        0.0,
+        -0.0,
+        0.0,
+        -1e-06,
+        -0.33556,
+        -0.202061,
+        -0.773823,
+        -0.20185,
+        -0.018574,
+        -2e-06,
+        -0.000442,
+        -0.000204,
+        -0.000114,
+        -0.706038,
+        -0.0
+      ]
+    },
+    "without_lora": {
+      "content": "",
+      "logprobs": [
+        -0.201983,
+        -5e-06,
+        -0.0,
+        -3e-06,
+        -0.010884,
+        0.0,
+        -3e-05,
+        -0.037508,
+        -0.052472,
+        -4.7e-05,
+        -0.000679,
+        -3e-06,
+        -3e-06,
+        -0.829262,
+        -0.517167,
+        -0.000435,
+        -0.011836,
+        -1.1e-05,
+        -0.014955,
+        -1.5e-05,
+        -0.018471,
+        -0.000642,
+        -0.304798,
+        -9e-06,
+        -0.030178,
+        -0.851881,
+        -2e-06,
+        -7e-06,
+        -0.0,
+        -4.6e-05,
+        -0.235447,
+        -0.328674,
+        -9.4e-05,
+        -0.002078,
+        -3.2e-05,
+        -0.000579,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.368291,
+        -0.000128,
+        -5.8e-05,
+        -0.135314,
+        -3e-05,
+        -0.001666,
+        -2e-06,
+        -1e-06
+      ]
+    }
+  },
+  "stats_stdout": "\u2500 /aider/tmp.benchmarks/2026-08-22-18-18-02--phone-number-iter14-fixed26-thin\u2026 \u2500\n- dirname: 2026-08-22-18-18-02--phone-number-iter14-fixed26-thinking-spot-20260822-172835-shard-0\n  test_cases: 13\n  model: openai/glm-4.7-flash-grpo\n  edit_format: whole\n  commit_hash: 5dc9490\n  pass_rate_1: 23.1\n  pass_rate_2: 38.5\n  pass_num_1: 3\n  pass_num_2: 5\n  percent_cases_well_formed: 100.0\n  error_outputs: 8\n  num_malformed_responses: 0\n  num_with_malformed_responses: 0\n  user_asks: 53\n  lazy_comments: 0\n  syntax_errors: 0\n  indentation_errors: 0\n  exhausted_context_windows: 8\n  prompt_tokens: 226704\n  completion_tokens: 145899\n  test_timeouts: 0\n  total_tests: 13\n  command: aider --model openai/glm-4.7-flash-grpo\n  date: 2026-08-22\n  versions: 0.86.3.dev\n  seconds_per_case: 681.3\n  total_cost: 0.0000\n\ncosts: $0.0000/test-case, $0.00 total, $0.00 projected\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n",
+  "validation": {
+    "terminal_tasks": 13,
+    "terminal_attempts": 23,
+    "maximum_attempts": 26,
+    "short_circuited_after_first_pass": 3,
+    "pass_at_1": 3,
+    "pass_at_k": 5,
+    "well_formed_tasks": 13,
+    "malformed_responses": 0,
+    "error_outputs": 8,
+    "context_exhaustions": 8,
+    "test_timeouts": 0,
+    "prompt_tokens": 226704,
+    "completion_tokens": 145899,
+    "unique_testcases": 13,
+    "testcases": [
+      "all-your-base",
+      "allergies",
+      "bank-account",
+      "binary-search-tree",
+      "circular-buffer",
+      "clock",
+      "complex-numbers",
+      "crypto-square",
+      "diamond",
+      "dnd-character",
+      "gigasecond",
+      "grade-school",
+      "kindergarten-garden"
+    ],
+    "outcomes": {
+      "all-your-base": [
+        true
+      ],
+      "allergies": [
+        false,
+        true
+      ],
+      "bank-account": [
+        false,
+        true
+      ],
+      "binary-search-tree": [
+        false,
+        false
+      ],
+      "circular-buffer": [
+        true
+      ],
+      "clock": [
+        false,
+        false
+      ],
+      "complex-numbers": [
+        false,
+        false
+      ],
+      "crypto-square": [
+        false,
+        false
+      ],
+      "diamond": [
+        false,
+        false
+      ],
+      "dnd-character": [
+        false,
+        false
+      ],
+      "gigasecond": [
+        false,
+        false
+      ],
+      "grade-school": [
+        true
+      ],
+      "kindergarten-garden": [
+        false,
+        false
+      ]
+    },
+    "result_sha256": {
+      "all-your-base": "f3c822e5a785d77ac6f0e60f3517954fa50073b32944e5d5615c62dadf2a2934",
+      "allergies": "01d89427f483043bc71c3bb0dd3f2808b30f28502bf3dbdc972e251bd394eb71",
+      "bank-account": "c2d17c4ae7a378f9a4592b6d592bff32716416d1e91d11fed489cf609bde6225",
+      "binary-search-tree": "723c30256c2883d0a0f7c8da0b43c4eeb7a6031bf814312339b30f22273a8769",
+      "circular-buffer": "d2fab613d5f71b967f608af31c48d26366d1ba86249193d4b602f46d9e924e6d",
+      "clock": "4fa9e24dc9d45adc9cf72a95e20271d71a5ee66e5df9c2bffd299d834ba3b8bc",
+      "complex-numbers": "bd1e025c8c8378af7c416c87def40f16f40e0a85d9659e5bfa8b0e29d4838e2e",
+      "crypto-square": "b964e0f0cffd02987f5edef2c132d475f29a49e0575ca56659b9c04950761da1",
+      "diamond": "44632ff151d78454faa78f8681b2442e3cc1743531920d4e95f8c9dcf34d5b9f",
+      "dnd-character": "5f9b6852cea784d8332bfb7b6847f187c34f2692ef2b769c4396d1c640eea864",
+      "gigasecond": "7434b0c8d34b1a911ef62bdb220dd0eb8099c92b20f858a7d0626770592b7060",
+      "grade-school": "ccaa9f5090b78059e3960fd860829b1ef9190a2c5361e12c862d677122f7088f",
+      "kindergarten-garden": "fdb78483863b6455e71f2ee140bd73cc600aeb0860606a9877a986d0aeb64a0e"
+    }
+  }
+}

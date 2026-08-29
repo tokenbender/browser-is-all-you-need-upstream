@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Convert GLM-4.7-Flash HF weights for the 8x H100 Miles TP4/PP1/EP8 layout.
+
 
 set -euo pipefail
 
@@ -39,7 +39,7 @@ fi
 cd "${MILES_ROOT}"
 source "${MODEL_ARGS_PATH}"
 
-# Keep grouped-GEMM naming aligned between conversion and training.
+
 STRIP_GROUPED_GEMM="${GLM47_STRIP_MOE_GROUPED_GEMM:-0}"
 CONVERT_MODEL_ARGS=()
 for arg in "${MODEL_ARGS[@]}"; do
@@ -64,11 +64,11 @@ echo "hf_checkpoint=${HF_CHECKPOINT}"
 echo "ref_load=${REF_LOAD_DIR}"
 echo "tp=${TP_SIZE} pp=${PP_SIZE} ep=${EP_SIZE} etp=${ETP_SIZE}"
 
-# The converter must see the GLM-4.7 bridge (stock mbridge cannot map
-# Glm4MoeLite); run it through the bridge-registering wrapper with the repo
-# src on PYTHONPATH, mirroring how training uses miles_train_with_glm47_bridge.
-# GLM47_KEEP_PP1 stops the converter from repurposing PP for conversion
-# parallelism so the checkpoint is written in the exact training layout.
+
+
+
+
+
 export MILES_CONVERT_PY="${MILES_ROOT}/tools/convert_hf_to_torch_dist.py"
 export GLM47_KEEP_PP1="${GLM47_KEEP_PP1:-1}"
 CONVERT_PYTHONPATH="${REPO_ROOT}/src:${MEGATRON_DIR}:${PYTHONPATH:-}"

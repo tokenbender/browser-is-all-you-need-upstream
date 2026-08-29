@@ -22,4 +22,4 @@ private:
     static void require_positive(int amount);
 };
 
-}  // namespace arcade_card
+}

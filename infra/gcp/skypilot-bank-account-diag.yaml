@@ -1,11 +1,11 @@
-# Infra layer: provisioning, tenancy, weight staging, stage orchestration and
-# artifact sync for the issue #110 bank-account diagnostic runs. Owns every
-# machine-lifecycle decision; scripts/ (train mechanism) and examples/
-# (experiment profiles) must stay orthogonal to it. Launch:
-#   sky launch -c <cluster> infra/gcp/skypilot-bank-account-diag.yaml \
-#     --env MILES_RUN_ID=<id> --env GLM47_SOURCE_COMMIT=<sha> \
-#     --workdir <clean checkout of that sha> \
-#     --image-id docker:ghcr.io/tokenbender/glm47-runtime@sha256:...
+
+
+
+
+
+
+
+
 name: issue110-diag10
 
 workdir: .
@@ -31,10 +31,10 @@ resources:
 envs:
   GLM47_STAGE: grpo
   GLM47_GRPO_PROFILE: bank-account-v1
-  # ---- tenancy policy (infra-owned; scripts/train_grpo.sh is mechanism) ----
-  # SkyPilot's job supervisor is itself a Ray cluster on this machine, so the
-  # training Ray must coexist: scoped cleanup, private session dir, and every
-  # fixed Ray port moved off default (incl. agent port 52365).
+
+
+
+
   MILES_RAY_SCOPED_CLEANUP: '1'
   MILES_RAY_PORT: '6479'
   MILES_RAY_DASHBOARD_PORT: '8280'
@@ -47,8 +47,8 @@ envs:
   GLM47_SOURCE_COMMIT: null
   GLM47_RUNTIME_IMAGE: docker:ghcr.io/tokenbender/glm47-runtime@sha256:b4f67ba1519bf276fe1dcb6fcb457600e4a256bc0d5c3011fcbd9cc05f240d43
   GLM47_MODEL_REVISION: 7dd20894a642a0aa287e9827cb1a1f7f91386b67
-  # Weights live on local NVMe, staged from the mounts in setup; the r3 session
-  # lost time reading the 59 GB model and converted checkpoint through gcsfuse.
+
+
   MILES_HF_CHECKPOINT: /workspace/local-models/GLM-4.7-Flash
   MILES_REF_LOAD_DIR: /workspace/local-checkpoints/GLM-4.7-Flash_torch_dist_tp4_pp1_ep8
   MILES_CPP_TASKS_DIR: /root/sky_workdir/benchmarks/cpp/bank-account-equivalent-v1
@@ -74,8 +74,8 @@ envs:
   GLM47_CPP_REWARD_WORKERS: '24'
   GLM47_GATE_EXPECTED_GROUPS: '32'
   GLM47_GATE_EXPECTED_SAMPLES: '32'
-  # The bounded diagnostic needs correctness contrast, not an arbitrary 30%
-  # curriculum-wide density. One mixed group is the minimum useful signal.
+
+
   GLM47_GATE_MINIMUM_MIXED_FRACTION: '0.03125'
   GLM47_CPP_SANDBOX_BACKEND: docker
   GLM47_CPP_SANDBOX_IMAGE: glm47-aider-polyglot-cpp:latest
@@ -131,7 +131,7 @@ setup: |
   mapfile -t gpu_names < <(nvidia-smi --query-gpu=name --format=csv,noheader)
   test "${#gpu_names[@]}" -eq 8
   for gpu_name in "${gpu_names[@]}"; do [[ "${gpu_name}" == *H100* ]]; done
-  # ---- stage all weights to local NVMe (the r3 lesson: never train off gcsfuse) ----
+
   mkdir -p /workspace/local-models /workspace/local-checkpoints /workspace/local-runs
   rsync -a /workspace/models/GLM-4.7-Flash/ /workspace/local-models/GLM-4.7-Flash/
   test -f "${MILES_HF_CHECKPOINT}/config.json"
@@ -162,13 +162,13 @@ setup: |
 
 run: |
   set -euo pipefail
-  # Set here, not in sky envs: sky's env templating mangles brace-bearing JSON.
+
   export MILES_APPLY_CHAT_TEMPLATE_KWARGS='{"enable_thinking": false}'
   parent_id="${MILES_RUN_ID}"
   artifact_root="/workspace/runs/${parent_id}"
   mkdir -p "${artifact_root}"
-  # Local stage roots are scratch (artifacts sync to GCS per stage); a retry
-  # must not trip the staging tool's refusal to overwrite nonempty outputs.
+
+
   rm -rf "/workspace/local-runs/${parent_id}-gate" "/workspace/local-runs/${parent_id}" "/workspace/local-runs/${parent_id}-close"
 
   sync_stage() {
@@ -188,7 +188,7 @@ run: |
     "$@"
   }
 
-  # ---- stage 1: no-update admission gate on the healthy sandbox ----
+
   set +e
   ( run_stage "${parent_id}-gate" \
       env MILES_ROLLOUT_ONLY=1 MILES_NUM_ROLLOUT=1 MILES_EVAL_INTERVAL=-1 \
@@ -211,7 +211,7 @@ run: |
   fi
   echo "DIAG10_ADMISSION_GATE_GREEN"
 
-  # ---- stage 2: 10-step diagnostic training, no validation ----
+
   set +e
   ( run_stage "${parent_id}" \
       env MILES_ROLLOUT_ONLY=0 MILES_NUM_ROLLOUT=10 MILES_EVAL_INTERVAL=-1 \
@@ -226,7 +226,7 @@ run: |
   fi
   echo "DIAG10_TRAIN_COMPLETE"
 
-  # ---- stage 3: closing no-update rollout on the final checkpoint ----
+
   final_adapter="$(ls -d "/workspace/local-runs/${parent_id}/checkpoints/grpo_lora_r16"/iter_* | sort | tail -1)/adapter"
   echo "DIAG10_FINAL_ADAPTER ${final_adapter}"
   test -f "${final_adapter}/adapter_model.bin"

@@ -1,4 +1,4 @@
-"""Sandboxed build-and-test harness for Aider Polyglot C++ exercises."""
+
 
 from __future__ import annotations
 
@@ -43,10 +43,10 @@ INFRASTRUCTURE_MARKERS = (
     "failed to create shim task",
     "no such image",
 )
-# Concurrency oracles spawn up to 1,000 threads and every thread costs one pid,
-# so the sandbox budget needs headroom above the largest oracle plus the shell,
-# timeout, and grader processes. Issue #110 r3: the previous shared 128 cap made
-# pthread_create race thread exit and killed 121/320 rollouts with EAGAIN.
+
+
+
+
 SANDBOX_PIDS_LIMIT = 2048
 PREFLIGHT_CONCURRENT_THREADS = 1000
 THREAD_EXHAUSTION_MARKERS = (
@@ -64,20 +64,20 @@ FORBIDDEN_CANDIDATE_PATTERNS = (
 
 
 class CandidatePolicyError(ValueError):
-    """Generated source attempts to bypass or inspect the hidden verifier."""
+    pass
 
 
 def _shadow_ordinal_total(grader_source: str) -> int | None:
-    """Return N when the grader short-circuits with clean sequential ordinals 1..N.
 
-    Most shadow graders are a single ``main()`` of ``if (!check) return k;`` lines
-    with a distinct 1-based ``k`` per check, so the renamed grader's return value
-    (surfaced as the candidate process exit code) is the index of the first failing
-    check. That lets us score partial progress without running checks against known-
-    bad state, which would risk crashes that destroy the tally. Graders that do not
-    follow this convention (abort-based ``assert``, constant ``return 1``) yield
-    ``None`` and fall back to binary pass/fail.
-    """
+
+
+
+
+
+
+
+
+
     values = [int(match) for match in ORDINAL_RETURN_RE.findall(grader_source)]
     values = [value for value in values if value != 0]
     if len(values) >= MIN_ORDINAL_CHECKS and values == list(range(1, len(values) + 1)):
@@ -114,7 +114,7 @@ def run_aider_tests(
     configure_timeout_s: int = DEFAULT_CONFIGURE_TIMEOUT_S,
     build_timeout_s: int = DEFAULT_BUILD_TIMEOUT_S,
 ) -> AiderTestResult:
-    """Apply candidate files and run the benchmark's build-triggered Catch suite."""
+
 
     source = Path(exercise_dir)
     if not source.is_dir():
@@ -154,8 +154,8 @@ def run_aider_tests(
         if _is_infrastructure_error(build_logs):
             raise SandboxInfrastructureError(build_logs)
         if _is_thread_exhaustion(build_logs) and not FAIL_RE.search(build_logs):
-            # Catch-suite runs abort mid-binary on pthread EAGAIN; without a
-            # failure tally the verdict would be a sandbox artifact.
+
+
             raise SandboxInfrastructureError(build_logs)
 
         passed = PASS_RE.search(build_logs)
@@ -189,7 +189,7 @@ def run_shadow_tests(
     test_timeout_s: int = DEFAULT_TEST_TIMEOUT_S,
     expected_test_sha256: str | None = None,
 ) -> AiderTestResult:
-    """Compile candidate sources against an answer-blind C++17 executable oracle."""
+
 
     source = Path(exercise_dir)
     if not source.is_dir():
@@ -254,7 +254,7 @@ def run_shadow_tests(
         if _is_infrastructure_error(compile_logs):
             raise SandboxInfrastructureError(compile_logs)
         if _is_thread_exhaustion(compile_logs):
-            # A toolchain fork/thread failure is the sandbox, never the candidate.
+
             raise SandboxInfrastructureError(compile_logs)
         if compile_result.returncode == 124 or "timed out" in compile_logs.lower():
             return AiderTestResult(
@@ -268,7 +268,7 @@ def run_shadow_tests(
                 candidate_returncode=compile_result.returncode,
                 logs={"compile": compile_logs},
             )
-        # The candidate process sees neither hidden test source nor its linkable object.
+
         (scratch / ".grader" / "test.o").unlink(missing_ok=True)
         driver.unlink(missing_ok=True)
 
@@ -300,9 +300,9 @@ def run_shadow_tests(
                 candidate_returncode=0,
                 logs=logs,
             )
-        # For sequential-ordinal graders the exit code is the 1-based index of the
-        # first failing check, so (returncode - 1) checks passed before it. Anything
-        # outside [1, N] (a crash signal, or a non-ordinal grader) scores zero.
+
+
+
         passed_checks = 0
         if ordinal_total is not None and 1 <= test_result.returncode <= ordinal_total:
             passed_checks = test_result.returncode - 1
@@ -332,11 +332,11 @@ def _run_stage(
         docker_args = docker_base_args(
             scratch, image=image, memory="4g", pids_limit=SANDBOX_PIDS_LIMIT
         )
-        # TSan reserves a fixed shadow-memory range. High-entropy ASLR can place
-        # the executable inside that range, while Docker's default seccomp profile
-        # blocks the personality syscall TSan uses to recover. Scope the proven
-        # workaround to executing an already-built TSan binary: compilation and
-        # every non-TSan sandbox stage retain the default seccomp profile and ASLR.
+
+
+
+
+
         tsan_execution = (
             "candidate_test_tsan" in script
             and "-o .grader/candidate_test_tsan" not in script
@@ -356,18 +356,18 @@ def _run_stage(
 
 
 def _local_sandbox_command(scratch: Path, script: str) -> list[str]:
-    """Use bubblewrap on Linux and fail closed if it is unavailable.
 
-    Modal cannot run Docker-in-Docker. Bubblewrap gives generated programs a
-    private mount, PID, IPC, UTS, and (by default) network namespace and
-    deliberately does not mount the repository, run volume, or inherited
-    environment secrets. GLM47_CPP_SANDBOX_UNSHARE_NET=0 skips only the
-    network unshare: gVisor-style runtimes (Modal) reject the RTM_NEWADDR
-    loopback setup bwrap performs after unsharing the network namespace.
-    """
+
+
+
+
+
+
+
+
 
     if platform.system() != "Linux":
-        # Development-only path for macOS unit tests. Paid Linux runs never use it.
+
         local_script = re.sub(r"\btimeout\s+\d+s\s+", "", script)
         return [
             "bash",
@@ -431,20 +431,20 @@ def _local_sandbox_command(scratch: Path, script: str) -> list[str]:
 
 
 def assert_local_sandbox_ready() -> None:
-    """Fail before allocating a training run if secure local isolation is absent."""
+
 
     if sandbox_backend() == "local" and platform.system() == "Linux" and not shutil.which("bwrap"):
         raise SandboxInfrastructureError("bubblewrap is required for secure Aider reward execution")
 
 
 def run_sandbox_preflight() -> None:
-    """Compile and execute probes proving the sandbox can host a full oracle run.
 
-    The thread probe holds ``PREFLIGHT_CONCURRENT_THREADS`` threads alive
-    simultaneously — the peak-pid shape of the largest concurrency oracle — so
-    an undersized pids budget fails here, before any rollout, instead of
-    killing scored candidates mid-run with pthread EAGAIN (issue #110 r3).
-    """
+
+
+
+
+
+
 
     assert_local_sandbox_ready()
     with TemporaryDirectory(prefix="aider_sandbox_preflight_") as scratch_value:
@@ -472,8 +472,8 @@ def run_sandbox_preflight() -> None:
         )
         require_tsan = os.environ.get(TSAN_PREFLIGHT_REQUIRED_ENV, "0") == "1"
         if require_tsan:
-            # TSan keeps its own probe: shadow memory for a thousand mostly
-            # blocked threads proves nothing extra and risks the memory cap.
+
+
             (scratch / "probe_tsan.cpp").write_text(
                 "#include <thread>\n"
                 "int main() { int value = 0; std::thread worker([&] { value = 1; }); "
@@ -510,7 +510,7 @@ def run_sandbox_preflight() -> None:
 
 
 def shlex_quote(value: str) -> str:
-    # Kept local so the candidate command construction has one tiny, auditable surface.
+
     import shlex
 
     return shlex.quote(value)
@@ -532,19 +532,19 @@ def _is_infrastructure_error(logs: str) -> bool:
 
 
 def _is_thread_exhaustion(logs: str) -> bool:
-    """Detect pthread-create EAGAIN aborts: the sandbox ran out of pids/threads."""
+
     lowered = logs.lower()
     return any(marker in lowered for marker in THREAD_EXHAUSTION_MARKERS)
 
 
 def is_test_stage_infrastructure_failure(test_logs: str) -> bool:
-    """True when a test-stage log must be scored as sandbox failure, not the model.
 
-    A thread-exhaustion abort with no prior ``FAILED:`` assertion means every
-    functional check had passed when the sandbox killed the grader; scoring it
-    as a candidate failure both robs a probable pass and, worse, feeds the
-    optimizer a gradient against likely-correct code. When at least one
-    assertion already failed the semantic verdict stands and the EAGAIN only
-    truncated the remainder, so the record stays a valid test failure.
-    """
+
+
+
+
+
+
+
+
     return _is_thread_exhaustion(test_logs) and "FAILED:" not in test_logs

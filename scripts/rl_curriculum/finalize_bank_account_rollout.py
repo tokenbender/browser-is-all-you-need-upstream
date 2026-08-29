@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert one Miles no-update dump set and apply the issue #110 gate."""
+
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
-from glm47_posttraining.integrations.miles_cpp_perf import (  # noqa: E402
+from glm47_posttraining.integrations.miles_cpp_perf import (
     load_miles_debug_samples,
     record_from_debug_sample,
 )

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SkyPilot's fail-closed SFT/GRPO dispatcher for one 8xH100 node.
+
 
 set -euo pipefail
 

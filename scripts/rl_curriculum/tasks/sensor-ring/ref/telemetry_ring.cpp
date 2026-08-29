@@ -41,4 +41,4 @@ bool SampleRing::saturated() const { return pending_ == slots_.size(); }
 
 bool SampleRing::drained() const { return pending_ == 0; }
 
-}  // namespace telemetry
+}

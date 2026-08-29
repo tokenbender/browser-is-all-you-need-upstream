@@ -1,4 +1,4 @@
-"""Pinned fixed-26 Aider C++ evaluation for a provenance-gated GRPO adapter."""
+
 
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ image = (
             "FLASHINFER_CUDA_INDEX": "129",
             "GLM47_EXPECTED_TRAINING_TASK_COUNT": str(EXPECTED_TRAINING_TASK_COUNT),
             "GLM47_EVAL_LORA_RANK": str(EVAL_LORA_RANK),
-            # Baked from the launching shell so the container agrees with the caller.
+
             "GLM47_EVAL_DISABLE_THINKING": "1" if DISABLE_THINKING else "0",
         }
     )
@@ -67,9 +67,9 @@ image = (
         f"git clone https://github.com/Aider-AI/polyglot-benchmark.git /aider/tmp.benchmarks/polyglot-benchmark && git -C /aider/tmp.benchmarks/polyglot-benchmark checkout {POLYGLOT_COMMIT}",
         "python3 -m venv /opt/aider-venv && /opt/aider-venv/bin/pip install -e '/aider[dev]'",
     )
-    # Fairness overlay: the polyglot instructions never state the interface the
-    # hidden test file requires, so every exercise is patched with an explicit
-    # contract before it is served. Hash-pinned; see the module docstring.
+
+
+
     .add_local_file(
         Path(__file__).with_name("aider_fixed26_contract_overlay.py"),
         "/opt/fixed26/aider_fixed26_contract_overlay.py",
@@ -86,13 +86,13 @@ results = modal.Volume.from_name("w8-aider-polyglot-cpp-results", create_if_miss
 
 
 def _model_settings_yaml() -> str:
-    """Aider model settings. Thinking is on by default, matching the frozen contract.
 
-    RL rollouts generate with thinking suppressed while this evaluation generates with
-    it enabled, so the trained and measured regimes differ. Setting
-    GLM47_EVAL_DISABLE_THINKING=1 measures the same checkpoint in the regime it was
-    actually trained in. Everything else stays identical so the two are comparable.
-    """
+
+
+
+
+
+
 
     thinking = (
         "\n    extra_body:\n      chat_template_kwargs:\n        enable_thinking: false"
@@ -333,7 +333,7 @@ def ensure_serving_adapter(
     expected_layer_47_tensors: int = EXPECTED_LAYER_47_TENSORS,
     expected_serving_tensors: int = EXPECTED_SERVING_TENSORS,
 ) -> dict[str, object]:
-    """Atomically create or verify the serving adapter for one training checkpoint."""
+
 
     import torch
 
@@ -612,12 +612,12 @@ def _benchmark(
 
 
 def _apply_contract_overlay(destination: Path) -> dict[str, object]:
-    """Patch the copied exercises with their stated interface contracts.
 
-    Applied to the shard copy, never to the pinned clone, so the upstream tree in
-    the image stays byte-identical to POLYGLOT_COMMIT. The overlay verifies the
-    sha256 of every original instructions.md and raises if upstream text drifted.
-    """
+
+
+
+
+
 
     sys.path.insert(0, "/opt/fixed26")
     import aider_fixed26_contract_overlay as overlay
@@ -636,9 +636,9 @@ def _create_cpp_shard(shard_index: int, run_id: str = "") -> tuple[Path, list[st
     if len(tasks) != 26:
         raise RuntimeError(f"fixed C++ benchmark task count mismatch: {len(tasks)} != 26")
     selected = tasks[shard_index * 13 : (shard_index + 1) * 13]
-    # Scoped by run_id: Modal reuses warm containers across sequential attempts,
-    # so a fixed path collides with the previous attempt's tree in the same
-    # container. The exist_ok=False below still guards against reuse within a run.
+
+
+
     suffix = f"-{run_id}" if run_id else ""
     shard_root = Path(f"/tmp/polyglot-benchmark-shard-{shard_index}{suffix}")
     if shard_root.exists():
@@ -693,7 +693,7 @@ def _validate_benchmark_results(
         ),
         "unique_testcases": len(set(testcases)),
         "testcases": sorted(testcases),
-        # Per-task outcomes, needed to take the union across independent samples.
+
         "passed_testcases_first": sorted(
             Path(payload["testcase"]).name
             for _, payload in rows
@@ -962,11 +962,11 @@ def merge_shards(run_id: str, shard_receipts: list[dict[str, object]]) -> dict[s
 
 @app.function(image=image, cpu=2.0, memory=4_096, timeout=1800)
 def verify_contract_overlay() -> dict[str, object]:
-    """CPU-only preflight: apply the overlay to both shards inside the real image.
 
-    Catches a drifted upstream clone or a missing overlay file before any GPU is
-    provisioned.
-    """
+
+
+
+
 
     out = []
     for shard_index in range(2):
@@ -1000,12 +1000,12 @@ def pass_at_k(
     tries: int = 1,
     first_index: int = 1,
 ) -> None:
-    """Run `samples` independent evaluations of the whole fixed-26 set.
 
-    Sampling is stochastic (temperature 0.7), so each attempt is an independent
-    draw; pass@k is the union over attempts. Every attempt runs both shards, so
-    each consumes 8x H100. Attempts run sequentially to bound peak cost.
-    """
+
+
+
+
+
 
     if not 1 <= samples <= 16:
         raise ValueError("samples must be between 1 and 16")

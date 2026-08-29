@@ -3,9 +3,9 @@ index 7bd4206d..3d528e02 100644
 --- a/include/fmt/chrono.h
 +++ b/include/fmt/chrono.h
 @@ -530,6 +530,37 @@ inline std::tm gmtime(
- 
+
  namespace detail {
- 
+
 +static std::pair<std::chrono::seconds, std::chrono::seconds> split_seconds(
 +    std::chrono::seconds duration) {
 +  return {duration, std::chrono::seconds::zero()};
@@ -37,9 +37,9 @@ index 7bd4206d..3d528e02 100644
 +  return {sec, remainder};
 +}
 +
- // Writes two-digit numbers a, b and c separated by sep to buf.
- // The method by Pavel Novikov based on
- // https://johnnylee-sde.github.io/Fast-unsigned-integer-to-time-string/.
+
+
+
 @@ -2077,30 +2108,11 @@ struct formatter<std::chrono::time_point<std::chrono::system_clock, Duration>,
    template <typename FormatContext>
    auto format(std::chrono::time_point<std::chrono::system_clock, Duration> val,
@@ -75,11 +75,11 @@ index 7bd4206d..3d528e02 100644
 +    return formatter<std::tm, Char>::do_format(tm, ctx, &subsecs);
    }
  };
- 
+
 @@ -2112,6 +2124,16 @@ struct formatter<std::chrono::local_time<Duration>, Char>
      this->format_str_ = detail::string_literal<Char, '%', 'F', ' ', '%', 'T'>{};
    }
- 
+
 +  template <typename FormatContext>
 +  auto format(std::chrono::local_time<Duration> val, FormatContext& ctx) const
 +      -> decltype(ctx.out()) {

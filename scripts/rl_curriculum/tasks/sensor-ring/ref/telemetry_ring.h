@@ -36,4 +36,4 @@ class SampleRing {
     std::size_t pending_{0};
 };
 
-}  // namespace telemetry
+}

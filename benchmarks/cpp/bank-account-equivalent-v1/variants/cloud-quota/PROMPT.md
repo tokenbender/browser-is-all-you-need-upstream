@@ -51,7 +51,7 @@ public:
     void retire();
     int available();
 };
-}  // namespace cloud_quota
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

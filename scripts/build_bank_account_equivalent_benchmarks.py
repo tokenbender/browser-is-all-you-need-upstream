@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build ten lineage-declared benchmark variants of the C++ bank-account task."""
+
 
 from __future__ import annotations
 

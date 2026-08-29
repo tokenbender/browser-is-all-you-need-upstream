@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Replay every accepted Synth-v1 epoch-50 bank-account signature on Linux/GCC.
 
-The verifier reconstructs candidate files from the four tracked accepted trial
-transcripts, adds the pinned healthcheck candidate, fetches the exact official
-polyglot oracle at its pinned commit, and checks the complete pass/fail table.
-It intentionally emits no repository artifacts; stdout is the receipt.
-"""
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -599,7 +599,7 @@ def fetch(url: str, attempts: int = 4) -> bytes:
             request = urllib.request.Request(url, headers={"User-Agent": "issue111-verifier/1"})
             with urllib.request.urlopen(request, timeout=60) as response:
                 return response.read()
-        except Exception as exc:  # pragma: no cover - exercised only on network failure
+        except Exception as exc:
             last_error = exc
             if attempt + 1 < attempts:
                 time.sleep(2 ** attempt)

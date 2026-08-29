@@ -51,7 +51,7 @@ public:
     void close();
     int credit();
 };
-}  // namespace library_credit
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

@@ -1,4 +1,4 @@
-"""Correctness-gated runtime-efficiency reward for C++ performance RL."""
+
 
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ class RewardBreakdown:
 
 
 def valid_model_output(model_output: str) -> bool:
-    """Require a reasoning block followed by exactly one fenced code block."""
+
 
     try:
         extract_code_block(model_output)
@@ -62,7 +62,7 @@ def valid_model_output(model_output: str) -> bool:
 
 
 def extract_code_block(model_output: str) -> str:
-    """Extract the only fenced code block from a model response."""
+
 
     matches = CODE_BLOCK_RE.findall(model_output)
     if len(matches) != 1:
@@ -71,7 +71,7 @@ def extract_code_block(model_output: str) -> str:
 
 
 def extract_reward_code(model_output: str) -> tuple[str, bool]:
-    """Extract C++ for scoring and report whether the strict model format was used."""
+
 
     if valid_model_output(model_output):
         return extract_code_block(model_output), True
@@ -79,7 +79,7 @@ def extract_reward_code(model_output: str) -> tuple[str, bool]:
 
 
 def extract_recoverable_code(model_output: str) -> str:
-    """Extract C++ from recoverable-but-invalid outputs for shaped GRPO rewards."""
+
 
     matches = CODE_BLOCK_RE.findall(model_output)
     if len(matches) == 1:
@@ -99,7 +99,7 @@ def compute_reward(
     *,
     runner: Runner | None = None,
 ) -> RewardBreakdown:
-    """Compute the correctness-gated efficiency reward."""
+
 
     try:
         code, format_valid = extract_reward_code(model_output)

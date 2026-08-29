@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "release": "phone-number-kernel12-GRPO20",
+  "status": "complete",
+  "checkpoint": "iter_0000014",
+  "adapter_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+  "contract": "fixed26-contract-v2",
+  "trial_count": 4,
+  "task_count": 26,
+  "sample_count": 104,
+  "pass_at_1": {
+    "scores": [11, 12, 11, 11],
+    "mean": 11.25,
+    "sample_standard_deviation": 0.5,
+    "range": [11, 12],
+    "bootstrap_95_percent_interval": [7.5, 15.0]
+  },
+  "multi_turn_with_feedback_turn_2": {
+    "scores": [15, 15, 15, 16],
+    "mean": 15.25,
+    "sample_standard_deviation": 0.5,
+    "range": [15, 16],
+    "bootstrap_95_percent_interval": [11.0, 19.25]
+  },
+  "conditional_turn_2_recovery": {
+    "recoveries": 16,
+    "turn_1_failures": 59,
+    "rate": 0.2711864406779661,
+    "bootstrap_95_percent_interval": [0.1311475409836066, 0.4423076923076923]
+  },
+  "health": {
+    "terminal_tasks_per_trial": 26,
+    "well_formed_tasks_per_trial": 26,
+    "malformed_responses": 0,
+    "test_timeouts": 0,
+    "lora_activation_verified": true
+  },
+  "trials": [
+    {
+      "id": "a1",
+      "run_id": "phone-number-iter14-fixed26-thinking-spot-20260822-142309",
+      "pass_at_1": 11,
+      "turn_2": 15,
+      "receipt": "trials/a1/run_receipt.json",
+      "receipt_sha256": "823dc7ac78b390e626aecc6f783dbba1176a93742aa64fe677893068da1a8f08"
+    },
+    {
+      "id": "a2",
+      "run_id": "phone-number-iter14-fixed26-thinking-spot-20260822-152052",
+      "pass_at_1": 12,
+      "turn_2": 15,
+      "receipt": "trials/a2/run_receipt.json",
+      "receipt_sha256": "2ffe1a8921ecb518a975de0ff71a12595698d0be65f474aa407376d63fc1b965"
+    },
+    {
+      "id": "a3",
+      "run_id": "phone-number-iter14-fixed26-thinking-spot-20260822-172835",
+      "pass_at_1": 11,
+      "turn_2": 15,
+      "receipt": "trials/a3/run_receipt.json",
+      "receipt_sha256": "756aafd73ff4c3caba58bf0d64f4134a29f7fec9976461cb711066bd780b44e0"
+    },
+    {
+      "id": "a4",
+      "run_id": "phone-number-iter14-fixed26-thinking-spot-20260822-190309",
+      "pass_at_1": 11,
+      "turn_2": 16,
+      "receipt": "trials/a4/run_receipt.json",
+      "receipt_sha256": "faf0afabb7b2c0e7e3391934c99f441c98c90ffdacd43dd07e0f41de72407075"
+    }
+  ]
+}

@@ -51,7 +51,7 @@ public:
     void disconnect();
     int remaining_megabytes();
 };
-}  // namespace prepaid_data
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

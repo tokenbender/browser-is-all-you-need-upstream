@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deliberately overfit a copy of the Synth-v1 rank-16 LoRA to the exact bank task.
+
 
 set -euo pipefail
 
@@ -13,8 +13,8 @@ export MILES_DATA_BUILD_MODULE="glm47_posttraining.integrations.miles_aider_poly
 export MILES_DATA_CURRICULUM="bank-account-official-drill-v1"
 export MILES_CPP_AUTO_PREPARE_DATA="1"
 
-# Eight rows make one optimizer update. Sixteen epochs is therefore sixteen
-# direct imitation updates, with resumable checkpoints every four updates.
+
+
 export MILES_ROLLOUT_BATCH_SIZE="${MILES_ROLLOUT_BATCH_SIZE:-8}"
 export MILES_GLOBAL_BATCH_SIZE="${MILES_GLOBAL_BATCH_SIZE:-8}"
 export MILES_SFT_NUM_EPOCH="${MILES_SFT_NUM_EPOCH:-16}"

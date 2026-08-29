@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the bank-account-equivalent benchmark suite and write its receipt."""
+
 
 from __future__ import annotations
 

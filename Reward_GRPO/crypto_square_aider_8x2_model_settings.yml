@@ -1,0 +1,13 @@
+- name: openai/glm-4.7-flash-crypto-square
+  edit_format: whole
+  use_repo_map: false
+  use_temperature: true
+  streaming: false
+  extra_params:
+    max_tokens: 32768
+    temperature: 0.7
+    top_p: 1.0
+    extra_body:
+      lora_path: crypto-square-eval
+      chat_template_kwargs:
+        enable_thinking: true

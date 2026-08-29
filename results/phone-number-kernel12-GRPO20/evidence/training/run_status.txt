@@ -1,0 +1,7 @@
+train_status=0
+source_commit=0521ea26b7f0329cbf3dc5d244a85efe57152098
+source_adapter_sha256=c9afe1ede8223e154c6efd1f3023ffb74b4a62c1705cae92efd1ebbf0a63d766
+data_build_module=Reward_GRPO.phone_number_grpo
+reward_func=Reward_GRPO.phone_number_grpo.reward_func
+verifier_gate=phone-number-strange-12-independent-kernel-gcc13-v1
+thinking=true

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Miles SFT LoRA rank-16 runner for GLM-4.7-Flash on the PIE C++ task.
+
 
 set -euo pipefail
 
@@ -130,7 +130,7 @@ if ! command -v ray >/dev/null 2>&1; then
   echo "Missing ray CLI. Run inside the Miles runtime container." >&2
   exit 2
 fi
-# Validate the selected C++ reward backend.
+
 if [ "${GLM47_CPP_SANDBOX_BACKEND:-docker}" != "local" ]; then
   if ! command -v docker >/dev/null 2>&1; then
     echo "Missing docker CLI inside container. Mount it with -v /usr/bin/docker:/usr/bin/docker:ro." >&2
@@ -312,9 +312,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Share SkyPilot-managed hosts without touching the supervisor's Ray process.
-# Infra owns the private directory and port policy through MILES_RAY_*; an
-# unset policy preserves the legacy sole-owner behavior.
+
+
+
 RAY_SESSION_TAG="$(printf %s "${RUN_ID}" | sha256sum | cut -c1-8)"
 RAY_SCOPED_CLEANUP="${MILES_RAY_SCOPED_CLEANUP:-0}"
 RAY_TMPDIR="${MILES_RAY_TMPDIR:-}"
@@ -443,7 +443,7 @@ fi
 if [ "${BALANCE_DATA}" = "1" ]; then
   PERF_ARGS+=(--balance-data)
 fi
-# Select the activation recompute policy.
+
 case "${RECOMPUTE_GRANULARITY}" in
   full)
     PERF_ARGS+=(--recompute-granularity full --recompute-method uniform --recompute-num-layers 1)
@@ -524,8 +524,8 @@ MISC_ARGS=(
   --attention-softmax-in-fp32
   --save-debug-rollout-data "${ROLLOUT_DUMP_TEMPLATE}"
 )
-# Raw passthrough for measured runtime experiments; appended last so an
-# explicit setting can override Miles' colocated defaults.
+
+
 if [ -n "${MILES_EXTRA_ARGS:-}" ]; then
   read -r -a EXTRA_ARGS <<< "${MILES_EXTRA_ARGS}"
   MISC_ARGS+=("${EXTRA_ARGS[@]}")

@@ -56,4 +56,4 @@ int quota_bucket::available() {
     return value_;
 }
 
-}  // namespace cloud_quota
+}

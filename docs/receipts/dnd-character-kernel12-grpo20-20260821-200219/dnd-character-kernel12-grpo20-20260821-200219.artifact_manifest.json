@@ -1,0 +1,41 @@
+{
+  "files": [
+    {
+      "name": "run_receipt.txt",
+      "sha256": "daa8c92d2ff3bd991c094cf32c87a5409e83bbb6b5751365792fcc03711ace3a",
+      "size_bytes": 3129
+    },
+    {
+      "name": "vram_usage.csv",
+      "sha256": "c50245f8b8d232580b9f6abbe869f716179e97d6c137dde62faaeb3ef9347473",
+      "size_bytes": 1569820
+    },
+    {
+      "name": "vram_peak.txt",
+      "sha256": "a15f1acee952b0a181732a9c3a35ed2aecf03f22b225f19ac656cc164cfb7db6",
+      "size_bytes": 26
+    },
+    {
+      "name": "grpo_training_gate.json",
+      "sha256": "9307bd2e6891e672598c7573c23b8fef3bdec67260838f3ea7d08e2d5985dc21",
+      "size_bytes": 7293
+    },
+    {
+      "name": "dnd-character-kernel12-grpo20-20260821-200219.checkpoint_manifest.json",
+      "sha256": "cfba15e4174302555bd80d5946c88ada0be75f1a3a5428a44e7d60e9a4334b6f",
+      "size_bytes": 2979
+    },
+    {
+      "name": "dnd-character-kernel12-grpo20-20260821-200219.evidence_summary.json",
+      "sha256": "12e8ca842f286a5f5cf5981b49098cce4c99b1665a5adec6662efba56ab43443",
+      "size_bytes": 423
+    }
+  ],
+  "schema_version": 1,
+  "skipped": [
+    {
+      "name": "run.log",
+      "reason": "sensitive_content"
+    }
+  ]
+}

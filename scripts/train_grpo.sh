@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Miles GRPO LoRA rank-16 runner for GLM-4.7-Flash on the PIE C++ task.
+
 
 set -euo pipefail
 
@@ -147,7 +147,7 @@ if [ ! -f "${MODEL_ARGS_PATH}" ]; then
   echo "Missing model args: ${MODEL_ARGS_PATH}" >&2
   exit 2
 fi
-# Validate the selected C++ reward backend.
+
 if [ "${GLM47_CPP_SANDBOX_BACKEND:-docker}" != "local" ]; then
   if ! command -v docker >/dev/null 2>&1; then
     echo "Missing docker CLI inside container. Mount it with -v /usr/bin/docker:/usr/bin/docker:ro." >&2
@@ -158,7 +158,7 @@ if [ "${GLM47_CPP_SANDBOX_BACKEND:-docker}" != "local" ]; then
     exit 2
   fi
 fi
-# Local backend needs a working compiler toolchain instead.
+
 if [ "${GLM47_CPP_SANDBOX_BACKEND:-docker}" = "local" ] && ! command -v g++ >/dev/null 2>&1; then
   echo "GLM47_CPP_SANDBOX_BACKEND=local but g++ is missing in this container." >&2
   exit 2
@@ -196,7 +196,7 @@ if [ "${FILTER_TRAIN_ORACLE_FULL_MARKS}" = "1" ]; then
   BUILD_DATA_ARGS+=(--filter-train-oracle-full-marks --oracle-filter-workers "${ORACLE_FILTER_WORKERS}")
 fi
 
-# Reuse a prepared dataset when available.
+
 if [ ! -f "${DATA_DIR}/grpo/train.jsonl" ]; then
   export GLM47_DATA_DIR="${GLM47_DATA_DIR:-${DATA_DIR}}"
   PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}" "${PYTHON_BIN}" "${BUILD_DATA_ARGS[@]}"
@@ -379,12 +379,12 @@ finalize_wandb() {
     "${REPO_ROOT}/scripts/publish_results.py" "${finalize_args[@]}"
 }
 
-# Ray lifecycle MECHANISM only. Tenancy POLICY (private session dir, port
-# assignments, scoped cleanup, submit retries) is owned by the infra layer —
-# see infra/gcp/ — and injected via MILES_RAY_* variables. With nothing set,
-# behavior is the legacy machine-owner default: broadcast cleanup, stock Ray
-# ports. Session dirs are tagged with a hash of the run id because AF_UNIX
-# caps socket paths (which live under the temp dir) at 107 bytes.
+
+
+
+
+
+
 RAY_SESSION_TAG="$(printf %s "${RUN_ID}" | sha256sum | cut -c1-8)"
 RAY_SCOPED_CLEANUP="${MILES_RAY_SCOPED_CLEANUP:-0}"
 RAY_TMPDIR="${MILES_RAY_TMPDIR:-}"
@@ -398,9 +398,9 @@ RAY_RUNTIME_ENV_AGENT_PORT="${MILES_RAY_RUNTIME_ENV_AGENT_PORT:-}"
 RAY_METRICS_EXPORT_PORT="${MILES_RAY_METRICS_EXPORT_PORT:-}"
 cleanup_ray_session() {
   if [ "${RAY_SCOPED_CLEANUP}" = "1" ]; then
-    # A multi-stage launch reuses the infra-owned ports. Stop only this
-    # stage's private Ray before the next stage starts, and clear its
-    # persisted session metadata so retries cannot attach to stale Redis.
+
+
+
     pkill -9 -f "ray-g47-${RAY_SESSION_TAG}" >/dev/null 2>&1 || true
     if [ -n "${RAY_TMPDIR}" ]; then
       rm -rf -- "${RAY_TMPDIR}"
@@ -409,10 +409,10 @@ cleanup_ray_session() {
 }
 pkill -9 sglang >/dev/null 2>&1 || true
 if [ "${RAY_SCOPED_CLEANUP}" = "1" ]; then
-  # Shared machine: only ever touch processes bound to this run's session.
+
   cleanup_ray_session
 else
-  # Sole owner of the machine: legacy broadcast cleanup.
+
   ray stop --force >/dev/null 2>&1 || true
   pkill -9 ray >/dev/null 2>&1 || true
   pkill -9 redis >/dev/null 2>&1 || true
@@ -448,7 +448,7 @@ CKPT_ARGS=(
   --save-interval "${MILES_SAVE_INTERVAL:-1}"
   --megatron-to-hf-mode bridge
 )
-# The canonical GRPO profile uses the policy model directly.
+
 if [ "${MILES_NO_REF:-0}" != "1" ]; then
   CKPT_ARGS+=(--ref-load "${REF_LOAD_DIR}")
 fi
@@ -463,15 +463,15 @@ LORA_ARGS=(
   --sglang-max-lora-rank "${LORA_RANK}"
   --sglang-lora-target-modules "${SGLANG_LORA_TARGET_MODULE_ARGS[@]}"
 )
-# Initialize adapter weights from a prior run (e.g. GRPO warm-started from the
-# SFT adapter): point at an iter_*/adapter dir with Megatron-native shards.
+
+
 LORA_ADAPTER_PATH="${MILES_LORA_ADAPTER_PATH:-}"
 if [ -n "${LORA_ADAPTER_PATH}" ]; then
-  # Three shard namings exist across Miles generations: legacy tp{t}_pp0.pt,
-  # the synth-v1 era's tp{t}_pp0_ep{e}.pt, and mainline rank{r}.pt. The r3 run
-  # staged ep-suffixed shards into a loader that knew neither newer naming and
-  # silently trained from a fresh LoRA init. The bridge now resolves all three
-  # per rank; refuse to launch only on names nothing is known to load.
+
+
+
+
+
   "${PYTHON_BIN}" - "${LORA_ADAPTER_PATH}" <<'PY'
 import pathlib, re, sys
 
@@ -534,9 +534,9 @@ if [ "${GRPO_ROLLOUT_SHUFFLE}" = "1" ]; then
   ROLLOUT_ARGS+=(--rollout-shuffle)
 fi
 
-# Prefer the stratified mini eval when the caller did not pick one: the full
-# validation set is a standalone gate, not an in-training trend eval, and it
-# costs ~10x the wall-clock per eval interval.
+
+
+
 if [ -z "${EVAL_PROMPT_DATA}" ] && [ -f "${DATA_DIR}/eval/validation_mini126.jsonl" ]; then
   EVAL_PROMPT_DATA="${DATA_DIR}/eval/validation_mini126.jsonl"
 fi
@@ -568,7 +568,7 @@ fi
 if [ "${BALANCE_DATA}" = "1" ]; then
   PERF_ARGS+=(--balance-data)
 fi
-# Select the activation recompute policy.
+
 case "${RECOMPUTE_GRANULARITY}" in
   full)
     PERF_ARGS+=(--recompute-granularity full --recompute-method uniform --recompute-num-layers 1)
@@ -600,9 +600,9 @@ GRPO_ARGS=(
   --eps-clip 0.2
   --eps-clip-high 0.28
 )
-# The KL penalty coefficient above is inert unless --use-kl-loss is also set; the
-# canonical PIE path leaves it off, so gate it behind an opt-in env var. Requires a
-# reference model (MILES_NO_REF must not be 1).
+
+
+
 if [ "${MILES_USE_KL_LOSS:-0}" = "1" ]; then
   if [ "${MILES_NO_REF:-0}" = "1" ]; then
     echo "MILES_USE_KL_LOSS=1 requires a reference model (MILES_NO_REF must not be 1)" >&2
@@ -630,10 +630,10 @@ WANDB_ARGS=(
   --wandb-group "${WANDB_GROUP}"
   --wandb-run-id "${WANDB_RUN_ID}"
 )
-# Correct-sample logging reads actor log_probs, which --debug-rollout-only
-# never computes; in rollout-only mode the ray job dies with
-# KeyError: 'log_probs' after the rollout finishes (also present in the r3
-# gate log, masked there because the SSH flow ignored the ray exit status).
+
+
+
+
 if [ "${ROLLOUT_ONLY}" = "0" ]; then
   WANDB_ARGS+=(--log-passrate --log-correct-samples)
 fi
@@ -683,7 +683,7 @@ MISC_ARGS=(
 if [ "${ROLLOUT_ONLY}" = "1" ]; then
   MISC_ARGS+=(--debug-rollout-only)
 fi
-# Raw passthrough for experiments (e.g. --sglang-disable-cuda-graph); appended last.
+
 if [ -n "${MILES_EXTRA_ARGS:-}" ]; then
   read -r -a EXTRA_ARGS <<< "${MILES_EXTRA_ARGS}"
   MISC_ARGS+=("${EXTRA_ARGS[@]}")
@@ -744,11 +744,11 @@ TRAIN_ENTRYPOINT=(python3 train.py)
 if [ -n "${TRAIN_MODULE}" ]; then
   TRAIN_ENTRYPOINT=(python3 -m "${TRAIN_MODULE}")
 fi
-# The dashboard's job agent registers asynchronously after `ray start`
-# returns, and a submit racing it fails with "No available agent to submit
-# job" (HTTP 500). The infra layer sets MILES_RAY_SUBMIT_RETRIES to tolerate
-# that race; only fast failures retry, so a genuine training error is never
-# rerun. Legacy default is a single attempt.
+
+
+
+
+
 RAY_STATUS=1
 for submit_attempt in $(seq 1 "${MILES_RAY_SUBMIT_RETRIES:-1}"); do
   SUBMIT_STARTED_AT=${SECONDS}
@@ -780,11 +780,11 @@ set -e
 
 cleanup
 
-# An eval dump at rollout id k reflects the policy after k optimizer updates,
-# so the trained final state is only ever measured by an eval with id >=
-# NUM_ROLLOUT. Issue #110 r3 shipped eval_0 (the frozen pre-update policy) as
-# "post-update validation"; record the truth in the receipt so that mislabel
-# cannot recur, and let launch profiles hard-require the post-update eval.
+
+
+
+
+
 POST_UPDATE_EVAL="absent"
 POST_UPDATE_EVAL_MAX_ID=""
 ROLLOUT_DUMP_DIR="$(dirname -- "${ROLLOUT_DUMP_TEMPLATE}")"

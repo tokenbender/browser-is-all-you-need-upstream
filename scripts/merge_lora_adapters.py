@@ -1,10 +1,10 @@
-"""Merge two compatible LoRA adapters without introducing factor cross-terms.
 
-For input rank ``r`` and scale ``alpha / r``, the output uses rank ``2r`` and
-the same alpha.  A tensors are concatenated on their rank dimension; B tensors
-are concatenated after applying the coefficient required to represent the
-requested weighted sum of the two adapter deltas exactly.
-"""
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -33,9 +33,9 @@ def _sha256(path: Path) -> str:
 
 
 def _rank_dim(tensor: Any, rank: int, key: str) -> int:
-    # Megatron TP shards partition the global LoRA rank, so a rank-16 adapter
-    # has local rank 4 at TP=4. Its module layout fixes the factor axes even
-    # though the local dimension no longer equals the global config rank.
+
+
+
     if ".adapter.linear_in.weight" in key:
         if tensor.ndim < 2:
             raise ValueError(f"{key}: expected a matrix-like A factor, got {tensor.shape}")
@@ -63,7 +63,7 @@ def merge_state(
     right_weight: float,
     prefix: str = "",
 ) -> dict[str, Any]:
-    """Return a state tree whose LoRA delta is the weighted input-delta sum."""
+
     import torch
 
     if set(left) != set(right):

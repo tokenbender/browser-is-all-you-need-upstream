@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "fixed26-client-release-package",
+  "release": "phone-number-kernel12-GRPO20",
+  "status": "complete",
+  "result": {
+    "pass_at_1_mean": 11.25,
+    "multi_turn_with_feedback_turn_2_mean": 15.25,
+    "trials": 4,
+    "samples": 104
+  },
+  "checkpoint_manifest": "selected_checkpoint.json",
+  "evaluation_manifest": "evaluation_manifest.json",
+  "training_evidence": "evidence/training",
+  "method": "method",
+  "trial_receipts": "trials",
+  "external_artifacts": {
+    "huggingface": "https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20",
+    "training_run": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/phone-number-kernel12-grpo20-spot-20260822-102653/",
+    "selected_adapter": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000014/adapter/",
+    "evaluation_root": "gs://lifeandhalf-24122025-w8-biayn/runs/glm47/evaluations/aider-fixed26/",
+    "wandb": "https://wandb.ai/models-iit-bhu-news/glm47-phone-number-dnd-grpo/runs/phone-number-kernel12-grpo20-spot-20260822-102653"
+  }
+}

@@ -56,4 +56,4 @@ int token_box::token_count() {
     return count_;
 }
 
-}  // namespace workshop_tokens
+}

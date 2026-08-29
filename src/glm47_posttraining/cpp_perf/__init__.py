@@ -1,4 +1,4 @@
-"""C++ performance-RL task, harness, and reward helpers."""
+
 
 from .reward import compute_reward, extract_code_block, extract_recoverable_code, extract_reward_code, valid_model_output
 from .schema import (

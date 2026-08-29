@@ -51,7 +51,7 @@ public:
     void deactivate();
     int balance();
 };
-}  // namespace secure_wallet
+}
 ```
 
 The object must remain default-constructible exactly as shown. The test

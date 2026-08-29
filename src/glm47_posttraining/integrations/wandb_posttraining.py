@@ -1,4 +1,4 @@
-"""Canonical W&B observability for PIE C++ post-training runs."""
+
 
 from __future__ import annotations
 
@@ -207,7 +207,7 @@ CURATED_STAGE_METRIC_TERMS = (
 
 
 def safe_identifier(value: str, *, fallback: str = "run") -> str:
-    """Return a W&B-safe stable identifier."""
+
 
     cleaned = re.sub(r"[^a-zA-Z0-9_.-]+", "-", value.strip()).strip("-.")
     return (cleaned or fallback)[:120]
@@ -219,7 +219,7 @@ def resolve_experiment_id(*, explicit: str = "", run_id: str = "", label: str = 
 
 
 def redact_sensitive(value: Any, *, key: str = "") -> Any:
-    """Recursively redact secrets while preserving metric and config structure."""
+
 
     if key and SENSITIVE_KEY_RE.search(key):
         return "<redacted>"
@@ -367,7 +367,7 @@ def build_comparison_table_rows(
 
 
 def parse_miles_metric_events(path: str | Path) -> list[dict[str, Any]]:
-    """Recover numeric Miles metric events from a preserved console log."""
+
 
     source = Path(path)
     if not source.is_file():
@@ -424,7 +424,7 @@ def load_miles_sample_evidence(
     receipt: dict[str, Any],
     max_rows_per_table: int,
 ) -> tuple[dict[str, list[list[Any]]], dict[str, int]]:
-    """Load repo-generated Miles debug dumps into bounded public table rows."""
+
 
     root = Path(dump_dir)
     rows: dict[str, list[list[Any]]] = {"rollout": [], "eval": []}

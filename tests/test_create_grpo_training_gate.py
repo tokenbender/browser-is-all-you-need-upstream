@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Training-receipt schema tests (issue #110 T3).
 
-Run: python3 tests/test_create_grpo_training_gate.py
 
-Reproduces the r3 failure shape — warm start from an EP8 hybrid adapter
-(8 native files) with a TP4 output checkpoint (4 shards) under the
-``one-update`` phase — and proves the fixed gate accepts it while the old
-single-shard-expectation behavior still fails it.
-"""
+
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -27,8 +27,8 @@ SPEC = importlib.util.spec_from_file_location(
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
-OUTPUT_SHARDS = 4  # TP4 trained checkpoint
-SOURCE_SHARDS = 8  # EP8 warm-start hybrid adapter
+OUTPUT_SHARDS = 4
+SOURCE_SHARDS = 8
 GPUS = 8
 
 
@@ -134,7 +134,7 @@ def test_one_update_phase_with_mismatched_shards_passes() -> None:
 
 
 def test_shared_shard_expectation_still_fails_r3_shape() -> None:
-    # Without the split expectation the r3 shape must fail exactly as it did.
+
     with tempfile.TemporaryDirectory() as scratch:
         paths = _build_fixture(pathlib.Path(scratch))
         try:
@@ -161,10 +161,10 @@ def test_cli_accepts_one_update_phase() -> None:
         ]
         try:
             MODULE.main()
-        except SystemExit as exc:  # argparse rejection would exit 2
+        except SystemExit as exc:
             parser_error = exc.code
         except FileNotFoundError:
-            parser_error = None  # parsed fine; fixture paths do not exist
+            parser_error = None
     finally:
         sys.argv = argv_backup
     assert parser_error != 2, "argparse rejected --phase one-update"

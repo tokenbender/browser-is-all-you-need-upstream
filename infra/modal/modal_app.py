@@ -1,4 +1,4 @@
-"""Canonical Modal reproduction path for GLM-4.7-Flash post-training."""
+
 
 from __future__ import annotations
 
@@ -18,9 +18,9 @@ MILES_IMAGE = (
     "sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e52a932fcefb7031402aeff37"
 )
 
-# Only meaningful locally (image build/mount). Modal re-imports this module inside
-# the container as /root/modal_app.py, where parents[2] does not exist, so fall back
-# to the module dir there rather than crashing the import before the function loads.
+
+
+
 _MODULE_PATH = Path(__file__).resolve()
 LOCAL_REPO = _MODULE_PATH.parents[2] if len(_MODULE_PATH.parents) >= 3 else _MODULE_PATH.parent
 REMOTE_REPO = "/workspace/glm47-h100-posttraining"
@@ -116,7 +116,7 @@ def _run(command: str, *, env: dict[str, str] | None = None) -> None:
     secrets=[hf_secret],
 )
 def prepare_assets() -> None:
-    """Download the exact base model, dataset, and validated SFT adapter."""
+
     from huggingface_hub import HfApi, snapshot_download
 
     resolved = HfApi().model_info(MODEL_ID, revision=MODEL_REVISION).sha
@@ -147,7 +147,7 @@ def prepare_assets() -> None:
     secrets=[hf_secret],
 )
 def prepare_aider_shadow_asset() -> dict[str, object]:
-    """Download and verify only the externally versioned Aider corpus."""
+
     import json
 
     _run(f"python3 scripts/download_assets.py aider-shadow --output-root {ASSETS_DIR}")
@@ -169,7 +169,7 @@ def merge_aider_adapter_files(
     right_path: str = AIDER_SFT_ADAPTER,
     output_path: str = AIDER_MERGED_ADAPTER,
 ) -> dict[str, object]:
-    """Create the exact equal-weight rank-32 delta merge used for GRPO."""
+
     import json
 
     _run(
@@ -188,7 +188,7 @@ def merge_aider_adapter_files(
     volumes={ASSETS_DIR: assets, RUNS_DIR: runs},
 )
 def validate_aider_path(adapter_path: str = AIDER_SFT_ADAPTER) -> dict[str, object]:
-    """CPU-only proof that data, sandbox, and exact warm-start bytes are usable."""
+
 
     import json
     import shutil
@@ -260,11 +260,11 @@ def _stage_env(
         "MILES_CPP_TASKS_DIR": f"{ASSETS_DIR}/data/tasks",
         "MILES_CPP_DATA_DIR": f"{ASSETS_DIR}/prepared",
         "GLM47_CPP_SANDBOX_BACKEND": "local",
-        # Modal's runtime rejects bwrap's netns loopback setup (RTM_NEWADDR).
+
         "GLM47_CPP_SANDBOX_UNSHARE_NET": "0",
         "GLM47_MODEL_REVISION": MODEL_REVISION,
-        # This is the immutable parent. The derived runtime gets its own digest
-        # only after the shared Dockerfile is built and published.
+
+
         "GLM47_BASE_IMAGE": MILES_IMAGE,
         "GLM47_EXPERIMENT_ID": run_id,
         "MILES_WANDB_PROJECT": "glm47-pie-cpp-posttraining",
@@ -277,11 +277,11 @@ def _stage_env(
         "GLM47_SOURCE_COMMIT": source_commit or "unbound",
     }
     if stage == "sft":
-        # Data max is 2270 tokens (600-set token audit), so 3072 removes ~25% of
-        # the wasted seq buffer vs 4096 without truncating any row (3072 % TP4 == 0).
+
+
         env["MILES_SEQ_LENGTH"] = "3072"
-        # Batch 20 divides 600 evenly (0 rows dropped) and maximizes optimizer steps
-        # (30/epoch). A larger batch would cut steps and recreate the undertraining.
+
+
         env["MILES_GLOBAL_BATCH_SIZE"] = "20"
         env["MILES_ROLLOUT_BATCH_SIZE"] = "20"
         if sft_num_epoch:
@@ -321,14 +321,14 @@ def _stage_env(
                 "GLM47_SYNC_METRICS_DIR": f"{RUNS_DIR}/{run_id}/sync_metrics",
                 "MILES_SEQ_LENGTH": "6144",
                 "MILES_ROLLOUT_MAX_RESPONSE_LEN": "4096",
-                # The pinned GLM generation config declares endoftext, user,
-                # and observation as terminal ids. Miles otherwise preserves
-                # the decoded stop marker and can glue it to Aider's final
-                # closing fence, hiding the last edited file from the scorer.
+
+
+
+
                 "MILES_ROLLOUT_STOP_TOKEN_IDS": "154820 154827 154829",
                 "MILES_ROLLOUT_SKIP_SPECIAL_TOKENS": "1",
-                # Match the frozen fixed-26 eval contract (temp 0.7); the failed
-                # 20260721 run rolled at 1.0 and 49% of samples died on format.
+
+
                 "MILES_ROLLOUT_TEMPERATURE": "0.7",
                 "MILES_EVAL_MAX_RESPONSE_LEN": "4096",
                 "MILES_MAX_TOKENS_PER_GPU": "12288",
@@ -339,8 +339,8 @@ def _stage_env(
                 "MILES_USE_KL_LOSS": "1",
                 "MILES_SAVE_INTERVAL": "1",
                 "MILES_EVAL_INTERVAL": "1",
-                # ~5 epochs over the 169-task difficulty-filtered set:
-                # 26 updates x 32 prompts = 832 slots = 4.92 passes.
+
+
                 "MILES_NUM_ROLLOUT": num_rollout or (
                     "1" if stage == "aider_profile" else "26"
                 ),
@@ -359,10 +359,10 @@ def _stage_env(
             }
         )
         if aider_data_dir:
-            # Pre-built (and difficulty-filtered) dataset staged on the assets
-            # volume; train_grpo.sh skips its in-container 253-task build when
-            # grpo/train.jsonl already exists. The staged manifest declares the
-            # filtered count, and the training gate verifies against it.
+
+
+
+
             env["MILES_CPP_DATA_DIR"] = aider_data_dir
             env["MILES_EVAL_PROMPT_DATA"] = f"{aider_data_dir}/eval/train_monitor.jsonl"
             env["MILES_EXPECTED_TRAIN_COUNT"] = "169"
@@ -441,7 +441,7 @@ def run_stage(
     lora_alpha: str = "",
     num_rollout: str = "",
 ) -> str:
-    """Run conversion, SFT, or GRPO on one Modal 8x H100 container."""
+
     if stage not in {
         "convert",
         "sft",

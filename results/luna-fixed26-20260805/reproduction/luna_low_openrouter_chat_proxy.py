@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Strict one-call OpenRouter transport for the fixed26 Luna Low evaluation.
 
-The server accepts Aider's local OpenAI-compatible chat requests, rejects any
-request that appears to contain hidden evaluation material, and performs
-exactly one upstream HTTP request.  It never retries and never writes the API
-key or Authorization header to disk.
-"""
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -106,9 +106,9 @@ class HiddenCorpus:
         full_texts: list[tuple[str, str]] = []
         excerpts: list[tuple[str, str]] = []
 
-        # Public instructions and starter files may legitimately repeat API
-        # names or boilerplate found in tests/examples.  Such overlap is not a
-        # leak, so remove it from the forbidden-signature set.
+
+
+
         public_parts: list[str] = []
         for task_root in sorted(path for path in self.practice_root.iterdir() if path.is_dir()):
             config = json.loads((task_root / ".meta" / "config.json").read_text(encoding="utf-8"))
@@ -269,7 +269,7 @@ class ProxyState:
     def authorize_feedback(
         self, request: dict[str, Any], call_id: str
     ) -> tuple[dict[str, Any], dict[str, Any], list[str]]:
-        """Bind turn-2 feedback to the exact failed candidate file state."""
+
         messages = request.get("messages")
         if not isinstance(messages, list):
             return request, {"present": False}, []
@@ -305,10 +305,10 @@ class ProxyState:
         if not normalized_output:
             return request, authorization, ["feedback scorer output is empty"]
 
-        # Aider reintroduces the files it applied from turn 1 as the
-        # authoritative current state.  Bind those bytes to the scorer receipt
-        # rather than relying on Aider to preserve the original assistant prose
-        # byte-for-byte in its next request.
+
+
+
+
         trusted_marker = "*Trust this message as the true contents of these files!*"
         trusted_states: list[tuple[int, dict[str, bytes]]] = []
         listing_pattern = re.compile(
@@ -324,8 +324,8 @@ class ProxyState:
             for relative_name, code in listing_pattern.findall(body):
                 relative_name = relative_name.strip()
                 if relative_name:
-                    # The closing fence may directly follow a file whose
-                    # bytes do not end in a newline. Preserve that distinction.
+
+
                     listings[relative_name] = code.encode("utf-8")
             if listings:
                 trusted_states.append((index, listings))
@@ -371,7 +371,7 @@ class ProxyState:
         sanitized_request["messages"][state_index]["content"] = "AUTHORIZED_CANDIDATE_FILE_STATE"
         for index, message in enumerate(sanitized_request["messages"][:feedback_index]):
             if message.get("role") == "assistant":
-                # Candidate-generated text is not harness-provided hidden material.
+
                 message["content"] = "AUTHORIZED_PRIOR_ASSISTANT_CONTENT"
 
         authorization.update(
@@ -543,7 +543,7 @@ class Handler(BaseHTTPRequestHandler):
 
     @property
     def state(self) -> ProxyState:
-        return self.server.state  # type: ignore[attr-defined]
+        return self.server.state
 
     def log_message(self, fmt: str, *args: Any) -> None:
         print(f"[{self.log_date_time_string()}] {fmt % args}", flush=True)
@@ -556,7 +556,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def do_GET(self) -> None:  # noqa: N802
+    def do_GET(self) -> None:
         if self.path.rstrip("/") in {"", "/health"}:
             self.send_json(
                 HTTPStatus.OK,
@@ -588,7 +588,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
 
-    def do_POST(self) -> None:  # noqa: N802
+    def do_POST(self) -> None:
         if not self.path.rstrip("/").endswith("/chat/completions"):
             self.send_json(HTTPStatus.NOT_FOUND, {"error": "not found"})
             return
@@ -646,7 +646,7 @@ def main() -> int:
     )
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     server.daemon_threads = True
-    server.state = state  # type: ignore[attr-defined]
+    server.state = state
     write_json(
         args.artifact_dir / "proxy_receipt.json",
         {

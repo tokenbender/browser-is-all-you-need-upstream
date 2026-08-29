@@ -1,8 +1,8 @@
-"""Run Miles checkpoint conversion with the GLM-4.7 bridge registered.
 
-The wrapper preserves the requested TP4/PP1/EP8 layout during distributed
-conversion so the output matches the training configuration.
-"""
+
+
+
+
 
 from __future__ import annotations
 
@@ -46,7 +46,7 @@ def main() -> None:
     source = _load_source(convert_py)
     sys.argv[0] = str(convert_py)
     globals_ns = {"__name__": "__main__", "__file__": str(convert_py), "__builtins__": __builtins__}
-    exec(compile(source, str(convert_py), "exec"), globals_ns)  # noqa: S102 - trusted in-image tool source
+    exec(compile(source, str(convert_py), "exec"), globals_ns)
 
 
 if __name__ == "__main__":

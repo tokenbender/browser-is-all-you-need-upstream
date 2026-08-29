@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hash-bound, network-denied macOS scorer for the pinned fixed26 tree."""
+
 
 from __future__ import annotations
 

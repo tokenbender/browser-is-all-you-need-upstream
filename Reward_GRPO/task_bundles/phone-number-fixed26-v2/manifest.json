@@ -1,0 +1,107 @@
+{
+  "api": {
+    "ast_flags": [],
+    "caller": "api_caller.cpp",
+    "candidate_header": "phone_number.h",
+    "clang": "clang++",
+    "contract": "public_api.json"
+  },
+  "build": {
+    "compiler": "g++",
+    "defines": [],
+    "flags": [
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror"
+    ],
+    "include_dirs": [
+      "."
+    ],
+    "libraries": [],
+    "link_args": [],
+    "sources": [
+      "phone_number.cpp"
+    ],
+    "standard": "c++17"
+  },
+  "contract_version": "fixed26-contract-v2-phone-number",
+  "editable_files": [
+    "phone_number.h",
+    "phone_number.cpp"
+  ],
+  "functional": {
+    "bridge_compile_flags": [],
+    "bridge_source_encoding": "plain",
+    "bridge_sources": [
+      "api_bridge.cpp"
+    ],
+    "compile_flags": [],
+    "defines": [],
+    "env": {},
+    "expected_total": 18,
+    "include_dirs": [
+      "."
+    ],
+    "libraries": [],
+    "link_args": [],
+    "mode": "external_oracle_v1",
+    "oracle_cases": "official_cases.json.gz",
+    "oracle_cases_encoding": "gzip",
+    "result_regex": "(?m)^GV2_PHONE_FIXED26_V2_RESULT passed=(?P<passed>[0-9]+) total=(?P<total>[0-9]+)$",
+    "result_stream": "stdout",
+    "run_args": [],
+    "test_source_encoding": "gzip",
+    "test_sources": [
+      "official_cases.json.gz"
+    ]
+  },
+  "limits": {
+    "cpus": 2,
+    "memory_mb": 1024,
+    "output_bytes": 200000,
+    "pids": 64,
+    "timeout_s": 30
+  },
+  "optional_policy_readiness": {
+    "G05": "diagnostic-ready-external-oracle-v1",
+    "G07": "diagnostic-ready-external-oracle-v1"
+  },
+  "portability": {
+    "compilers": [
+      "g++",
+      "clang++"
+    ]
+  },
+  "preflight_commands": [
+    [
+      "g++",
+      "--version"
+    ],
+    [
+      "clang++",
+      "--version"
+    ]
+  ],
+  "prompt": {
+    "kind": "aider-whole-file-v5dc9490bb",
+    "public_starter_files": [
+      "phone_number.h",
+      "phone_number.cpp"
+    ]
+  },
+  "protected_files": {
+    "api_bridge.cpp": "c839e0393e8b2b9e63757b48f2c12141f17a2d25b41e57280671332816298bd2",
+    "api_caller.cpp": "6b6a64a26ccb5e4de41f26c548332fb29c2a3252932c3079e0657cd4eafc11d4",
+    "instructions.md": "688f8b8082ed60ea107cbddd6f0418ab512df3ab8c13db5ab39436987a41df3b",
+    "official_cases.json.gz": "58430881357688284a6be929d071576288328a17176fa353f945106d7a7e66c0",
+    "protected_asset_hashes.json": "b06b5d4ba5d92531327f6ed3873d3061d9a021f9eae0597878078b1fe17a612e",
+    "public_api.json": "c9b93685c65b10805bc525bb5a4c4fd60e12ef44e01f33c0e6503dac704ff606",
+    "source_provenance.json": "b4540b9efd203f7a9d9164ff5287126d8d4f8d8c576ea231d8032a053c2ea0e7"
+  },
+  "runtime": {
+    "image": "glm47-strange-multi-env@sha256:dc1e058dc8697442386862ddab7f9ca7230151419c63a5e4652b7a0ddc76e204"
+  },
+  "schema_version": 2,
+  "task_id": "phone-number-fixed26-v2"
+}

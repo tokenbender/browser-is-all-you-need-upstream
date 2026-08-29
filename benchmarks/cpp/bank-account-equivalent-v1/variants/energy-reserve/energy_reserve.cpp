@@ -56,4 +56,4 @@ int reserve_meter::remaining_units() {
     return amount_;
 }
 
-}  // namespace energy_reserve
+}

@@ -169,6 +169,87 @@
         "a4"
       ]
     },
+    "Phone Number kernel12 GRPO20, iter 14": {
+      "bootstrap_95_percent_intervals": {
+        "conditional_turn_2_recovery_rate": [
+          0.1311475409836066,
+          0.4423076923076923
+        ],
+        "multi_turn_mean_score": [
+          11.0,
+          19.25
+        ],
+        "pass_at_1_mean_score": [
+          7.5,
+          15.0
+        ]
+      },
+      "conditional_turn_2_recovery": {
+        "per_trial": [
+          {
+            "rate": 0.26666666666666666,
+            "recoveries": 4,
+            "trial": "a1",
+            "turn_1_failures": 15
+          },
+          {
+            "rate": 0.21428571428571427,
+            "recoveries": 3,
+            "trial": "a2",
+            "turn_1_failures": 14
+          },
+          {
+            "rate": 0.26666666666666666,
+            "recoveries": 4,
+            "trial": "a3",
+            "turn_1_failures": 15
+          },
+          {
+            "rate": 0.3333333333333333,
+            "recoveries": 5,
+            "trial": "a4",
+            "turn_1_failures": 15
+          }
+        ],
+        "rate": 0.2711864406779661,
+        "recoveries": 16,
+        "turn_1_failures": 59
+      },
+      "multi_turn_with_feedback_turn_2": {
+        "mean": 15.25,
+        "range": [
+          15,
+          16
+        ],
+        "sample_standard_deviation": 0.5,
+        "scores": [
+          15,
+          15,
+          15,
+          16
+        ]
+      },
+      "pass_at_1": {
+        "mean": 11.25,
+        "range": [
+          11,
+          12
+        ],
+        "sample_standard_deviation": 0.5,
+        "scores": [
+          11,
+          12,
+          11,
+          11
+        ]
+      },
+      "trial_ids": [
+        "a1",
+        "a2",
+        "a3",
+        "a4"
+      ]
+    },
     "SFT v5, Aider-format": {
       "bootstrap_95_percent_intervals": {
         "conditional_turn_2_recovery_rate": [

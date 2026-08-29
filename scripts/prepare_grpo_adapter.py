@@ -1,17 +1,17 @@
-"""Create the GLM-4.7 adapter layout used by SGLang and Miles.
 
-The Miles trainer saves LoRA adapters that include the MTP head's tensors
-(GLM-4.7-Flash layer 47). The serving adapter contains decoder layers 0-46.
-Usage:
 
-    python scripts/prepare_grpo_adapter.py <trainer_adapter_dir> <serve_dir>
-    python scripts/prepare_grpo_adapter.py --include-native <trainer_adapter_dir> <hybrid_dir>
-    python scripts/prepare_grpo_adapter.py --include-native --include-training-state \
-        <same_stage_checkpoint_dir> <resume_dir>
 
-``--include-native`` adds Megatron adapter shards for an SFT-to-GRPO transfer.
-``--include-training-state`` additionally includes same-stage optimizer state.
-"""
+
+
+
+
+
+
+
+
+
+
+
 
 from __future__ import annotations
 
@@ -63,14 +63,14 @@ def copy_native_state(
     *,
     include_training_state: bool = False,
 ) -> tuple[list[Path], list[Path], str, str]:
-    """Copy native shards, normalizing to Miles's rank-named format when possible.
 
-    The synth-v1 era saved per-rank shards as ``tp{t}_pp0_ep{e}.pt`` where the
-    ep index is the global rank (verified: tp == ep % tp_count on every file).
-    Mainline Miles resolves ``adapter_megatron_rank{r}.pt``, so those shards are
-    renamed to rank-named files — a pure rename, no weight surgery. tp-only and
-    already-rank-named sources are copied verbatim.
-    """
+
+
+
+
+
+
+
 
     sources = sorted(src.glob("adapter_megatron_*.pt"))
     source_layout = classify_native_layout(sources)
@@ -113,15 +113,15 @@ _RANK_NAMED_SHARD_RE = re.compile(r"^adapter_megatron_rank(\d+)\.pt$")
 
 
 def classify_native_layout(paths: list[Path]) -> str:
-    """Identify shard naming; unknown names fail closed.
 
-    Three generations exist: legacy ``tp{t}_pp0.pt`` (invalid when EP > TP —
-    ranks sharing a tp load each other's experts), the synth-v1 era's per-rank
-    ``tp{t}_pp0_ep{e}.pt``, and mainline Miles's ``rank{r}.pt``. The r3 GRPO
-    run staged ep-sharded shards into a loader that knew neither of the newer
-    namings and silently trained from a fresh LoRA init; every shard set must
-    therefore match a known layout exactly.
-    """
+
+
+
+
+
+
+
+
 
     names = sorted(path.name for path in paths)
     tp_only = [_TP_ONLY_SHARD_RE.fullmatch(name) for name in names]

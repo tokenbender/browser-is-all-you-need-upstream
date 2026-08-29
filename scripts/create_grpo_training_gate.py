@@ -1,4 +1,4 @@
-"""Create a provenance gate for a completed Aider GRPO checkpoint set."""
+
 
 from __future__ import annotations
 
@@ -87,9 +87,9 @@ def create_gate(
     expected_train_count: int = 253,
     output: Path,
 ) -> dict[str, Any]:
-    # The warm-start hybrid adapter and the trained output need not shard the
-    # same way: r3 warmed from an EP8 adapter (8 native files) and saved TP4
-    # checkpoints (4 shards). One shared expectation failed a successful run.
+
+
+
     if expected_source_native_shards is None:
         expected_source_native_shards = expected_native_shards
     data_manifest = json.loads(data_manifest_path.read_text(encoding="utf-8"))

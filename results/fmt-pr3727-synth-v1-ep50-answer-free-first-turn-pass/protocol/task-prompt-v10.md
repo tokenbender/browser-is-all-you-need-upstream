@@ -85,10 +85,10 @@ Use C++11 SFINAE/`enable_if` overload selection. Do not use a runtime type-trait
 Use this exact insertion anchor:
 
 ```cpp
-}  // namespace safe_duration_cast
+}
 #endif
 
-// Prevents expansion of a preceding token as a function-style macro.
+
 ```
 
 ### 2. Generalize the existing system-clock `gmtime` overload

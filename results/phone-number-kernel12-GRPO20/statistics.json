@@ -1,0 +1,48 @@
+{
+  "conditional_turn_2_recovery": {
+    "bootstrap_95_percent_interval": [
+      0.1311475409836066,
+      0.4423076923076923
+    ],
+    "rate": 0.2711864406779661,
+    "recoveries": 16,
+    "turn_1_failures": 59
+  },
+  "multi_turn_with_feedback_turn_2": {
+    "bootstrap_95_percent_interval": [
+      11.0,
+      19.25
+    ],
+    "mean": 15.25,
+    "range": [
+      15,
+      16
+    ],
+    "sample_standard_deviation": 0.5,
+    "scores": [
+      15,
+      15,
+      15,
+      16
+    ]
+  },
+  "pass_at_1": {
+    "bootstrap_95_percent_interval": [
+      7.5,
+      15.0
+    ],
+    "mean": 11.25,
+    "range": [
+      11,
+      12
+    ],
+    "sample_standard_deviation": 0.5,
+    "scores": [
+      11,
+      12,
+      11,
+      11
+    ]
+  },
+  "schema_version": 1
+}

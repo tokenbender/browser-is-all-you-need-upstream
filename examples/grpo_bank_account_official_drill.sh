@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Exact official fixed26 bank-account drill environment; training knobs stay in grpo.sh.
+
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." &>/dev/null && pwd)"
 
-# The official curriculum is generated from pinned in-code assets; this existing
-# directory only satisfies the generic build-data CLI's source-root argument.
+
+
 export MILES_CPP_TASKS_DIR="${MILES_CPP_TASKS_DIR:-${REPO_ROOT}/benchmarks/cpp/bank-account-equivalent-v1}"
 export MILES_DATA_BUILD_MODULE="glm47_posttraining.integrations.miles_aider_polyglot"
 export MILES_DATA_CURRICULUM="bank-account-official-drill-v1"

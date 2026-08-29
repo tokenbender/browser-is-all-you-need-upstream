@@ -1,4 +1,4 @@
-"""Pinned fixed-26 Aider C++ evaluation for a base model or gated adapter."""
+
 
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ image = (
             "FLASHINFER_CUDA_INDEX": "129",
             "GLM47_EXPECTED_TRAINING_TASK_COUNT": str(EXPECTED_TRAINING_TASK_COUNT),
             "GLM47_EVAL_LORA_RANK": str(EVAL_LORA_RANK),
-            # Baked from the launching shell so the container agrees with the caller.
+
             "GLM47_EVAL_DISABLE_THINKING": "1" if DISABLE_THINKING else "0",
         }
     )
@@ -67,9 +67,9 @@ image = (
         f"git clone https://github.com/Aider-AI/polyglot-benchmark.git /aider/tmp.benchmarks/polyglot-benchmark && git -C /aider/tmp.benchmarks/polyglot-benchmark checkout {POLYGLOT_COMMIT}",
         "python3 -m venv /opt/aider-venv && /opt/aider-venv/bin/pip install -e '/aider[dev]'",
     )
-    # Fairness overlay: the polyglot instructions never state the interface the
-    # hidden test file requires, so every exercise is patched with an explicit
-    # contract before it is served. Hash-pinned; see the module docstring.
+
+
+
     .add_local_file(
         Path(__file__).with_name("aider_fixed26_contract_overlay.py"),
         "/opt/fixed26/aider_fixed26_contract_overlay.py",
@@ -87,19 +87,19 @@ training_assets = modal.Volume.from_name("glm47-assets", create_if_missing=False
 
 
 def _model_settings_yaml(lora_name: str | None = None) -> str:
-    """Aider model settings. Thinking is on by default, matching the frozen contract.
 
-    RL rollouts generate with thinking suppressed while this evaluation generates with
-    it enabled, so the trained and measured regimes differ. Setting
-    GLM47_EVAL_DISABLE_THINKING=1 measures the same checkpoint in the regime it was
-    actually trained in. Everything else stays identical so the two are comparable.
-    """
+
+
+
+
+
+
 
     extra_body_lines = []
     if lora_name is not None:
-        # SGLang only applies a loaded LoRA when the request selects it, either via
-        # "base:adapter" model syntax or an explicit top-level lora_path field.
-        # Without this line every request silently runs the base weights.
+
+
+
         extra_body_lines.append(f"      lora_path: {lora_name}")
     if DISABLE_THINKING:
         extra_body_lines.append("      chat_template_kwargs:\n        enable_thinking: false")
@@ -186,9 +186,9 @@ def verify_training_binding(
 
     merged_receipt_path = source / "merged_receipt.json"
     if merged_receipt_path.is_file():
-        # A merged adapter blends two independently gated fine-tunes, so it belongs
-        # to no single run's checkpoint catalog. Verify its own bytes, then verify
-        # every parent through this same gate check against that parent's own run.
+
+
+
         merged = json.loads(merged_receipt_path.read_text(encoding="utf-8"))
         if merged.get("kind") != "glm47-merged-adapter":
             raise RuntimeError("merged adapter receipt has an unknown kind")
@@ -265,9 +265,9 @@ def verify_training_binding(
     checkpoint = _catalog_entry(adapter_sha256, config_sha256)
     derived_receipt_path = source / "derived_receipt.json"
     if checkpoint is None and derived_receipt_path.is_file():
-        # A derived adapter (e.g. a scaled interpolation toward base) is accepted
-        # only when its receipt binds the exact bytes served to a parent that is
-        # itself in the gate's checkpoint catalog.
+
+
+
         derived = json.loads(derived_receipt_path.read_text(encoding="utf-8"))
         if derived.get("kind") != "glm47-derived-scaled-adapter":
             raise RuntimeError("derived adapter receipt has an unknown kind")
@@ -373,11 +373,11 @@ def derive_scaled_adapter(
     expected_training_phase: str = EXPECTED_TRAINING_PHASE,
     expected_training_task_count: int = EXPECTED_TRAINING_TASK_COUNT,
 ) -> dict[str, object]:
-    """Create base + scale*delta as a gated derived adapter under the parent's run.
 
-    Scaling every lora_B tensor by `scale` scales the low-rank weight delta exactly,
-    which is the linear interpolation between the base model and the fine-tune.
-    """
+
+
+
+
 
     import torch
 
@@ -447,13 +447,13 @@ def derive_merged_adapter(
     tag: str,
     expected_training_phase: str = EXPECTED_TRAINING_PHASE,
 ) -> dict[str, object]:
-    """Blend two gated rank-16 fine-tunes into their exact 50/50 linear merge.
 
-    A LoRA delta is B @ A, so averaging A and B separately is not the average of
-    the deltas. Concatenating along the rank axis is exact: with lora_alpha held
-    at 32 while r doubles to 32, PEFT's alpha/r scaling halves, and the served
-    delta becomes base + 0.5*delta_primary + 0.5*delta_secondary.
-    """
+
+
+
+
+
+
 
     import torch
 
@@ -498,10 +498,10 @@ def derive_merged_adapter(
         other = second[name]
         if tensor.shape != other.shape:
             raise RuntimeError(f"shape mismatch between parents for {name}")
-        # Shared MoE expert tensors carry a leading expert axis, so concatenate on
-        # the rank axis relative to the end: lora_A is (..., r, in), lora_B is
-        # (..., out, r). Concatenating on absolute axes would widen the expert
-        # dimension instead, which the shared-outer-LoRA serving path rejects.
+
+
+
+
         if "lora_A" in name:
             axis = tensor.dim() - 2
         elif "lora_B" in name:
@@ -629,7 +629,7 @@ def ensure_serving_adapter(
     expected_layer_47_tensors: int = EXPECTED_LAYER_47_TENSORS,
     expected_serving_tensors: int = EXPECTED_SERVING_TENSORS,
 ) -> dict[str, object]:
-    """Atomically create or verify the serving adapter for one training checkpoint."""
+
 
     import torch
 
@@ -889,12 +889,12 @@ def _lora_probe_completion(lora: bool, port: int = 8000) -> dict[str, object]:
 
 
 def _verify_lora_activation(port: int = 8000) -> dict[str, object]:
-    """Fail closed unless requests that select the adapter behave differently from base.
 
-    A loaded adapter that is never selected by requests is indistinguishable from a
-    healthy server; only a behavioral divergence under greedy decoding proves the
-    benchmark traffic will actually exercise the trained weights.
-    """
+
+
+
+
+
     with_lora = _lora_probe_completion(lora=True, port=port)
     without_lora = _lora_probe_completion(lora=False, port=port)
     diverged = (
@@ -963,12 +963,12 @@ def _benchmark(
 
 
 def _apply_contract_overlay(destination: Path) -> dict[str, object]:
-    """Patch the copied exercises with their stated interface contracts.
 
-    Applied to the shard copy, never to the pinned clone, so the upstream tree in
-    the image stays byte-identical to POLYGLOT_COMMIT. The overlay verifies the
-    sha256 of every original instructions.md and raises if upstream text drifted.
-    """
+
+
+
+
+
 
     sys.path.insert(0, "/opt/fixed26")
     import aider_fixed26_contract_overlay as overlay
@@ -995,9 +995,9 @@ def _create_cpp_shard(shard_index: int, run_id: str = "") -> tuple[Path, list[st
     if len(tasks) != 26:
         raise RuntimeError(f"fixed C++ benchmark task count mismatch: {len(tasks)} != 26")
     selected = tasks[shard_index * 13 : (shard_index + 1) * 13]
-    # Scoped by run_id: Modal reuses warm containers across sequential attempts,
-    # so a fixed path collides with the previous attempt's tree in the same
-    # container. The exist_ok=False below still guards against reuse within a run.
+
+
+
     suffix = f"-{run_id}" if run_id else ""
     shard_root = Path(f"/tmp/polyglot-benchmark-shard-{shard_index}{suffix}")
     if shard_root.exists():
@@ -1052,7 +1052,7 @@ def _validate_benchmark_results(
         ),
         "unique_testcases": len(set(testcases)),
         "testcases": sorted(testcases),
-        # Per-task outcomes, needed to take the union across independent samples.
+
         "passed_testcases_first": sorted(
             Path(payload["testcase"]).name
             for _, payload in rows
@@ -1152,9 +1152,9 @@ def evaluate_shard(
         "8000",
     ]
     if not base_model:
-        # A merged adapter has a wider rank than a single fine-tune, so read the
-        # rank the server must support from the adapter that will be served rather
-        # than from the image environment.
+
+
+
         served_rank = max(
             EVAL_LORA_RANK,
             int(
@@ -1388,11 +1388,11 @@ def merge_shards(run_id: str, shard_receipts: list[dict[str, object]]) -> dict[s
 
 @app.function(image=image, cpu=2.0, memory=4_096, timeout=1800)
 def verify_contract_overlay() -> dict[str, object]:
-    """CPU-only preflight: apply the overlay to both shards inside the real image.
 
-    Catches a drifted upstream clone or a missing overlay file before any GPU is
-    provisioned.
-    """
+
+
+
+
 
     out = []
     for shard_index in range(2):
@@ -1430,7 +1430,7 @@ def _extract_training_file_listings(
     content: str,
     expected_names: set[str],
 ) -> dict[str, str]:
-    """Extract exact whole-edit targets from a validated SFT assistant message."""
+
 
     lines = content.splitlines()
     files: dict[str, str] = {}
@@ -1466,7 +1466,7 @@ def _extract_training_file_listings(
 def revalidate_fixed26_direct_dataset_linux(
     receipt_name: str = "fixed26-direct-v1-linux-gcc13",
 ) -> dict[str, object]:
-    """Replay the 26 direct SFT targets under the Linux fixed-26 test harness."""
+
 
     import tempfile
 
@@ -1695,7 +1695,7 @@ def pass_at_k(
     tries: int = 1,
     first_index: int = 1,
 ) -> None:
-    """Run independent evaluations while the local Modal client stays connected."""
+
 
     _run_pass_at_k(
         adapter_path=adapter_path,
@@ -1763,7 +1763,7 @@ def run_pass_at_k_suite(
     two_turn_samples: int = 8,
     expected_training_task_count: int = EXPECTED_TRAINING_TASK_COUNT,
 ) -> dict[str, object]:
-    """Run both pass@k arms entirely server-side and persist a suite receipt."""
+
 
     resolved_suite_id = validate_run_id(suite_run_id)
     destination = Path("/results/runs") / resolved_suite_id
@@ -1842,7 +1842,7 @@ def launch_pass_at_k_suite(
     single_turn_first_index: int = 1,
     single_turn_samples_to_run: int = 8,
 ) -> None:
-    """Detach one durable server-side controller and print its function-call ID."""
+
 
     call = run_pass_at_k_suite.spawn(
         adapter_path=adapter_path,
@@ -1889,11 +1889,11 @@ PLAN_ENTRY_KEYS = {
     volumes={"/results": results},
 )
 def run_fixed26_eval_plan(plan: list[dict], index: int = 0) -> dict[str, object]:
-    """Run one plan entry's suite, then spawn the next entry as a fresh call.
 
-    Self-chaining keeps every call far below the function timeout and keeps the
-    whole multi-checkpoint sequence alive with no local client attached.
-    """
+
+
+
+
 
     for position, entry in enumerate(plan):
         missing = PLAN_ENTRY_KEYS - set(entry)
@@ -1930,7 +1930,7 @@ def run_fixed26_eval_plan(plan: list[dict], index: int = 0) -> dict[str, object]
 
 @app.local_entrypoint()
 def launch_fixed26_eval_plan(plan_json: str) -> None:
-    """Detach the self-chaining plan runner and print the first function-call ID."""
+
 
     plan = json.loads(Path(plan_json).read_text(encoding="utf-8"))
     if not isinstance(plan, list) or not plan:
@@ -1955,7 +1955,7 @@ def base_pass_at_k(
     tries: int = 1,
     first_index: int = 1,
 ) -> None:
-    """Run independent fixed-26 evaluations without loading an adapter."""
+
 
     if not 1 <= samples <= 16:
         raise ValueError("samples must be between 1 and 16")

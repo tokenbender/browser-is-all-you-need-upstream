@@ -1,4 +1,4 @@
-"""Miles bridge for shadow-task GRPO and official Aider Polyglot C++ evaluation."""
+
 
 from __future__ import annotations
 
@@ -49,7 +49,7 @@ _ACTIVE_REWARD_WORKERS_LOCK = threading.Lock()
 
 
 def run_response_contract_preflight() -> None:
-    """Prove that Miles-retained GLM stop tokens cannot hide the final file."""
+
 
     parsed = parse_whole_file_response(
         "preflight.cpp\n```cpp\nint answer() { return 42; }\n```<|user|>",
@@ -62,7 +62,7 @@ def run_response_contract_preflight() -> None:
 async def reward_func(
     args: Any, sample: Any, **_kwargs: Any
 ) -> dict[str, Any] | list[dict[str, Any]]:
-    """Miles custom reward hook for one sample or a batch."""
+
 
     if isinstance(sample, list):
         workers = max(1, min(len(sample), _reward_workers()))
@@ -78,19 +78,19 @@ async def reward_func(
 
 
 def neutralize_infrastructure_scores(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Zero the GRPO advantage of infrastructure-invalid samples in place.
 
-    Miles trains on ``record["score"]`` (``--reward-key score``) and exposes no
-    channel for a custom reward to drop a sample, so an infrastructure-invalid
-    sample's 0.0 would enter its prompt group's advantage baseline as if the
-    policy had earned it (issue #110 r3: 61/256 training samples were sandbox
-    EAGAIN deaths scored this way). Setting the invalid sample's score to the
-    mean score of its group's valid members makes its group-normalized
-    advantage exactly zero while preserving every valid sample's ordering; a
-    group with no valid members collapses to identical scores, which likewise
-    yields zero advantage. The audited ``reward`` field keeps the original
-    value and ``score_neutralized`` marks the substitution.
-    """
+
+
+
+
+
+
+
+
+
+
+
+
 
     groups: dict[Any, list[dict[str, Any]]] = defaultdict(list)
     for record in records:
@@ -167,7 +167,7 @@ def _score_sample(sample: Any, *, reward_worker_load: int = 1) -> dict[str, Any]
         return reward_record(
             sample, task, breakdown, reward_worker_load=reward_worker_load
         )
-    except Exception as exc:  # pragma: no cover - protects remote rollout workers
+    except Exception as exc:
         return _exception_record(
             sample,
             metadata,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run a fail-closed GPT-5.6 Luna Low fixed26 matrix."""
+
 
 from __future__ import annotations
 

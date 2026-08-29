@@ -1,4 +1,4 @@
-"""Docker sandbox command construction and execution for C++ candidates."""
+
 
 from __future__ import annotations
 
@@ -36,19 +36,19 @@ DOCKER_INFRASTRUCTURE_ERROR_MARKERS = (
 
 
 class SandboxInfrastructureError(RuntimeError):
-    """The sandbox runtime failed before candidate code could be evaluated."""
+    pass
 
 
 def sandbox_backend() -> str:
-    """Selected sandbox backend: ``docker`` (default) or ``local``.
 
-    ``local`` runs the same stage scripts directly in this process's container
-    with the working directory set to the scratch dir — for hosts without a
-    Docker daemon (local container runtime). ``timeout`` and ``taskset`` timing
-    semantics are identical; the Docker cgroup memory/pids caps and read-only
-    rootfs do not apply, so candidate and oracle still race in the same
-    environment but without container isolation.
-    """
+
+
+
+
+
+
+
+
 
     backend = os.environ.get(SANDBOX_BACKEND_ENV, "docker").strip().lower() or "docker"
     if backend not in ("docker", "local"):
@@ -57,13 +57,13 @@ def sandbox_backend() -> str:
 
 
 class _LocalCorePool:
-    """Leases one host-visible core per concurrent candidate.
 
-    Both backends share the host CPU namespace. Docker's ``--cpus 1`` is a
-    quota, not a private cpuset, so a fixed ``taskset -c N`` stampedes one core
-    there just as it does in local mode. Leasing a distinct core per candidate
-    keeps candidate and oracle on the same core for the whole measurement.
-    """
+
+
+
+
+
+
 
     def __init__(self) -> None:
         self._cv = threading.Condition()
@@ -94,7 +94,7 @@ _LOCAL_CORE_POOL = _LocalCorePool()
 
 @contextmanager
 def _sandbox_cpu(cpu: str) -> Any:
-    """Resolve the pin target for one candidate's full measurement."""
+
 
     with _LOCAL_CORE_POOL.lease(cpu) as core:
         yield core
@@ -107,11 +107,11 @@ def sandbox_command(
     image: str = DEFAULT_DOCKER_IMAGE,
     memory: str = DEFAULT_MEMORY,
 ) -> list[str]:
-    """Wrap one stage script for the selected backend.
 
-    Every harness stage is a bash script using paths relative to the scratch
-    dir; Docker mode mounts scratch at /work, local mode cd's into it.
-    """
+
+
+
+
 
     if sandbox_backend() == "local":
         wrapped = f"cd {shlex.quote(str(Path(scratch).resolve()))} && ulimit -c 0 && {script}"
@@ -121,7 +121,7 @@ def sandbox_command(
 
 @dataclass(frozen=True)
 class RuntimePreflightResult:
-    """Result of checking that the runtime harness works inside the sandbox."""
+
 
     ok: bool
     runtime_cpu_ns: int | None
@@ -150,13 +150,13 @@ def docker_base_args(
     memory: str = DEFAULT_MEMORY,
     pids_limit: int = DEFAULT_PIDS_LIMIT,
 ) -> list[str]:
-    """Return the locked-down Docker prefix used by compile, test, and timing steps.
 
-    ``pids_limit`` must be sized for the workload: every thread costs one pid,
-    so an oracle that spawns N threads needs headroom above N or pthread_create
-    fails with EAGAIN mid-run (issue #110 r3 forensics: 121/320 rollouts died
-    this way under the previous unconditional 128 cap).
-    """
+
+
+
+
+
+
 
     return [
         "docker",
@@ -188,7 +188,7 @@ def docker_base_args(
 
 
 def sandbox_image_dockerfile() -> str:
-    """Return the Dockerfile for the default C++ runtime sandbox image."""
+
 
     return f"""FROM {BASE_DOCKER_IMAGE}
 RUN apt-get update \\
@@ -198,13 +198,13 @@ RUN apt-get update \\
 
 
 def build_sandbox_image_command(*, image: str = DEFAULT_DOCKER_IMAGE) -> list[str]:
-    """Return the docker build command for the default sandbox image."""
+
 
     return ["docker", "build", "-t", image, "-"]
 
 
 def sandbox_image_build_plan(*, image: str = DEFAULT_DOCKER_IMAGE) -> str:
-    """Render the default sandbox-image build command and Dockerfile."""
+
 
     return "\n".join(
         [
@@ -217,7 +217,7 @@ def sandbox_image_build_plan(*, image: str = DEFAULT_DOCKER_IMAGE) -> str:
 
 
 def build_sandbox_image(*, image: str = DEFAULT_DOCKER_IMAGE) -> subprocess.CompletedProcess[str]:
-    """Build the default sandbox image from stdin."""
+
 
     return subprocess.run(
         build_sandbox_image_command(image=image),
@@ -234,10 +234,10 @@ def compile_command(task: CppTask, scratch: str | Path, *, image: str = DEFAULT_
 
 
 def reference_compile_command(task: CppTask, scratch: str | Path, *, image: str = DEFAULT_DOCKER_IMAGE) -> list[str]:
-    # Some accepted PIE references rely on INT32_MAX arriving transitively
-    # under their original compiler. Define only that legacy constant here:
-    # force-including a standard header before source-level _GLIBCXX_DEBUG
-    # changes libstdc++ ABI mode and breaks otherwise-valid references.
+
+
+
+
     script = (
         f"timeout {task.build.timeout_s}s g++ {task.reference.compiler_flags} "
         "-DINT32_MAX=__INT32_MAX__ reference.cpp -o reference"
@@ -342,7 +342,7 @@ def dry_run_plan(
     warmups: int = DEFAULT_RUNTIME_WARMUPS,
     repeats: int = DEFAULT_RUNTIME_REPEATS,
 ) -> str:
-    """Render the commands the harness would run."""
+
 
     tests = task.unit_tests + task.hidden_tests
     lines = [
@@ -387,7 +387,7 @@ def runtime_preflight_plan(
     warmups: int = DEFAULT_RUNTIME_WARMUPS,
     repeats: int = DEFAULT_RUNTIME_REPEATS,
 ) -> str:
-    """Render the command used to verify runtime measurement in the sandbox."""
+
 
     return "\n".join(
         [
@@ -404,7 +404,7 @@ def run_runtime_preflight(
     cpu: str = DEFAULT_CPU,
     work_dir: str | Path | None = None,
 ) -> RuntimePreflightResult:
-    """Check that CPU-time runtime measurement works in Docker."""
+
 
     with _sandbox_cpu(cpu) as pinned:
         if work_dir is None:
@@ -472,7 +472,7 @@ def run_in_sandbox(
     cpu: str = DEFAULT_CPU,
     work_dir: str | Path | None = None,
 ) -> HarnessResult:
-    """Compile, test, sanitize, and measure one candidate in Docker."""
+
 
     with _sandbox_cpu(cpu) as pinned:
         if work_dir is None:
@@ -570,7 +570,7 @@ def _run_in_directory(task: CppTask, candidate_code: str, scratch: Path, *, imag
 
 
 def parse_runtime_benchmark_output(text: str) -> dict[str, Any] | None:
-    """Parse the JSON line emitted by the runtime benchmark helper."""
+
 
     for line in reversed(text.splitlines()):
         line = line.strip()
@@ -586,7 +586,7 @@ def parse_runtime_benchmark_output(text: str) -> dict[str, Any] | None:
 
 
 def _tests_passed_after_runtime_failure(tests_passed: int, reason: str) -> int:
-    """Turn a timed correctness/reliability failure into one failed test."""
+
 
     if reason in {"wrong_output", "nonzero_exit"}:
         return max(0, tests_passed - 1)

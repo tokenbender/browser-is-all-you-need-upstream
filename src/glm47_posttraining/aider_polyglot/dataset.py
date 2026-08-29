@@ -1,4 +1,4 @@
-"""Build answer-free GRPO data from the checked-in Aider C++ shadow tasks."""
+
 
 from __future__ import annotations
 
@@ -26,9 +26,9 @@ def sha256_path(path: Path) -> str:
     return digest.hexdigest()
 
 
-# Everything below is rendered VERBATIM from aider 5dc9490bb35f9729ef2c95d00a19ccd30c26339c
-# (wholefile coder, fence ```, default ModelSettings, empty final_reminders) so GRPO rollouts
-# see byte-identical message content to the fixed-26 eval, which runs real aider.
+
+
+
 AIDER_SOURCE_COMMIT = "5dc9490bb35f9729ef2c95d00a19ccd30c26339c"
 
 _AIDER_MAIN_SYSTEM = """Act as an expert software developer.
@@ -111,7 +111,7 @@ Only use standard libraries, don't suggest installing any packages.
 
 
 def build_aider_messages(exercise_dir: Path, editable_files: list[str]) -> list[dict[str, str]]:
-    """Reproduce the exact benchmark message sequence aider sends at eval time."""
+
 
     instructions = (exercise_dir / ".docs" / "instructions.md").read_text(encoding="utf-8")
     files_content = _AIDER_FILES_CONTENT_PREFIX
@@ -415,7 +415,7 @@ def build_aider_polyglot_datasets(
     force: bool = False,
     imitation_targets: Mapping[str, str] | None = None,
 ) -> dict[str, Path]:
-    """Validate a manifest-bound task set, then materialize trainer-safe data."""
+
 
     source = Path(tasks_root).resolve()
     output = Path(output_dir).resolve()

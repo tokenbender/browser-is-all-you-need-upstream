@@ -1,4 +1,4 @@
-"""Persistent task and result models for Aider Polyglot C++ RL."""
+
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class AiderChatMessage(BaseModel):
-    """One turn of the exact chat aider sends to the model."""
+
 
     model_config = ConfigDict(extra="forbid")
 
@@ -19,7 +19,7 @@ class AiderChatMessage(BaseModel):
 
 
 class AiderPolyglotTask(BaseModel):
-    """One relocatable shadow-training or official-evaluation C++ task."""
+
 
     model_config = ConfigDict(extra="forbid")
 
@@ -86,7 +86,7 @@ class AiderPolyglotTask(BaseModel):
 
 
 class AiderTestResult(BaseModel):
-    """Outcome of applying a whole-file response and running the official tests."""
+
 
     status: Literal[
         "passed",
@@ -119,7 +119,7 @@ class AiderTestResult(BaseModel):
 
 
 class AiderShadowRubric(BaseModel):
-    """Checked-in, answer-free contract for one shadow training exercise."""
+
 
     model_config = ConfigDict(extra="forbid")
 

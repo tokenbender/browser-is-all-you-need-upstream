@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Four official fixed26 trials with one compiler-feedback repair turn."""
+
 
 from __future__ import annotations
 
@@ -450,7 +450,7 @@ def main() -> None:
                 text=True,
                 start_new_session=True,
             )
-            proc._issue110_log = log  # type: ignore[attr-defined]
+            proc._issue110_log = log
             servers.append(proc)
             print(f"SGLANG_SHARD_{shard}_STARTING port={port} cuda={cuda}", flush=True)
         for shard, (proc, port) in enumerate(zip(servers, PORTS)):

@@ -56,4 +56,4 @@ int fare_pass::funds() {
     return amount_;
 }
 
-}  // namespace transit_pass
+}

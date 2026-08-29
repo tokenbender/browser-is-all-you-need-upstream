@@ -85,10 +85,10 @@ Use C++11 SFINAE/`enable_if` overload selection. Do not use a runtime type-trait
 Use this exact insertion anchor:
 
 ```cpp
-}  // namespace safe_duration_cast
+}
 #endif
 
-// Prevents expansion of a preceding token as a function-style macro.
+
 ```
 
 ### 2. Generalize the existing system-clock `gmtime` overload
@@ -179,11 +179,11 @@ Emit exactly five small SEARCH/REPLACE edits: wrapper insertion, `gmtime` overlo
 The helper insertion has repeatedly failed because the SEARCH anchor omitted the existing `Usage` comment. Copy this complete old block exactly:
 
 ```cpp
-}  // namespace safe_duration_cast
+}
 #endif
 
-// Prevents expansion of a preceding token as a function-style macro.
-// Usage: f FMT_NOMACRO()
+
+
 #define FMT_NOMACRO
 ```
 
@@ -193,7 +193,7 @@ Each C++11 overload declaration must follow the existing source pattern:
 
 ```cpp
 template <typename To, typename From,
-          FMT_ENABLE_IF(/* category condition */)>
+          FMT_ENABLE_IF(  )>
 To your_wrapper_name(const From& from) {
 ```
 

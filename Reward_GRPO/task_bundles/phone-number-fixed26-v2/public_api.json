@@ -1,0 +1,83 @@
+{
+  "contract_version": "fixed26-contract-v2-phone-number",
+  "declarations": [
+    {
+      "ast_filter": "phone_number",
+      "kind": "CXXRecordDecl",
+      "name": "phone_number",
+      "namespace": "phone_number",
+      "overload_count": 1,
+      "tag": "class"
+    },
+    {
+      "access": "public",
+      "ast_filter": "phone_number",
+      "const": false,
+      "default_argument_count": 0,
+      "explicit": false,
+      "kind": "CXXConstructorDecl",
+      "name": "phone_number",
+      "namespace": "phone_number::phone_number",
+      "noexcept": false,
+      "overload_count": 1,
+      "parameter_count": 1,
+      "parameter_types": [
+        "const std::string &"
+      ],
+      "ref_qualifier": "",
+      "static": false,
+      "type": "void (const std::string &)"
+    },
+    {
+      "access": "public",
+      "ast_filter": "phone_number",
+      "const": true,
+      "default_argument_count": 0,
+      "explicit": false,
+      "kind": "CXXMethodDecl",
+      "name": "area_code",
+      "namespace": "phone_number::phone_number",
+      "noexcept": false,
+      "overload_count": 1,
+      "parameter_count": 0,
+      "parameter_types": [],
+      "ref_qualifier": "",
+      "static": false,
+      "type": "std::string () const"
+    },
+    {
+      "access": "public",
+      "ast_filter": "phone_number",
+      "const": true,
+      "default_argument_count": 0,
+      "explicit": false,
+      "kind": "CXXMethodDecl",
+      "name": "number",
+      "namespace": "phone_number::phone_number",
+      "noexcept": false,
+      "overload_count": 1,
+      "parameter_count": 0,
+      "parameter_types": [],
+      "ref_qualifier": "",
+      "static": false,
+      "type": "std::string () const"
+    },
+    {
+      "access": "public",
+      "ast_filter": "phone_number",
+      "const": true,
+      "default_argument_count": 0,
+      "explicit": true,
+      "kind": "CXXConversionDecl",
+      "name": "operator basic_string",
+      "namespace": "phone_number::phone_number",
+      "noexcept": false,
+      "overload_count": 1,
+      "parameter_count": 0,
+      "parameter_types": [],
+      "ref_qualifier": "",
+      "static": false,
+      "type": "std::string () const"
+    }
+  ]
+}

@@ -19,4 +19,4 @@ private:
     std::mutex mutex_{};
 };
 
-}  // namespace library_credit
+}

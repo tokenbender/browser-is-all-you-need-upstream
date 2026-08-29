@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail fast when the Miles/SGLang FlashInfer packages are incompatible."""
+
 
 from __future__ import annotations
 

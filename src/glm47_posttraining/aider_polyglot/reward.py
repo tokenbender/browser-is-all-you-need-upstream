@@ -1,4 +1,4 @@
-"""Pass@1-aligned reward for Aider-style shadow tasks and official evaluation."""
+
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ def compute_aider_reward(
     runner: Runner | None = None,
     strict_binary: bool = False,
 ) -> AiderRewardBreakdown:
-    """Score correctness first and use formatting only as a small tie-breaker."""
+
 
     try:
         parsed = parse_whole_file_response(model_output, task.editable_files)

@@ -1,0 +1,144 @@
+{
+  "checkpoints": [
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "633e9a9e5889e520e64a25497e1634c9f3a755ea8022dffb79e5e98c60c90338",
+      "adapter_path": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000004/adapter",
+      "iteration": 4,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "c33dcdcc4ffb437cfdf2b3c01541d38cf6758fe3714160cd580a3e742119e782",
+        "adapter_megatron_tp1_pp0.pt": "ea8bf1b63f92385d568370f8468866ed5e20be3fc79dbd7bca77b593561d2196",
+        "adapter_megatron_tp2_pp0.pt": "cdfc915e860bddd7b9a3adfda026eb746926a32ec28c5646dbcb6b1ca4e1aa1a",
+        "adapter_megatron_tp3_pp0.pt": "4efbc01251bf787db9aed2b9d24db95e5e00f028099a451ea2259f01b3cac135"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    },
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "53c68961fcb348f0f7da36c2361081df8711d1ee34731fa0d2b2f7e6327f19c9",
+      "adapter_path": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000009/adapter",
+      "iteration": 9,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "9556778325bddd401471d4cba81fdb97634c3db052356ca2d65d2c916d1be8ae",
+        "adapter_megatron_tp1_pp0.pt": "c822f184e60f3452b7a12c5ae7e6ab854dc53fd4052fd7c7a2cbd4c26d2e9723",
+        "adapter_megatron_tp2_pp0.pt": "3697a3111853b1c7e20b9ecdcc5634a04fc4e6185a5ae9349119ff81c6a4453b",
+        "adapter_megatron_tp3_pp0.pt": "ef4275c9865f4d168da603117041a3ec6bb627efa5e774a17f75afe88af6c9df"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    },
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "62fa190ad26e30fc1b5dd9543936ef549a49dd8cfa8220e4af726a1d499e575a",
+      "adapter_path": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000014/adapter",
+      "iteration": 14,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "25b58f2b2556cc803b8fffd2dc96a95dea51f2f14a0e4acd04e529e5325a3a59",
+        "adapter_megatron_tp1_pp0.pt": "066d0852df9d262520d8428673d478ce447a3607f5e0af65a8d6674ff30411a3",
+        "adapter_megatron_tp2_pp0.pt": "7bfb092d05e97c6287df581fab4a2b71446bd4bbc4ae07793d586328617208ed",
+        "adapter_megatron_tp3_pp0.pt": "95d46d817a3d2db1b696705b74a901b3505aa12dcf66aaa1a3c15b2611260103"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    },
+    {
+      "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+      "adapter_model_sha256": "394b1b732c4983c87085516ec4e1da58bba9661869a4329fa5093bb27f9e7bd6",
+      "adapter_path": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+      "iteration": 19,
+      "layer_47_tensor_count": 207,
+      "native_shards": {
+        "adapter_megatron_tp0_pp0.pt": "4a13e6fed22992a5c4d5f247df2f858257e5d998106986ce5ca626906a7f23d3",
+        "adapter_megatron_tp1_pp0.pt": "0ffa1cb09ac1e4dd9bc763e80bae86709e63c9039238a7cc3b4215d198649d43",
+        "adapter_megatron_tp2_pp0.pt": "d5f18c832a69d4d74b7a7541b6770ffaeae81504581a7efeba441f6013fbd641",
+        "adapter_megatron_tp3_pp0.pt": "ad39f497108d396eff25e637a81cb085de38ff6725c9826689931926b3a0e2db"
+      },
+      "tensor_count": 9741,
+      "training_state_files": [
+        "training_state_rank0.pt",
+        "training_state_rank1.pt",
+        "training_state_rank2.pt",
+        "training_state_rank3.pt",
+        "training_state_rank4.pt",
+        "training_state_rank5.pt",
+        "training_state_rank6.pt",
+        "training_state_rank7.pt"
+      ]
+    }
+  ],
+  "data_manifest_path": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653/data/manifest.json",
+  "data_manifest_sha256": "2c0e004d56f650a30c71068e433273dc94849d92dce43bcdd39f6f6cb240d50c",
+  "data_source_tree_sha256": "4b9e277c616ff6984ced34c985aaae5b5b3d66365736de809f53890d081c80b3",
+  "expected_native_shards": 4,
+  "expected_source_native_shards": 4,
+  "gpus_per_node": 8,
+  "hybrid_manifest_path": "/workspace/local-checkpoints/dnd-character-grpo20-iter19-hybrid/mtp_strip_manifest.json",
+  "hybrid_manifest_sha256": "eadfaf1aeaa374d7c7f2c10bbed4e865793cfb7c68bedfbd490f8cbbaf8722f1",
+  "kind": "glm47-aider-grpo-training-gate",
+  "latest_checkpoint": {
+    "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "adapter_model_sha256": "394b1b732c4983c87085516ec4e1da58bba9661869a4329fa5093bb27f9e7bd6",
+    "adapter_path": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+    "iteration": 19,
+    "layer_47_tensor_count": 207,
+    "native_shards": {
+      "adapter_megatron_tp0_pp0.pt": "4a13e6fed22992a5c4d5f247df2f858257e5d998106986ce5ca626906a7f23d3",
+      "adapter_megatron_tp1_pp0.pt": "0ffa1cb09ac1e4dd9bc763e80bae86709e63c9039238a7cc3b4215d198649d43",
+      "adapter_megatron_tp2_pp0.pt": "d5f18c832a69d4d74b7a7541b6770ffaeae81504581a7efeba441f6013fbd641",
+      "adapter_megatron_tp3_pp0.pt": "ad39f497108d396eff25e637a81cb085de38ff6725c9826689931926b3a0e2db"
+    },
+    "tensor_count": 9741,
+    "training_state_files": [
+      "training_state_rank0.pt",
+      "training_state_rank1.pt",
+      "training_state_rank2.pt",
+      "training_state_rank3.pt",
+      "training_state_rank4.pt",
+      "training_state_rank5.pt",
+      "training_state_rank6.pt",
+      "training_state_rank7.pt"
+    ]
+  },
+  "num_rollout": 20,
+  "official_26_role": "explicitly authorized training target",
+  "phase": "full",
+  "run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "run_root": "/workspace/local-runs/phone-number-kernel12-grpo20-spot-20260822-102653",
+  "schema_version": 1,
+  "source_adapter_path": "/workspace/local-checkpoints/dnd-character-grpo20-iter19-source",
+  "source_adapter_sha256": "c9afe1ede8223e154c6efd1f3023ffb74b4a62c1705cae92efd1ebbf0a63d766",
+  "source_commit": "0521ea26b7f0329cbf3dc5d244a85efe57152098",
+  "status": "passed",
+  "training_task_count": 8
+}
