@@ -1,9 +1,0 @@
-1. eval empty-ANSWER events (n=126):
-   cap       -> LOOP      29
-   cap       -> TRUNCATED 14
-   uncapped  -> EMPTY     83
-   verdict OK (must be 0): 0 []
-2. phone train rows (n=5120, truncated=63):
-   truncated-row verdicts: {'TRUNCATED': 61, 'LOOP': 2}  (OK among them: 0)
-   format-valid completed-row verdicts: {'OK': 4946}
-3. aider-confirmed good replies: 324, non-OK (must be 0): 0

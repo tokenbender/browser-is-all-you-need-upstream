@@ -1,9 +1,0 @@
-{
-  "expect": "TRUNCATED",
-  "source": "empty_full.pkl[61] trial=trial-02 shard=1 task=zebra-puzzle tok_limit=True think_chars=85501",
-  "note": "trial-02 zebra-puzzle cap-hit: no tail loop, generation cut mid-statement ('result[1 + HouseCount] = assignment[')",
-  "answer_file": "_empty_answer.txt",
-  "gen_tokens": 32768,
-  "max_tokens": 32768,
-  "fixture": "trunc-zebra-puzzle-mid-line-cap.txt"
-}

@@ -1,43 +1,27 @@
 #!/usr/bin/env bash
-# run_sandboxed.sh -- execute the full check-layer validation suite INSIDE
-# the pinned sandbox image, with controls mirroring the sandbox launcher:
-#
-#   --network none            no network
-#   --read-only               read-only root filesystem
-#   --tmpfs /tmp              scratch build space (explicit `exec` flag:
-#                             dockerd mounts tmpfs noexec by default, and
-#                             verifier 04 runs freshly built test binaries
-#                             from TMPDIR)
-#   --cap-drop ALL            no Linux capabilities
-#   --security-opt no-new-privileges
-#   --user 65534:65534        non-root (nobody/nogroup)
-#   repo mounted read-only at /workspace; only /out is writable
-#
-# Produces generalized_verifier_docs/validation/sandbox_run_receipt.json
-# (image id, controls, per-verifier verdicts, sha256 of inputs/outputs) --
-# the end-to-end sandbox receipt. Artifacts stay in
-# generalized_verifier_docs/validation/sandbox_out/.
-set -u
-cd "$(dirname "$0")/../.."   # repo root
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
 REPO=$(pwd)
 VAL=generalized_verifier_docs/validation
-IMAGE=glm47-strange-multi-env:gcc13.3-v2
-OUT=$REPO/$VAL/sandbox_out
-
-IMAGE_ID=$(docker image inspect "$IMAGE" --format '{{.Id}}' 2>/dev/null) || {
-    echo "error: cannot inspect image $IMAGE (docker unavailable?)" >&2
+IMAGE=${GENERALIZED_VERIFIER_IMAGE:-glm47-strange-multi-env:gcc13.3-v2}
+if [[ -n "${GENERALIZED_VERIFIER_OUTPUT_DIR:-}" ]]; then
+    OUT=$GENERALIZED_VERIFIER_OUTPUT_DIR
+    mkdir -p "$OUT"
+else
+    OUT=$(mktemp -d "${TMPDIR:-/tmp}/generalized-verifier-sandbox.XXXXXX")
+fi
+if [[ -n "$(find "$OUT" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
+    echo "error: output directory must be empty: $OUT" >&2
     exit 2
-}
+fi
+
+IMAGE_ID=$(docker image inspect "$IMAGE" --format '{{.Id}}')
 echo "[sandbox] image: $IMAGE"
-echo "[sandbox] image id: $IMAGE_ID"
+echo "[sandbox] resolved immutable id: $IMAGE_ID"
 
-mkdir -p "$OUT"
-chmod 777 "$OUT"   # container runs as nobody; /out must be writable
-# Clear stale artifacts from a previous run (files are owned by the
-# container's nobody uid, so the cleanup must happen container-side).
-docker run --rm -v "$OUT:/out" "$IMAGE" sh -c 'rm -rf /out/receipts /out/sandbox_run_receipt.json /out/self_check_results.json /out/SELF_CHECK.sandbox.md'
-
-CONTROLS='{"network":"none","read_only_root":true,"tmpfs_tmp":"rw,nosuid,nodev,exec,size=512m (exec required: verifier 04 runs freshly built test binaries from TMPDIR; dockerd mounts tmpfs noexec unless exec is explicit)","cap_drop":"ALL","no_new_privileges":true,"user":"65534:65534 (nobody)","repo_mount":"/workspace:ro","writable_mount":"/out:rw","python_dont_write_bytecode":true}'
+chmod 0777 "$OUT"
+CONTROLS='{"network":"none","read_only_root":true,"tmpfs_tmp":"rw,nosuid,nodev,exec,size=512m","cap_drop":"ALL","no_new_privileges":true,"user":"65534:65534","repo_mount":"/workspace:ro","writable_mount":"/out:rw","python_dont_write_bytecode":true}'
 
 docker run --rm \
     --network none \
@@ -54,21 +38,13 @@ docker run --rm \
     -v "$REPO:/workspace:ro" \
     -v "$OUT:/out:rw" \
     -w /workspace \
-    "$IMAGE" \
-    python3 generalized_verifier_docs/validation/self_check.py \
+    "$IMAGE_ID" \
+    python3 "$VAL/self_check.py" \
         --receipt-dir /out/receipts \
         --gen-dir /tmp/self_check_generated \
-        --report /out/SELF_CHECK.sandbox.md \
+        --report /out/SELF_CHECK.md \
         --json-out /out/self_check_results.json \
         --sandbox-receipt /out/sandbox_run_receipt.json
-rc=$?
-echo "[sandbox] container exit: $rc"
 
-if [ -f "$OUT/sandbox_run_receipt.json" ]; then
-    cp "$OUT/sandbox_run_receipt.json" "$VAL/sandbox_run_receipt.json"
-    echo "[sandbox] receipt: $VAL/sandbox_run_receipt.json"
-else
-    echo "[sandbox] WARNING: no sandbox receipt produced" >&2
-    rc=1
-fi
-exit $rc
+echo "[sandbox] artifacts: $OUT"
+echo "[sandbox] receipt: $OUT/sandbox_run_receipt.json"

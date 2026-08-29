@@ -7,10 +7,9 @@ and classifies the dynamic safety outcome: CLEAN / SANITIZER_HIT (with UB
 kind and first candidate-frame location) / CRASH_NO_REPORT / BUILD_FAIL /
 TIMEOUT.
 
-Diagnostic, not additive: every kernel this wrapper emits carries
-``kernel: 0``, excluded from the receipt's numeric ``kernel_sum`` (and
-``maximum_kernel_sum``), so a G07 finding never changes the semantic score.
-The wrapper still reports ``status: fail`` and exits 1 on a safety finding.
+Diagnostic aggregation is separate from the semantic policy aggregate. The
+wrapper still emits a normal pass/fail kernel so its receipt obeys the runner
+contract; G07 never changes ``semantic_status`` or its kernel sum.
 
 Runner contract: reads --candidate-dir/--manifest/--expected-manifest-sha256,
 writes <output-dir>/verification_receipt.json, exits 0 no safety finding /
@@ -32,14 +31,13 @@ ENGINE = "08_safety_sanitizer_verifier.py"
 SAFETY_FINDING_VERDICTS = {"SANITIZER_HIT", "CRASH_NO_REPORT"}
 
 DIAGNOSTIC_NOTE = (
-    "diagnostic policy: kernel value 0, excluded from the semantic kernel "
-    "sum; functional failures are owned by G03, build failures by G02")
+    "diagnostic policy: excluded from semantic aggregation; functional "
+    "failures are owned by G03, build failures by G02")
 
 
 def diagnostic_kernel(kernel_id, status, summary, **kwargs):
-    """A kernel that reports a verdict but never enters the kernel sum."""
+    """A normal kernel that the runner places in diagnostic aggregation."""
     kern = common.kernel(kernel_id, status, summary, **kwargs)
-    kern["kernel"] = 0  # diagnostic: not additive (see module docstring)
     kern["facts"]["policy_role"] = "diagnostic"
     return kern
 

@@ -43,6 +43,8 @@ def validate_manifest(manifest: Any) -> None:
             "candidate_files must be a non-empty list of relative paths")
     for item in candidate_files:
         _check_relative_path(item, "candidate_files entry")
+    if len(set(candidate_files)) != len(candidate_files):
+        raise ManifestValidationError("candidate_files contains duplicates")
 
     protected = manifest.get("protected_files", {})
     if not isinstance(protected, dict):
@@ -56,7 +58,11 @@ def validate_manifest(manifest: Any) -> None:
     policies = manifest.get("policies")
     if not isinstance(policies, dict):
         raise ManifestValidationError("policies must be an object keyed by "
-                                      "policy id (G01..G06)")
+                                      "policy id (G01..G07)")
+    unknown = sorted(set(policies) - {f"G{i:02d}" for i in range(1, 8)})
+    if unknown:
+        raise ManifestValidationError(
+            "policies contains unsupported ids: " + ", ".join(unknown))
 
     fixture_dir = manifest.get("fixture_dir")
     if fixture_dir is not None and not isinstance(fixture_dir, str):

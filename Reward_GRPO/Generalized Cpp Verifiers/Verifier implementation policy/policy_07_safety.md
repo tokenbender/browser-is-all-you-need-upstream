@@ -20,7 +20,7 @@ Classify the *dynamic safety* of a candidate that the strict build already accep
 | G06 | hygiene | stage-1 diagnostics |
 | **G07** | **safety DIAGNOSIS** | classifies WHY (UB kind); **adds no second negative** |
 
-A candidate that crashes or fails functionally already earns its −1 from G03; G07 only classifies the cause. A candidate that *passes functionally yet exhibits UB* is flagged **only** by G07 — that signal is unique to this policy. Mechanically: every G07 kernel carries `kernel: 0`, so it never enters the receipt's numeric `kernel_sum` / `maximum_kernel_sum`; the receipt also carries `policy_role: "diagnostic"`. The wrapper still reports `status: fail` and exits 1 on a safety finding so the signal is visible; the exit code is 0 for CLEAN and for functional/build/timeout outcomes without safety findings (owned by G03/G02/G04 respectively), and 2 only for invalid input.
+A candidate that crashes or fails functionally already earns its −1 from G03; G07 only classifies the cause. A candidate that *passes functionally yet exhibits UB* is flagged **only** by G07 — that signal is unique to this policy. Mechanically, G07 emits a normal pass/fail kernel inside its own diagnostic receipt and carries `policy_role: "diagnostic"`. The aggregate runner keeps G07 out of `semantic_status`, so it cannot double-count G03; it is reported under `diagnostic_status`. The wrapper exits 1 on a safety finding, 0 for CLEAN and for outcomes owned elsewhere, and 2 only for invalid input.
 
 ## Shared method
 
@@ -32,7 +32,7 @@ Before any build, candidate files are scanned (comments stripped, literals blank
 
 ## Aggregation
 
-One kernel, diagnostic (`kernel: 0`). Engine exit-code ownership: nonzero only for safety findings (1) or invalid (2).
+One normal pass/fail kernel in the diagnostic aggregate. Engine exit-code ownership: nonzero only for safety findings (1) or invalid (2).
 
 ## Execution
 
@@ -40,4 +40,4 @@ One kernel, diagnostic (`kernel: 0`). Engine exit-code ownership: nonzero only f
 
 ## Evidence
 
-`generalized_verifier_docs/validation/VALIDATION_08.md` (3 recorded crashes classified with kind + location; 5 reference implementations CLEAN; suppression-attempt INVALID; recorded wrong-logic candidate CLEAN with the functional failure attributed to G03).
+`tests/test_generalized_cpp_verifiers.py` runs G07 with the other six policies and verifies a CLEAN diagnostic receipt under the full profile.

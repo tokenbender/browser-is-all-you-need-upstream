@@ -31,8 +31,7 @@ import re
 import sys
 
 # ---------------------------------------------------------------------------
-# Tunables (task-independent; calibrated against the recorded corpus, see
-# validation/VALIDATION_05.md)
+# Tunables are task-independent and exercised by the hermetic control matrix.
 # ---------------------------------------------------------------------------
 
 TAIL_WINDOW = 16000      # loop scan covers the last N chars of the stream
@@ -183,8 +182,7 @@ def parse_deliverable(text):
     Unclosed-fence rule: the fence toggle state at end-of-text is open AND
     the last non-blank line is not itself a bare closing fence. The second
     clause matters because models quote prompt material containing fences,
-    so raw fence parity alone drifts odd on some clean generations (see
-    validation/VALIDATION_05.md).
+    so raw fence parity alone can drift odd on otherwise clean generations.
     """
     fences = 0
     complete = 0

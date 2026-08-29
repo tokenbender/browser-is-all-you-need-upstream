@@ -2,18 +2,29 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "generalized C++ verifier manifest",
   "type": "object",
-  "required": ["task_id", "candidate_files", "policies"],
+  "required": [
+    "task_id",
+    "candidate_files",
+    "policies"
+  ],
   "properties": {
-    "schema_version": {"type": "integer", "const": 1},
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
     "task_id": {
       "type": "string",
       "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"
     },
-    "source": {"type": "string"},
+    "source": {
+      "type": "string"
+    },
     "candidate_files": {
       "type": "array",
       "minItems": 1,
-      "items": {"type": "string"},
+      "items": {
+        "type": "string"
+      },
       "description": "Candidate file paths relative to the candidate directory; exactly one header plus optional sources."
     },
     "protected_files": {
@@ -31,7 +42,9 @@
       "type": "object",
       "description": "Policy map keyed by policy id; presence of each requested policy key (G02..) is required by the runner. Entries are advisory command records.",
       "patternProperties": {
-        "^G0[1-6]$": {"type": "array"}
+        "^G0[1-7]$": {
+          "type": "array"
+        }
       },
       "additionalProperties": false
     },
@@ -46,18 +59,32 @@
     "trajectory": {
       "type": "object",
       "properties": {
-        "turn_limit": {"type": "integer"},
+        "turn_limit": {
+          "type": "integer"
+        },
         "turns": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "turn": {"type": "integer"},
-              "response_file": {"type": "string"},
-              "response_text": {"type": "string"},
-              "response_receipt": {"type": "object"},
-              "generated_feedback": {"type": "string"},
-              "delivered_feedback": {"type": "string"}
+              "turn": {
+                "type": "integer"
+              },
+              "response_file": {
+                "type": "string"
+              },
+              "response_text": {
+                "type": "string"
+              },
+              "response_receipt": {
+                "type": "object"
+              },
+              "generated_feedback": {
+                "type": "string"
+              },
+              "delivered_feedback": {
+                "type": "string"
+              }
             },
             "additionalProperties": true
           }

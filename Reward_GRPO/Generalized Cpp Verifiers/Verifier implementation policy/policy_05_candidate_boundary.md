@@ -22,4 +22,4 @@ Single-kernel policy with an issue list in facts. Boundary violations are model 
 
 ## Evidence
 
-`generalized_verifier_docs/validation/VALIDATION_06.md` (13/13 agreement with recorded production verdicts across 4 task families; reconstruction reproduces the recorded downstream link error byte-identically).
+The committed compact controls cover an exact editable set, a forbidden file, and a cross-boundary tamper case.

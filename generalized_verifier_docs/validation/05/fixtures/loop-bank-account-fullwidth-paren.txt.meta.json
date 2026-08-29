@@ -1,9 +1,0 @@
-{
-  "expect": "LOOP",
-  "source": "empty_full.pkl[16] trial=trial-01 shard=0 task=bank-account tok_limit=True think_chars=43484",
-  "note": "trial-01 bank-account cap-hit: fullwidth-paren run loop",
-  "answer_file": "_empty_answer.txt",
-  "gen_tokens": 32768,
-  "max_tokens": 32768,
-  "fixture": "loop-bank-account-fullwidth-paren.txt"
-}

@@ -1,8 +1,0 @@
-{
-  "expect": "TRUNCATED",
-  "source": "/tmp/phone_iter14_gcs_audit/extracted/train_records.jsonl task_id=aider-shadow-cpp/phone-number--country-code-repair iteration=13 response_length=8192",
-  "note": "truncated train row, odd fence count (unclosed code fence) at the 8192 cap",
-  "gen_tokens": 8192,
-  "max_tokens": 8192,
-  "fixture": "trunc-trainrow-unclosed-fence-8192.txt"
-}

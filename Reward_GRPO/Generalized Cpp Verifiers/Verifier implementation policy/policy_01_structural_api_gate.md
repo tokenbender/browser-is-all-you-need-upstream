@@ -22,4 +22,4 @@ Single-kernel policy. A symbol defect is a model failure (`-1`); unusable inputs
 
 ## Evidence
 
-`generalized_verifier_docs/validation/VALIDATION.md` (catches recorded failures on 5 tasks; zero false positives on 6 reference solutions).
+The committed self-check matrix covers a passing reference plus missing-namespace fault and tamper controls; `tests/test_generalized_cpp_verifiers.py` executes it from a clean checkout.

@@ -1,96 +1,225 @@
 {
-  "comment": "Three-control self-validation matrix for the six check-layer verifiers. All concrete inputs live here as DATA; self_check.py contains zero task names and only orchestrates the verifier CLIs. Placeholders: {REPO}=repo root, {GV}=generalized_verifier_docs, {VAL}=generalized_verifier_docs/validation, {FIX}=Reward_GRPO/multi_env_fixtures, {GEN}=runtime-generated tamper inputs dir.",
+  "comment": "Three-control self-validation matrix for six core engines. Every input is committed under validation/fixtures, so a clean checkout is sufficient. Placeholders: {REPO}=repo root, {GV}=generalized_verifier_docs, {VAL}=generalized_verifier_docs/validation, {FIXTURES}=validation/fixtures, {GEN}=runtime-generated tamper inputs dir.",
   "cases": [
     {
       "id": "01-positive",
       "verifier": "01_structural_api_gate.py",
       "control": "positive",
-      "description": "Known-good reference implementation (.meta/example.*) against its official test file.",
-      "argv": ["--test", "{FIX}/zebra-puzzle/zebra_puzzle_test.cpp", "--header", "{FIX}/zebra-puzzle/.meta/example.h", "--source", "{FIX}/zebra-puzzle/.meta/example.cpp"],
-      "expect": {"exit": 0, "stdout_contains": ["VERDICT: PASS"]}
+      "description": "Known-good reference implementation against the committed arithmetic test fixture.",
+      "argv": [
+        "--test",
+        "{FIXTURES}/arithmetic/arithmetic_test.cpp",
+        "--header",
+        "{FIXTURES}/arithmetic/.meta/example.h",
+        "--source",
+        "{FIXTURES}/arithmetic/.meta/example.cpp"
+      ],
+      "expect": {
+        "exit": 0,
+        "stdout_contains": [
+          "VERDICT: PASS"
+        ]
+      }
     },
     {
       "id": "01-fault",
       "verifier": "01_structural_api_gate.py",
       "control": "fault",
-      "description": "Recorded failure input (validation/ candidates): candidate whose namespace lacks the symbol the test uses ('solve' is not a member -- recorded compiler error).",
-      "argv": ["--test", "{FIX}/zebra-puzzle/zebra_puzzle_test.cpp", "--header", "{VAL}/candidates/zebra-puzzle/zebra_puzzle.h", "--source", "{VAL}/candidates/zebra-puzzle/zebra_puzzle.cpp"],
-      "expect": {"exit": 1, "stdout_contains": ["VERDICT: FAIL", "required symbol 'solve' not declared"]}
+      "description": "Fault control: the candidate uses a foreign namespace and lacks the API required by the test.",
+      "argv": [
+        "--test",
+        "{FIXTURES}/arithmetic/arithmetic_test.cpp",
+        "--header",
+        "{FIXTURES}/candidates/foreign/arithmetic.h",
+        "--source",
+        "{FIXTURES}/candidates/foreign/arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: FAIL",
+          "required symbol 'add' not declared"
+        ]
+      }
     },
     {
       "id": "01-tamper",
       "verifier": "01_structural_api_gate.py",
       "control": "tamper",
-      "description": "Cross-task mismatch: official test file of task A with the reference header/source of task B.",
-      "rationale": "Sensible behavior: the required symbols derived from task A's test are absent from task B's namespace, so the gate must FAIL with missing-symbol diagnostics. A silent PASS here would mean the gate is not actually binding the test to the candidate.",
-      "argv": ["--test", "{FIX}/zebra-puzzle/zebra_puzzle_test.cpp", "--header", "{FIX}/clock/.meta/example.h", "--source", "{FIX}/clock/.meta/example.cpp"],
-      "expect": {"exit": 1, "stdout_contains": ["VERDICT: FAIL", "not declared in namespace"]}
+      "description": "Tamper control: an independently stored foreign candidate is paired with the arithmetic test.",
+      "rationale": "The test-derived demo namespace must not be satisfied by similarly named symbols in a foreign namespace.",
+      "argv": [
+        "--test",
+        "{FIXTURES}/arithmetic/arithmetic_test.cpp",
+        "--header",
+        "{FIXTURES}/candidates/foreign/arithmetic.h",
+        "--source",
+        "{FIXTURES}/candidates/foreign/arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: FAIL",
+          "not declared in namespace"
+        ]
+      }
     },
     {
       "id": "03-positive",
       "verifier": "03_two_stage_build_verifier.py",
       "control": "positive",
-      "description": "Known-good header-only reference implementation against its fixture (real g++ two-stage build).",
-      "argv": ["--fixture-dir", "{FIX}/binary-search-tree", "--header", "{FIX}/binary-search-tree/.meta/example.h"],
-      "expect": {"exit": 0, "stdout_contains": ["STATUS: PASS"]}
+      "description": "Known-good reference implementation through the real two-stage g++ build.",
+      "argv": [
+        "--fixture-dir",
+        "{FIXTURES}/arithmetic",
+        "--header",
+        "{FIXTURES}/arithmetic/.meta/example.h",
+        "--source",
+        "{FIXTURES}/arithmetic/.meta/example.cpp"
+      ],
+      "expect": {
+        "exit": 0,
+        "stdout_contains": [
+          "STATUS: PASS"
+        ]
+      }
     },
     {
       "id": "03-fault",
       "verifier": "03_two_stage_build_verifier.py",
       "control": "fault",
-      "description": "Recorded failure input: template methods declared in the header but defined in the .cpp (recorded 'undefined reference' link failure).",
-      "argv": ["--fixture-dir", "{FIX}/linked-list", "--header", "{VAL}/candidates/linked-list/linked_list.h", "--source", "{VAL}/candidates/linked-list/linked_list.cpp"],
-      "expect": {"exit": 1, "stdout_contains": ["STATUS: LE", "LINKER ERROR"]}
+      "description": "Fault control: one declared API function intentionally has no definition.",
+      "argv": [
+        "--fixture-dir",
+        "{FIXTURES}/arithmetic",
+        "--header",
+        "{FIXTURES}/candidates/link-fail/arithmetic.h",
+        "--source",
+        "{FIXTURES}/candidates/link-fail/arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "STATUS: LE",
+          "LINKER ERROR"
+        ]
+      }
     },
     {
       "id": "03-tamper",
       "verifier": "03_two_stage_build_verifier.py",
       "control": "tamper",
-      "description": "Cross-task mismatch: fixture (official test + harness) of task A with the reference header of task B (header-only candidate).",
-      "rationale": "Sensible behavior: task B's header does not declare task A's API, so stage 2 must fail as CE-2 (the official test does not compile against the foreign candidate header). A PASS would mean the build never actually compiled the test against the candidate.",
-      "argv": ["--fixture-dir", "{FIX}/zebra-puzzle", "--header", "{FIX}/clock/.meta/example.h"],
-      "expect": {"exit": 1, "stdout_contains": ["STATUS: CE-2"]}
+      "description": "Tamper control: a foreign-namespace candidate is compiled against the arithmetic test.",
+      "rationale": "The official test must fail to compile when the candidate does not expose the required namespace.",
+      "argv": [
+        "--fixture-dir",
+        "{FIXTURES}/arithmetic",
+        "--header",
+        "{FIXTURES}/candidates/foreign/arithmetic.h",
+        "--source",
+        "{FIXTURES}/candidates/foreign/arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "STATUS: CE-2"
+        ]
+      }
     },
     {
       "id": "04-positive",
       "verifier": "04_differential_semantic_verifier.py",
       "control": "positive",
-      "description": "Reference implementation as candidate: must score 8/8 assertions, score 1.0.",
-      "argv": ["--fixture-dir", "{FIX}/crypto-square", "--header", "{FIX}/crypto-square/.meta/example.h", "--source", "{FIX}/crypto-square/.meta/example.cpp"],
-      "expect": {"exit": 0, "stdout_contains": ["VERDICT: PASS (score 1.0)"]}
+      "description": "Reference implementation as candidate: must score 4/4 assertions.",
+      "argv": [
+        "--fixture-dir",
+        "{FIXTURES}/arithmetic",
+        "--header",
+        "{FIXTURES}/arithmetic/.meta/example.h",
+        "--source",
+        "{FIXTURES}/arithmetic/.meta/example.cpp"
+      ],
+      "expect": {
+        "exit": 0,
+        "stdout_contains": [
+          "VERDICT: PASS (score 1.0)"
+        ]
+      }
     },
     {
       "id": "04-fault",
       "verifier": "04_differential_semantic_verifier.py",
       "control": "fault",
-      "description": "Recorded failure input: candidate that returns the essentially-normalized input (recorded Catch2 'clu hlt io ' == 'chillout ' failure).",
-      "argv": ["--fixture-dir", "{FIX}/crypto-square", "--header", "{VAL}/candidates/crypto-square/crypto_square.h", "--source", "{VAL}/candidates/crypto-square/crypto_square.cpp"],
-      "expect": {"exit": 1, "stdout_contains": ["VERDICT: FAIL (score 0.625)", "semantic regression"]}
+      "description": "Fault control: addition is correct but multiplication has two semantic regressions.",
+      "argv": [
+        "--fixture-dir",
+        "{FIXTURES}/arithmetic",
+        "--header",
+        "{FIXTURES}/candidates/semantic-fail/arithmetic.h",
+        "--source",
+        "{FIXTURES}/candidates/semantic-fail/arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: FAIL (score 0.5)",
+          "semantic regression"
+        ]
+      }
     },
     {
       "id": "04-tamper",
       "verifier": "04_differential_semantic_verifier.py",
       "control": "tamper",
-      "description": "Cross-task mismatch: fixture of task A with a recorded candidate of task B.",
-      "rationale": "Sensible behavior: task B's candidate does not provide task A's API, so the candidate build fails (BUILD_FAIL / CE-2) and the verdict is FAIL with score 0.0. A PASS would mean the differential never ran against the real test binary.",
-      "argv": ["--fixture-dir", "{FIX}/kindergarten-garden", "--header", "{VAL}/candidates/zebra-puzzle/zebra_puzzle.h", "--source", "{VAL}/candidates/zebra-puzzle/zebra_puzzle.cpp"],
-      "expect": {"exit": 1, "stdout_contains": ["BUILD_FAIL", "VERDICT: FAIL"]}
+      "description": "Tamper control: the semantic oracle is paired with a foreign-namespace candidate.",
+      "rationale": "The differential verifier must report a candidate build failure instead of silently accepting a mismatched implementation.",
+      "argv": [
+        "--fixture-dir",
+        "{FIXTURES}/arithmetic",
+        "--header",
+        "{FIXTURES}/candidates/foreign/arithmetic.h",
+        "--source",
+        "{FIXTURES}/candidates/foreign/arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "BUILD_FAIL",
+          "VERDICT: FAIL"
+        ]
+      }
     },
     {
       "id": "05-positive",
       "verifier": "05_response_integrity_verifier.py",
       "control": "positive",
-      "description": "Recorded clean generation (complete file listings, stream ends at a closing fence).",
-      "argv": ["--response", "{VAL}/05/fixtures/good-bank-account-reply.txt"],
-      "expect": {"exit": 0, "stdout_contains": ["VERDICT: OK"]}
+      "description": "Compact clean generation with two complete file listings.",
+      "argv": [
+        "--response",
+        "{FIXTURES}/responses/complete.txt"
+      ],
+      "expect": {
+        "exit": 0,
+        "stdout_contains": [
+          "VERDICT: OK"
+        ]
+      }
     },
     {
       "id": "05-fault",
       "verifier": "05_response_integrity_verifier.py",
       "control": "fault",
-      "description": "Recorded failure input: degenerate CJK-phrase loop running to the end of the generation.",
-      "argv": ["--response", "{VAL}/05/fixtures/loop-knapsack-cjk-phrase.txt"],
-      "expect": {"exit": 1, "stdout_contains": ["VERDICT: LOOP"]}
+      "description": "Compact degenerate CJK-phrase loop running to the end of the generation.",
+      "argv": [
+        "--response",
+        "{FIXTURES}/responses/loop.txt"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: LOOP"
+        ]
+      }
     },
     {
       "id": "05-tamper",
@@ -98,50 +227,118 @@
       "control": "tamper",
       "description": "Deliberately corrupted input: the known-good generation with its final closing fence removed (generated at runtime by drop_last_fence).",
       "rationale": "Sensible behavior: the deliverable's last fence is never closed, so the verdict must be TRUNCATED (cut mid-block), not OK. A silent PASS would mean truncation detection is dead.",
-      "generate": {"kind": "drop_last_fence", "source": "{VAL}/05/fixtures/good-bank-account-reply.txt", "name": "05_tamper_unclosed_fence.txt"},
-      "argv": ["--response", "{GEN}/05_tamper_unclosed_fence.txt"],
-      "expect": {"exit": 1, "stdout_contains": ["VERDICT: TRUNCATED"]}
+      "generate": {
+        "kind": "drop_last_fence",
+        "source": "{FIXTURES}/responses/complete.txt",
+        "name": "05_tamper_unclosed_fence.txt"
+      },
+      "argv": [
+        "--response",
+        "{GEN}/05_tamper_unclosed_fence.txt"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: TRUNCATED"
+        ]
+      }
     },
     {
       "id": "06-positive",
       "verifier": "06_candidate_boundary_verifier.py",
       "control": "positive",
-      "description": "Recorded clean PASS response: both editable files listed exactly once, no boundary issues.",
-      "argv": ["--response", "{VAL}/06/cases/clean__space-age__turn1.response.txt", "--editable", "space_age.h", "--editable", "space_age.cpp"],
-      "expect": {"exit": 0, "stdout_contains": ["VERDICT: OK"]}
+      "description": "Clean response: both editable arithmetic files are listed exactly once.",
+      "argv": [
+        "--response",
+        "{FIXTURES}/responses/complete.txt",
+        "--editable",
+        "arithmetic.h",
+        "--editable",
+        "arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 0,
+        "stdout_contains": [
+          "VERDICT: OK"
+        ]
+      }
     },
     {
       "id": "06-fault",
       "verifier": "06_candidate_boundary_verifier.py",
       "control": "fault",
-      "description": "Recorded failure input (GRPO-30 row, reason=forbidden_file, reward -1.0): markdown-glued labels outside the editable set.",
-      "argv": ["--response", "{VAL}/06/cases/meetup__u1_s477.response.txt", "--editable", "meetup.h", "--editable", "meetup.cpp"],
-      "expect": {"exit": 1, "stdout_contains": ["FORBIDDEN_FILE", "VERDICT: FAIL"]}
+      "description": "Fault control: response contains a file outside the editable set.",
+      "argv": [
+        "--response",
+        "{FIXTURES}/responses/forbidden.txt",
+        "--editable",
+        "arithmetic.h",
+        "--editable",
+        "arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "FORBIDDEN_FILE",
+          "VERDICT: FAIL"
+        ]
+      }
     },
     {
       "id": "06-tamper",
       "verifier": "06_candidate_boundary_verifier.py",
       "control": "tamper",
-      "description": "Cross-task mismatch: a recorded clean response for task A checked against the editable set of task B.",
+      "description": "Tamper control: a clean arithmetic response is checked against a foreign editable set.",
       "rationale": "Sensible behavior: every listed file is outside task B's editable set, so the verdict must be FAIL with FORBIDDEN_FILE issues. A silent PASS would mean the editable-set boundary is not enforced.",
-      "argv": ["--response", "{VAL}/06/cases/clean__space-age__turn1.response.txt", "--editable", "zebra_puzzle.h", "--editable", "zebra_puzzle.cpp"],
-      "expect": {"exit": 1, "stdout_contains": ["FORBIDDEN_FILE", "VERDICT: FAIL"]}
+      "argv": [
+        "--response",
+        "{FIXTURES}/responses/complete.txt",
+        "--editable",
+        "foreign.h",
+        "--editable",
+        "foreign.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "FORBIDDEN_FILE",
+          "VERDICT: FAIL"
+        ]
+      }
     },
     {
       "id": "07-positive",
       "verifier": "07_warning_hygiene_classifier.py",
       "control": "positive",
-      "description": "Recorded clean build log (no compiler diagnostics).",
-      "argv": ["--stderr", "{VAL}/07/cases/clean_robot-name_trial-03.build-log.txt"],
-      "expect": {"exit": 0, "stdout_contains": ["VERDICT: PASS"]}
+      "description": "Compact clean build log with no compiler diagnostics.",
+      "argv": [
+        "--stderr",
+        "{FIXTURES}/logs/clean.stderr.txt"
+      ],
+      "expect": {
+        "exit": 0,
+        "stdout_contains": [
+          "VERDICT: PASS"
+        ]
+      }
     },
     {
       "id": "07-fault",
       "verifier": "07_warning_hygiene_classifier.py",
       "control": "fault",
-      "description": "Recorded failure input: missing <cstdint> include ('uint32_t' was not declared in this scope).",
-      "argv": ["--stderr", "{VAL}/07/cases/eval_missing-include-cstdint.stderr.txt"],
-      "expect": {"exit": 1, "stdout_contains": ["VERDICT: FAIL", "missing-include", "cstdint"]}
+      "description": "Compact missing-include diagnostic for uint32_t.",
+      "argv": [
+        "--stderr",
+        "{FIXTURES}/logs/missing-cstdint.stderr.txt"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: FAIL",
+          "missing-include",
+          "cstdint"
+        ]
+      }
     },
     {
       "id": "07-tamper",
@@ -149,9 +346,25 @@
       "control": "tamper",
       "description": "Deliberately corrupted input: the known-good clean log of one build with a foreign error block from a different failing build appended (generated at runtime by concat).",
       "rationale": "Sensible behavior: the classifier trusts only the diagnostic content, never the filename or origin label, so the injected unused-parameter errors must flip the verdict to FAIL with dominant class unused-parameter. A silent PASS would mean it is not actually parsing the text.",
-      "generate": {"kind": "concat", "sources": ["{VAL}/07/cases/clean_robot-name_trial-03.build-log.txt", "{VAL}/07/cases/eval_unused-parameter.stderr.txt"], "name": "07_tamper_mixed_log.txt"},
-      "argv": ["--stderr", "{GEN}/07_tamper_mixed_log.txt"],
-      "expect": {"exit": 1, "stdout_contains": ["VERDICT: FAIL", "unused-parameter"]}
+      "generate": {
+        "kind": "concat",
+        "sources": [
+          "{FIXTURES}/logs/clean.stderr.txt",
+          "{FIXTURES}/logs/unused-parameter.stderr.txt"
+        ],
+        "name": "07_tamper_mixed_log.txt"
+      },
+      "argv": [
+        "--stderr",
+        "{GEN}/07_tamper_mixed_log.txt"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: FAIL",
+          "unused-parameter"
+        ]
+      }
     }
   ]
 }

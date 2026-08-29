@@ -23,4 +23,4 @@ Two kernels; each stage independent. A single-stage build previously lumped both
 
 ## Evidence
 
-`generalized_verifier_docs/validation/VALIDATION.md` (CE vs LE separation on recorded cases; reference passes both stages).
+The committed arithmetic fixture covers PASS, undefined-reference LE, and foreign-API CE-2 controls in the clean-checkout matrix.

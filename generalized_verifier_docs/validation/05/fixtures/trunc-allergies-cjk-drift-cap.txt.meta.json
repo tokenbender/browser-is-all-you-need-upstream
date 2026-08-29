@@ -1,9 +1,0 @@
-{
-  "expect": "TRUNCATED",
-  "source": "empty_full.pkl[41] trial=trial-02 shard=0 task=allergies tok_limit=True think_chars=78520",
-  "note": "trial-02 allergies cap-hit: CJK drift, cut mid-sentence, no hard loop",
-  "answer_file": "_empty_answer.txt",
-  "gen_tokens": 32768,
-  "max_tokens": 32768,
-  "fixture": "trunc-allergies-cjk-drift-cap.txt"
-}

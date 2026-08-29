@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
-# Run the full three-control self-validation matrix (6 verifiers x
-# positive/fault/tamper) on the host. Emits validation/SELF_CHECK.md,
-# per-case kernel receipts under validation/self_check_receipts/, and
-# machine-readable results at validation/self_check_results.json.
-set -u
-cd "$(dirname "$0")/../.."   # repo root
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
 VAL=generalized_verifier_docs/validation
+if [[ -n "${GENERALIZED_VERIFIER_OUTPUT_DIR:-}" ]]; then
+    OUT=$GENERALIZED_VERIFIER_OUTPUT_DIR
+    mkdir -p "$OUT"
+else
+    OUT=$(mktemp -d "${TMPDIR:-/tmp}/generalized-verifier-host.XXXXXX")
+fi
 
 python3 "$VAL/self_check.py" \
-    --json-out "$VAL/self_check_results.json" "$@"
+    --receipt-dir "$OUT/receipts" \
+    --gen-dir "$OUT/generated" \
+    --report "$OUT/SELF_CHECK.md" \
+    --json-out "$OUT/self_check_results.json"
+
+echo "[self-check] artifacts: $OUT"

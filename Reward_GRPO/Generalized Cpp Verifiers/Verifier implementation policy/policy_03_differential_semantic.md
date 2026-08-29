@@ -22,4 +22,4 @@ Single kernel with a fractional fact channel. Semantic shortfalls are model fail
 
 ## Evidence
 
-`generalized_verifier_docs/validation/VALIDATION.md` (recorded echo/plaintext candidate scored 0.625 with the exact failing cases; references score 1.0).
+The committed reference scores 1.0 and the semantic-fault candidate scores 0.5 with a named failing case; the direct-runner pytest verifies this remains a model failure rather than INVALID.

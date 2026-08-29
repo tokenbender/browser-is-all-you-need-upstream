@@ -22,4 +22,4 @@ Single-kernel policy. Degeneration verdicts are model-behavior failures (`-1`) w
 
 ## Evidence
 
-`generalized_verifier_docs/validation/VALIDATION_05.md` (126/126 recorded empty-answer events and 63/63 truncated rows caught; zero false positives on 4,946 clean rows and 324 good replies).
+The committed compact controls cover a complete response, an end-of-stream CJK loop, and a generated unclosed-fence truncation.

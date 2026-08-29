@@ -1,9 +1,0 @@
-{
-  "expect": "LOOP",
-  "source": "empty_full.pkl[62] trial=trial-02 shard=1 task=meetup tok_limit=True think_chars=46751",
-  "note": "trial-02 meetup cap-hit: fullwidth-paren run loop",
-  "answer_file": "_empty_answer.txt",
-  "gen_tokens": 32768,
-  "max_tokens": 32768,
-  "fixture": "loop-meetup-fullwidth-paren.txt"
-}

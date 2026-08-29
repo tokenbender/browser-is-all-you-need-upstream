@@ -328,7 +328,7 @@ def main(argv=None):
         "{REPO}": _REPO,
         "{GV}": _GV,
         "{VAL}": _HERE,
-        "{FIX}": os.path.join(_REPO, "Reward_GRPO", "multi_env_fixtures"),
+        "{FIXTURES}": os.path.join(_HERE, "fixtures"),
         "{GEN}": args.gen_dir,
     }
 

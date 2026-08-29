@@ -43,8 +43,7 @@ import sys
 from pathlib import PurePath
 
 # ---------------------------------------------------------------------------
-# Boundary constants -- deliberately identical to the production whole-file
-# response parser's semantics (see validation/VALIDATION_06.md, section 2).
+# Boundary constants for the Aider whole-file response contract.
 # ---------------------------------------------------------------------------
 
 FENCE_LINE_RE = re.compile(r"^```(?P<language>[^\n]*)$", re.MULTILINE)

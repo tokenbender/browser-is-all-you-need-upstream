@@ -1,9 +1,0 @@
-{
-  "expect": "EMPTY",
-  "source": "empty_full.pkl[4] trial=trial-01 shard=0 task=allergies tok_limit=False think_chars=33476",
-  "note": "trial-01 allergies: 33.5k chars, clean fenced end, ANSWER empty",
-  "answer_file": "_empty_answer.txt",
-  "gen_tokens": null,
-  "max_tokens": null,
-  "fixture": "empty-allergies-solution-in-thinking.txt"
-}

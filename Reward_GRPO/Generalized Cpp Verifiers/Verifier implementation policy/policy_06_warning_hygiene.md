@@ -22,4 +22,4 @@ Single-kernel policy; the class distribution is reported in facts. Warning-free-
 
 ## Evidence
 
-`generalized_verifier_docs/validation/VALIDATION_07.md` (16/16 recorded cases classified correctly across 9 tasks; known-good builds pass with zero false positives).
+The committed compact controls cover a clean log, missing `<cstdint>`, and an injected unused-parameter diagnostic.

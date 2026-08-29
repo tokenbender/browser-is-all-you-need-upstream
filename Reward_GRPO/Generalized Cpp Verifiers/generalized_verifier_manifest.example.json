@@ -1,24 +1,20 @@
 {
   "schema_version": 1,
-  "task_id": "replace-with-pinned-task-id",
-  "source": "replace-with-task-source",
-  "candidate_files": ["implementation.cpp", "implementation.h"],
-  "protected_files": {
-    "CMakeLists.txt": "replace-with-64-lowercase-hex-digest"
-  },
-  "fixture_dir": "/workspace/fixture",
+  "task_id": "portable-arithmetic",
+  "source": "hermetic-review-fixture",
+  "candidate_files": [
+    "arithmetic.cpp",
+    "arithmetic.h"
+  ],
+  "protected_files": {},
+  "fixture_dir": "generalized_verifier_docs/validation/fixtures/arithmetic",
   "policies": {
-    "G02": [{"command": ["g++", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-Werror", "-c", "implementation.cpp"], "timeout_s": 120, "expected_exit": 0}],
-    "G03": [{"command": ["./trusted-official-suite"], "timeout_s": 120, "expected_exit": 0}],
-    "G04": [{"command": ["./trusted-response-probe"], "timeout_s": 120, "expected_exit": 0}],
-    "G05": [{"command": ["./trusted-boundary-probe"], "timeout_s": 120, "expected_exit": 0}],
-    "G06": [{"command": ["./trusted-hygiene-probe"], "timeout_s": 120, "expected_exit": 0}]
+    "G02": [],
+    "G03": [],
+    "G04": [],
+    "G05": [],
+    "G06": [],
+    "G07": []
   },
-  "trajectory": {
-    "turn_limit": 2,
-    "turns": [
-      {"turn": 1, "response_receipt": {"status": "completed", "num_error_outputs": 0, "num_exhausted_context_windows": 0}, "generated_feedback": ""},
-      {"turn": 2, "response_file": "/workspace/response.txt", "response_receipt": {"status": "completed", "num_error_outputs": 0, "num_exhausted_context_windows": 0}, "delivered_feedback": ""}
-    ]
-  }
+  "response_text": "arithmetic.h\n```cpp\n#pragma once\nnamespace demo { int add(int, int); int multiply(int, int); }\n```\n\narithmetic.cpp\n```cpp\n#include \"arithmetic.h\"\nnamespace demo { int add(int a, int b) { return a + b; } int multiply(int a, int b) { return a * b; } }\n```\n"
 }
