@@ -1,0 +1,11 @@
+{
+  "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+  "contract_overlay_sha256": "470bc0eef40759207b87932896107de4b6f9959401fa4c0f5a59adddfc8cb115",
+  "fixed26_contract": "fixed26-contract-v2",
+  "original_cmake_sha256": "53d531120e650972adf19a2a42aa2d5bc716c93700ffac74c1c2868fdce633ff",
+  "original_official_test_sha256": "12aa1d8ef503b67d9be8a6d1b8bc858eabcc88af3db916821ec25dcb3709fee5",
+  "polyglot_commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+  "schema_version": 1,
+  "semantic_harness": "18 authenticated historical cases encoded as opaque requests and trusted expected raw observations; generic G04 compares outside the candidate process.",
+  "semantic_oracle_encoding": "gzip-json-v1"
+}

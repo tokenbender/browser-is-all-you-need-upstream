@@ -1,0 +1,19 @@
+{
+  "contract_version": "portable-adder-v1",
+  "declarations": [
+    {
+      "ast_filter": "add",
+      "default_argument_count": 0,
+      "kind": "FunctionDecl",
+      "name": "add",
+      "namespace": "",
+      "overload_count": 1,
+      "parameter_count": 2,
+      "parameter_types": [
+        "int",
+        "int"
+      ],
+      "type": "int (int, int)"
+    }
+  ]
+}

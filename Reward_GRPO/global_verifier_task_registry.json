@@ -1,0 +1,20 @@
+{
+  "bundles": {
+    "phone-number-fixed26-v2": {
+      "bundle_sha256": "62723accef99d5f4009f0f36c73f8f88b7fa7c6893f26e7c2a9f9c325d02b932",
+      "manifest_sha256": "3e00b69e4884f4ca975da1810408b1de1c8684a20f07b030ecb6fcead4e14832",
+      "path": "task_bundles/phone-number-fixed26-v2"
+    },
+    "phone-number-grpo12-v1": {
+      "bundle_sha256": "8ce05d551e4cb5f1c69cb7a3be8cbdccfb727044ab0bc05581226ba3c9ec2414",
+      "manifest_sha256": "2a107ad27f29dfec988d760f64a5c4a0e3997e1efafb3a435cf212a34410a117",
+      "path": "task_bundles/phone-number-grpo12-v1"
+    },
+    "portable-adder": {
+      "bundle_sha256": "e1ddafefa42f156f76f2d89dcfa95b8f1842eec372c6a8f8028ed8c443230bb3",
+      "manifest_sha256": "a4d497b9ffb031ae1f42f79e5270a687ce615ba6c9a0086cead47a963eafaf6d",
+      "path": "global_verifiers_set2/task_bundle_example"
+    }
+  },
+  "schema_version": 1
+}
