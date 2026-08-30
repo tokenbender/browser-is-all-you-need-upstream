@@ -1,0 +1,61 @@
+{
+  "candidate_source_sha256": "947763d6c0aa749fcab25394f5cf58fa5b40bef9a71ca48615f45e729be1aaa1",
+  "candidate_source_sha256_after": "947763d6c0aa749fcab25394f5cf58fa5b40bef9a71ca48615f45e729be1aaa1",
+  "candidate_source_sha256_before": "947763d6c0aa749fcab25394f5cf58fa5b40bef9a71ca48615f45e729be1aaa1",
+  "candidate_source_unchanged": true,
+  "excluded_conditions": [],
+  "generated_at": "2026-08-28T12:49:41.396910+00:00",
+  "kernel_results": [
+    {
+      "command": [
+        "06_candidate_boundary_verifier.py",
+        "--response",
+        "/workspace/response.txt",
+        "--editable",
+        "binary_search_tree.h",
+        "--template",
+        "binary_search_tree.h=/workspace/fixture/binary_search_tree.h",
+        "--json"
+      ],
+      "duration_seconds": 0.038905,
+      "facts": {
+        "boundary_status": "OK",
+        "editable": [
+          "binary_search_tree.h"
+        ],
+        "engine": "06_candidate_boundary_verifier.py",
+        "engine_exit_code": 0,
+        "files": {
+          "binary_search_tree.h": {
+            "bytes": 7054,
+            "origin": "listed"
+          }
+        },
+        "issues": [],
+        "modified": false,
+        "stderr_tail": "",
+        "templates_applied": [
+          "binary_search_tree.h"
+        ]
+      },
+      "kernel": 1,
+      "kernel_id": "G05-1",
+      "status": "pass",
+      "stderr_log": null,
+      "stdout_log": null,
+      "summary": "candidate boundary: OK (0 issue(s))"
+    }
+  ],
+  "kernel_sum": 1,
+  "manifest_schema_sha256": "93e470b21d7cc3dbf65b62f2f3cdfb1a4fd670e3266cb2b92ca71278fc74290c",
+  "manifest_sha256": "33aa88387a97ae79099f4912f091d5759c6d91813e751767fad1c3451efc9d08",
+  "maximum_kernel_sum": 1,
+  "policy_id": "G05",
+  "reason": "candidate boundary: OK (0 issue(s))",
+  "schema_version": 2,
+  "status": "pass",
+  "task_id": "bst-e2e-pass",
+  "verifier_common_sha256": "3c3a8719effe5a9c35c5e3b555f59bc0e8abe7472ae6f4ad5f380a6847261234",
+  "verifier_source_sha256": "3901fc1d9203a9cdf1d4728f34be3e286735050f8ce8fb511890a9d4a2200529",
+  "verifier_wrapper_sha256": "3901fc1d9203a9cdf1d4728f34be3e286735050f8ce8fb511890a9d4a2200529"
+}
