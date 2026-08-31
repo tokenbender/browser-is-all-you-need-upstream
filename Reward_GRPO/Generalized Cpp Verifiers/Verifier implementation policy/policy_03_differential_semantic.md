@@ -1,0 +1,25 @@
+# Policy G03 — Differential Semantic
+
+## Purpose
+
+Score functional behavior as a fraction of official assertions passed, controlled against the task's own reference implementation, instead of an all-or-nothing test verdict.
+
+| Kernel | Question | `+1` | `-1` | `INVALID` |
+|---|---|---|---|---|
+| G03-A | Does the candidate pass the full official suite under reference control? | 100% assertions, reference control clean | Assertion fraction below 100% (per-case facts reported) | Reference missing/broken or fixture unusable |
+
+## Shared method
+
+The fixture reference (`.meta/example.*`) is built and run first as a positive control; a reference below 100% marks the task package broken and yields `INVALID`, never a candidate penalty. The candidate's Catch2 summary is parsed into `passed/total` assertions; the fraction is reported in facts for partial-credit reward projection.
+
+## Aggregation
+
+Single kernel with a fractional fact channel. Semantic shortfalls are model failures (`-1`) with the exact failing assertions named; control failures are `INVALID`. When the candidate does not build, the candidate kernel is `not_run` (null, unscored) — the identical build failure is already penalized by G02 — with the build detail kept in facts.
+
+## Execution
+
+`python verifier_03_differential_semantic.py --candidate-dir TASK --manifest MANIFEST --expected-manifest-sha256 DIGEST --output-dir OUT` (requires `fixture_dir` in the manifest)
+
+## Evidence
+
+The committed reference scores 1.0 and the semantic-fault candidate scores 0.5 with a named failing case; the direct-runner pytest verifies this remains a model failure rather than INVALID.

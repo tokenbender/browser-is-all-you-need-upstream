@@ -1,0 +1,31 @@
+{
+  "candidate_files": [
+    "perfect_numbers.cpp",
+    "perfect_numbers.h"
+  ],
+  "fixture_dir": "multi_env_fixtures/perfect-numbers",
+  "policies": {
+    "G02": [],
+    "G03": [],
+    "G04": [],
+    "G05": [],
+    "G06": [],
+    "G07": []
+  },
+  "protected_files": {
+    ".docs/instructions.md": "8db797c5f8e9c0efbb8c805ddefca892f764b4f3a72dff65c037f4bffb92b1cb",
+    ".meta/config.json": "5ed306e3c419a01c3f7404c2cfe27ac6793591b913bb64714c455ba28956e0ec",
+    ".meta/example.cpp": "068dec0c2dcb773232ec622cddd55951fd6d13421bf77155219f12d058f54262",
+    ".meta/example.h": "216164fb4b94a80a05b93785d787c92bca08d1712c851ade21c807df9e4469ed",
+    ".meta/tests.toml": "8b0d194af6ebbefe95efab1fdb6958d3a88ee12cd50501869373b4b72be202b6",
+    "CMakeLists.txt": "53d531120e650972adf19a2a42aa2d5bc716c93700ffac74c1c2868fdce633ff",
+    "perfect_numbers.cpp": "70dd79e4d85cee28284c68781066701f9928e23fbe7b58f73913463cf1c19e75",
+    "perfect_numbers.h": "fb068f000b20175a67ebc2835f103b71f1fd2efb2714edb6dbf62cf6b8e1e221",
+    "perfect_numbers_test.cpp": "fa206f8feaa1f8aa63986db34fc96458b30ab0325c0855fd6659ab7cbcb50be3",
+    "test/catch.hpp": "681e7505a50887c9085539e5135794fc8f66d8e5de28eadf13a30978627b0f47",
+    "test/tests-main.cpp": "5847fda35c1320d94f8d088aaf34229d689f66f1da235f885cbb28c8f17e4260"
+  },
+  "schema_version": 1,
+  "source": "official:Aider-AI/polyglot-benchmark@7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/cpp/exercises/practice/perfect-numbers",
+  "task_id": "perfect-numbers"
+}

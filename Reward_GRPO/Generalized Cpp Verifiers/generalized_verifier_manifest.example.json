@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "task_id": "portable-arithmetic",
+  "source": "hermetic-review-fixture",
+  "candidate_files": [
+    "arithmetic.cpp",
+    "arithmetic.h"
+  ],
+  "protected_files": {},
+  "fixture_dir": "generalized_verifier_docs/validation/fixtures/arithmetic",
+  "policies": {
+    "G02": [],
+    "G03": [],
+    "G04": [],
+    "G05": [],
+    "G06": [],
+    "G07": []
+  },
+  "response_text": "arithmetic.h\n```cpp\n#pragma once\nnamespace demo { int add(int, int); int multiply(int, int); }\n```\n\narithmetic.cpp\n```cpp\n#include \"arithmetic.h\"\nnamespace demo { int add(int a, int b) { return a + b; } int multiply(int a, int b) { return a * b; } }\n```\n"
+}
