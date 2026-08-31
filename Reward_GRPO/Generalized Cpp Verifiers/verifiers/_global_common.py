@@ -31,7 +31,8 @@ from datetime import datetime, timezone
 
 SCHEMA_VERSION = 2
 EXIT_CODE = {"pass": 0, "fail": 1, "invalid": 2}
-KERNEL_VALUE = {"pass": 1, "fail": -1, "invalid": None}
+# not_run: the check was not applicable (kernel null, excluded from sums).
+KERNEL_VALUE = {"pass": 1, "fail": -1, "invalid": None, "not_run": None}
 ENGINES_DIR_NAME = "generalized_verifier_docs"
 ENGINE_DIR_ENV = "GENERALIZED_VERIFIER_ENGINE_DIR"
 ENGINE_TIMEOUT_SECONDS = 600

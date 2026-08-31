@@ -190,6 +190,28 @@
       }
     },
     {
+      "id": "04-fault-build-fail-le",
+      "verifier": "04_differential_semantic_verifier.py",
+      "control": "fault",
+      "description": "Fault control (verifier-v2 fix 1): the candidate declares a function with no definition, so the official test fails to link (LE) and the engine reports candidate BUILD_FAIL. Wrapper G03 maps this engine report to an unscored (not_run/null) candidate kernel with the build failure preserved in facts, deduplicating the G02 build penalty; that mapping is asserted end-to-end in tests/test_generalized_cpp_verifiers.py.",
+      "argv": [
+        "--fixture-dir",
+        "{FIXTURES}/arithmetic",
+        "--header",
+        "{FIXTURES}/candidates/link-fail/arithmetic.h",
+        "--source",
+        "{FIXTURES}/candidates/link-fail/arithmetic.cpp"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "BUILD_FAIL",
+          "LE",
+          "VERDICT: FAIL"
+        ]
+      }
+    },
+    {
       "id": "05-positive",
       "verifier": "05_response_integrity_verifier.py",
       "control": "positive",
@@ -240,6 +262,47 @@
         "exit": 1,
         "stdout_contains": [
           "VERDICT: TRUNCATED"
+        ]
+      }
+    },
+    {
+      "id": "05-cap-cut-truncated",
+      "verifier": "05_response_integrity_verifier.py",
+      "control": "fault",
+      "description": "Fault control (verifier-v2 fix 3): a generation with two complete file listings that is then cut mid-prose by the output-token cap, with harness token counts supplied (--gen-tokens equals --max-tokens). Without token counts this same input is OK, so this case exercises the cap-aware TRUNCATED branch that the training adapter now feeds.",
+      "argv": [
+        "--response",
+        "{FIXTURES}/responses/cap_cut.txt",
+        "--gen-tokens",
+        "8192",
+        "--max-tokens",
+        "8192"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: TRUNCATED",
+          "output cap"
+        ]
+      }
+    },
+    {
+      "id": "05-loop-at-cap",
+      "verifier": "05_response_integrity_verifier.py",
+      "control": "fault",
+      "description": "Fault control (verifier-v2 fix 3): the degenerate CJK-phrase loop with harness token counts showing the cap was hit. LOOP must outrank TRUNCATED (precedence LOOP > TRUNCATED), matching the adapter's escalation of loop degeneration to the full -1.0 penalty.",
+      "argv": [
+        "--response",
+        "{FIXTURES}/responses/loop.txt",
+        "--gen-tokens",
+        "8192",
+        "--max-tokens",
+        "8192"
+      ],
+      "expect": {
+        "exit": 1,
+        "stdout_contains": [
+          "VERDICT: LOOP"
         ]
       }
     },

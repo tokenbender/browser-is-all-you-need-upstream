@@ -6,7 +6,7 @@ corpora, absolute paths, or untracked `Reward_GRPO/multi_env_fixtures` data.
 
 ## Commands
 
-- `bash generalized_verifier_docs/validation/run_all.sh` runs the 18 host
+- `bash generalized_verifier_docs/validation/run_all.sh` runs the 21 host
   controls and writes receipts to a temporary directory.
 - `bash generalized_verifier_docs/validation/run_sandboxed.sh` runs the same
   matrix in the configured image using a read-only repository mount, no

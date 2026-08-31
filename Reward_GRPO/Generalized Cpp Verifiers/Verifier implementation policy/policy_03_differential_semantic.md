@@ -14,7 +14,7 @@ The fixture reference (`.meta/example.*`) is built and run first as a positive c
 
 ## Aggregation
 
-Single kernel with a fractional fact channel. Semantic shortfalls are model failures (`-1`) with the exact failing assertions named; control failures are `INVALID`.
+Single kernel with a fractional fact channel. Semantic shortfalls are model failures (`-1`) with the exact failing assertions named; control failures are `INVALID`. When the candidate does not build, the candidate kernel is `not_run` (null, unscored) — the identical build failure is already penalized by G02 — with the build detail kept in facts.
 
 ## Execution
 

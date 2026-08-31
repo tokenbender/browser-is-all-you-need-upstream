@@ -92,7 +92,7 @@ def test_clean_checkout_self_check_is_hermetic(tmp_path: Path) -> None:
     results = json.loads(json_out.read_text())
     assert completed.returncode == 0, completed.stdout + completed.stderr
     assert results["all_ok"] is True
-    assert len(results["cases"]) == 18
+    assert len(results["cases"]) == 21
     assert all(case["ok"] for case in results["cases"])
 
 
@@ -151,3 +151,117 @@ def test_manifest_validator_rejects_duplicates_and_unknown_policy() -> None:
     unknown = {**base, "policies": {"G99": []}}
     with pytest.raises(validator.ManifestValidationError, match="unsupported"):
         validator.validate_manifest(unknown)
+
+
+# --- verifier-v2: the reward adapter lives next to the pack and needs src/
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT))
+from Reward_GRPO import generalized_cpp_grpo  # noqa: E402
+
+
+def _policy(policy_id: str, values: list) -> dict:
+    return {
+        "policy_id": policy_id,
+        "kernels": [
+            {"kernel_id": f"{policy_id}-{index}", "kernel": value}
+            for index, value in enumerate(values, start=1)
+        ],
+    }
+
+
+def test_build_fail_candidate_g03_kernel_is_not_run(tmp_path: Path) -> None:
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+    source = FIXTURES / "candidates/link-fail"
+    shutil.copy2(source / "arithmetic.h", candidate / "arithmetic.h")
+    shutil.copy2(source / "arithmetic.cpp", candidate / "arithmetic.cpp")
+    completed, receipt = _run_runner(tmp_path, candidate)
+    policies = {item["policy_id"]: item for item in receipt["policy_results"]}
+    assert completed.returncode == 1
+    assert receipt["status"] == "fail"  # via G02
+    assert policies["G02"]["status"] == "fail"
+    g03 = policies["G03"]
+    assert "receipt_errors" not in g03
+    kernels = {kernel["kernel_id"]: kernel for kernel in g03["kernels"]}
+    assert kernels["G03-1"]["kernel"] == 1  # reference control unchanged
+    candidate_kernel = kernels["G03-2"]
+    assert candidate_kernel["kernel"] is None
+    assert candidate_kernel["status"] == "not_run"
+    assert candidate_kernel["facts"]["candidate"]["status"] == "BUILD_FAIL"
+    assert candidate_kernel["facts"]["candidate"]["build"]["status"] == "LE"
+    assert g03["kernel_sum"] == 1 and g03["kernel_total"] == 1
+
+
+def test_receipt_to_reward_is_flat_kernel_mean() -> None:
+    ce1 = {  # stage-1 compile failure, G03-2 deduplicated (not_run)
+        "status": "fail",
+        "policy_results": [
+            _policy("G01", [1]), _policy("G02", [-1]), _policy("G03", [1, None]),
+            _policy("G04", [1]), _policy("G05", [1]),
+        ],
+    }
+    # flat mean over the five remaining +/-1 kernels: (1-1+1+1+1)/5
+    assert generalized_cpp_grpo.receipt_to_reward(ce1)[0] == pytest.approx(0.6)
+    ce2 = {  # stage-2 / link failure
+        "status": "fail",
+        "policy_results": [
+            _policy("G01", [1]), _policy("G02", [1, -1]), _policy("G03", [1, None]),
+            _policy("G04", [1]), _policy("G05", [1]),
+        ],
+    }
+    assert generalized_cpp_grpo.receipt_to_reward(ce2)[0] == pytest.approx(4 / 6)
+    semantic = {  # builds and runs, differential fails: G03-2 stays -1
+        "status": "fail",
+        "policy_results": [
+            _policy("G01", [1]), _policy("G02", [1, 1]), _policy("G03", [1, -1]),
+            _policy("G04", [1]), _policy("G05", [1]),
+        ],
+    }
+    assert generalized_cpp_grpo.receipt_to_reward(semantic)[0] == pytest.approx(5 / 7)
+    g01_fail = {  # API gate failure stays the harshest verifier outcome
+        "status": "fail",
+        "policy_results": [
+            _policy("G01", [-1]), _policy("G02", []), _policy("G03", []),
+            _policy("G04", []), _policy("G05", []),
+        ],
+    }
+    assert generalized_cpp_grpo.receipt_to_reward(g01_fail)[0] == -1.0
+    full_pass = {
+        "status": "pass",
+        "policy_results": [
+            _policy("G01", [1]), _policy("G02", [1, 1]), _policy("G03", [1, 1]),
+            _policy("G04", [1]), _policy("G05", [1]),
+        ],
+    }
+    assert generalized_cpp_grpo.receipt_to_reward(full_pass)[0] == 1.0
+    invalid = {"status": "invalid", "policy_results": []}
+    assert generalized_cpp_grpo.receipt_to_reward(invalid) == (0.0, True, "verifier_invalid")
+
+
+def test_parser_failures_are_routed_through_g04() -> None:
+    truncated = (
+        "Let me work through this.\narithmetic.cpp\n```cpp\n"
+        "int add(int a, int b) { return a + b; }\n"  # fence never closed
+    )
+    record = generalized_cpp_grpo._model_failure(
+        {"response": truncated, "response_length": 8192, "metadata": {}},
+        "portable-arithmetic", "invalid_format", "no complete editable files",
+    )
+    assert record["score"] == record["reward"] == -0.8
+    assert record["integrity_verdict"] == "TRUNCATED"
+    assert record["integrity_facts"]["unclosed_fence"] is True
+
+    loop = (FIXTURES / "responses/loop.txt").read_text()
+    record = generalized_cpp_grpo._model_failure(
+        {"response": loop, "response_length": 8192, "metadata": {}},
+        "portable-arithmetic", "invalid_format", "no complete editable files",
+    )
+    assert record["score"] == record["reward"] == -1.0
+    assert record["integrity_verdict"] == "LOOP"
+
+    forbidden = generalized_cpp_grpo._model_failure(
+        {"response": truncated, "metadata": {}},
+        "portable-arithmetic", "forbidden_file", "non-editable file",
+    )
+    assert forbidden["score"] == -1.0
+    assert "integrity_verdict" not in forbidden

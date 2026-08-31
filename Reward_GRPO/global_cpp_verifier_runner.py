@@ -337,7 +337,14 @@ def _normalize_kernel(
     errors: list[str] = []
     verdict = _status(raw.get("status") or raw.get("verdict"))
     value = raw.get("kernel", raw.get("score"))
-    expected_value = {"pass": 1, "fail": -1, "invalid": None}[verdict]
+    # A wrapper may mark a kernel not_run (e.g. G03's candidate kernel when
+    # G02 already scored the build failure): value must be null and the
+    # kernel is excluded from kernel_sum, not an invalid-kernel error.
+    if str(raw.get("status") or "").strip().lower() == "not_run" and value is None:
+        verdict = "not_run"
+        expected_value = None
+    else:
+        expected_value = {"pass": 1, "fail": -1, "invalid": None}[verdict]
     if value != expected_value or isinstance(value, bool):
         errors.append(f"kernel {index} verdict/value mismatch")
         verdict = "invalid"
@@ -439,7 +446,7 @@ def _normalize_receipt(
             errors.append("invalid receipt kernel maximum is inconsistent")
         normalized_sum: int | None = None
     else:
-        if len(numeric) != len(kernels):
+        if any(item["status"] == "invalid" for item in kernels):
             errors.append("non-invalid receipt contains an invalid kernel")
         derived = "pass" if numeric and computed_sum == computed_total else "fail"
         if receipt_status != derived:

@@ -6,7 +6,9 @@ the fixture's reference implementation (``.meta/example.h`` / optional
 ``.meta/example.cpp``) is built and run as a positive control, then the
 candidate is built and scored assertion-by-assertion against the same
 official test.  Emits one kernel for the reference control and one for the
-candidate differential score.
+candidate differential score; when the candidate does not build, the
+candidate kernel is ``not_run`` (kernel null) because G02 already scores
+that build failure.
 
 If the reference is missing or does not pass 100% of assertions the task
 package cannot establish a differential, so the verdict is invalid (never a
@@ -71,17 +73,23 @@ def run_checks(args, manifest):
 
     if candidate.get("status") == "BUILD_FAIL":
         build = candidate.get("build", {})
+        # G02 already scores this exact build failure (this engine reuses
+        # G02's build_candidate), so a second -1 here would double-count one
+        # root cause.  Emit the candidate kernel as not_run (kernel null,
+        # excluded from kernel_sum) and keep the build facts for diagnosis.
         kernels.append(common.kernel(
-            f"{POLICY_ID}-2", "fail",
+            f"{POLICY_ID}-2", "not_run",
             "candidate build failed: "
-            f"{build.get('status')} -- {build.get('feedback')}",
+            f"{build.get('status')} -- {build.get('feedback')} "
+            "(scored under G02; differential candidate kernel not run)",
             facts=facts))
-        status = "fail" if ref_ok else "invalid"
-        reason = ("candidate does not build against the official test"
-                  if ref_ok else
-                  "reference control failed; candidate build failure is "
-                  "not differentially attributable")
-        return kernels, status, reason
+        if not ref_ok:
+            return kernels, "invalid", (
+                "reference control failed; candidate build failure is "
+                "not differentially attributable")
+        return kernels, "pass", (
+            "reference control passed; candidate build failure is scored "
+            "by G02, so the differential candidate kernel was not run")
 
     run = candidate.get("run", {})
     score = run.get("score")
