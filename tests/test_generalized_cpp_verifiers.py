@@ -265,3 +265,13 @@ def test_parser_failures_are_routed_through_g04() -> None:
     )
     assert forbidden["score"] == -1.0
     assert "integrity_verdict" not in forbidden
+
+
+def test_empty_response_is_empty_verdict_not_flat_penalty() -> None:
+    for empty in ("", "   \n\t  "):
+        record = generalized_cpp_grpo._model_failure(
+            {"response": empty, "metadata": {}},
+            "portable-arithmetic", "invalid_format", "no complete editable files",
+        )
+        assert record["score"] == record["reward"] == -1.0
+        assert record["integrity_verdict"] == "EMPTY"

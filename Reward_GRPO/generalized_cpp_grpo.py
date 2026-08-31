@@ -320,8 +320,12 @@ def _response_integrity(response: str, gen_tokens: Any) -> dict[str, Any] | None
     training.  Any engine/IO problem falls back to the flat penalty silently.
     """
     engine = _integrity_engine_path()
-    if engine is None or not response:
+    if engine is None:
         return None
+    if not response.strip():
+        # A missing or empty generation is EMPTY by definition; only an
+        # absent engine still falls back to the flat penalty silently.
+        return {"verdict": "EMPTY", "details": {"reason": "empty_response"}}
     gen = gen_tokens if isinstance(gen_tokens, int) and not isinstance(gen_tokens, bool) else None
     temporary_path: Path | None = None
     try:
