@@ -21,6 +21,7 @@
 | [execution-midband-RL-v1](https://huggingface.co/TokenBender/glm47-bank-account-official-grpo20) | 8.25/26 mean | 13/26 mean | 4 | 104 |
 | [execution-midband-RL-v2](https://huggingface.co/TokenBender/execution-midband-RL-v2) | 10.5/26 mean | 14.5/26 mean | 4 | 104 |
 | [Phone Number kernel12 GRPO20, iter 14](results/phone-number-kernel12-GRPO20/) | 11.25/26 mean | 15.25/26 mean | 4 | 104 |
+| [Generalized C++ kernel GRPO20, iter 14](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20) | 11.75/26 mean | 16/26 mean | 4 | 104 |
 
 | Result | Pass@1 SD, range, 95% CI (out of 26) | Multi turn with feedback (turn=2) SD, range, 95% CI (out of 26) | Conditional turn-2 recovery |
 | --- | --- | --- | ---: |
@@ -29,6 +30,7 @@
 | execution-midband-RL-v1 | 2.06; 6-11; 4.75-12 | 0.82; 12-14; 9-17 | 19/71 (26.8%; CI 14.5-41.4%) |
 | execution-midband-RL-v2 | 1.29; 9-12; 7-14 | 2.08; 12-17; 10.5-18.5 | 16/62 (25.8%; CI 12.9-41.9%) |
 | Phone Number kernel12 GRPO20, iter 14 | 0.5; 11-12; 7.5-15 | 0.5; 15-16; 11-19.25 | 16/59 (27.1%; CI 13.1-44.2%) |
+| Generalized C++ kernel GRPO20, iter 14 | 1.50; 10-13; 8-15.5 | 1.41; 14-17; 11.75-20 | 17/57 (29.8%; CI 14.5-48.9%) |
 
 Statistics: [method and summary](results/statistics.md) · [per-task frequencies](results/per_task_success.csv) · [recompute](results/compute_statistics.py)
 
@@ -41,6 +43,10 @@ execution-midband-RL-v1 artifacts: [run archive](https://huggingface.co/TokenBen
 execution-midband-RL-v2 artifacts: [run archive](https://huggingface.co/TokenBender/execution-midband-RL-v2) · [final adapter](https://huggingface.co/TokenBender/execution-midband-RL-v2/tree/main/execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter) · [evaluation evidence](https://huggingface.co/TokenBender/execution-midband-RL-v2/tree/main/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818) · [evaluation method](results/execution-midband-rl-v2/method/) · [launch configurations](results/execution-midband-rl-v2/launch-configs/) · [W&B run](https://wandb.ai/ahm-rimer/execution-bank-RL-v2-think/runs/execution-bank-RL-v2-think-r2)
 
 Phone Number kernel12 GRPO20 artifacts: [run archive](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20) · [scored adapter](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/tree/main/checkpoints/iter_0000014/adapter) · [training dataset](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/blob/main/Phone_Number_train.jsonl) · [evaluation evidence](results/phone-number-kernel12-GRPO20/trials/) · [evaluation method](results/phone-number-kernel12-GRPO20/method/) · [launch configurations](results/phone-number-kernel12-GRPO20/launch-configs/) · [W&B run](https://wandb.ai/models-iit-bhu-news/glm47-phone-number-dnd-grpo/runs/phone-number-kernel12-grpo20-spot-20260822-102653)
+
+Generalized C++ kernel GRPO20 artifacts: [run archive](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20) · [scored adapter, iter 14](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20/tree/main/checkpoints/iter_0000014/adapter) · [training dataset](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20/blob/main/Generalized_CPP_GRPO20_train.jsonl) · [evaluation evidence](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20/tree/main/evaluations/iter14-fixed26-mt2-best4-20260902) · [W&B run](https://wandb.ai/himanshu2725pathak-wootzapp/glm47-generalized-cpp-grpo/runs/generalized-cpp-kernel-grpo20-spot-20260829-083214-retry1)
+
+Generalized C++ result boundary: this row uses four selected, receipt-verified `fixed26-contract-v2` trials. It is an assisted regression result, not a random four-trial or pristine held-out benchmark claim; six training task IDs overlap Fixed26.
 
 ## How to reproduce
 
