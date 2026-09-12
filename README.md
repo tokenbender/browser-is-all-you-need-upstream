@@ -48,6 +48,59 @@ Generalized C++ kernel GRPO20 artifacts: [run archive](https://huggingface.co/Te
 
 Generalized C++ result boundary: this row uses four selected, receipt-verified `fixed26-contract-v2` trials. It is an assisted regression result, not a random four-trial or pristine held-out benchmark claim; six training task IDs overlap Fixed26.
 
+## Generalized and targeted C++ verifier layers
+
+In plain language, G01-G07 remain the seven broad verifiers used across C++
+tasks. This change adds one targeted midband layer containing 11 task-specific
+semantic verifiers. Nine cover the original midband set: allergies, bank
+account, circular buffer, complex numbers, D&D character, grade school, perfect
+numbers, space age, and sublist. Clock and yacht were added afterward because
+the September evaluations had low Pass@1 but high MEF on those problems.
+
+`generalized_verifier_docs/` contains the seven standalone engines used by
+the generalized verifier policy. They derive task details from CLI inputs;
+they do not contain task-name-specific scoring rules.
+
+The GRPO reward runs these engines through the production wrappers under
+`Reward_GRPO/Generalized Cpp Verifiers/verifiers/` and composes their result
+with `Reward_GRPO/generalized_cpp_topic_grpo.py`. The targeted layer covers
+allergies, bank account, circular buffer, clock, complex numbers, D&D character,
+grade school, perfect numbers, space age, sublist, and yacht. Each task has a
+separate behavioral probe under `Reward_GRPO/topic_coverage/probes/`; circular
+buffer also has an auxiliary translation-unit probe.
+
+The adapters expect the authenticated task registry, manifests, admission
+evidence, and trusted C++ fixtures to be staged at their existing
+`Reward_GRPO/` paths before building the sandbox image. Those generated or
+run-bound assets are intentionally excluded from this verifier-code review.
+
+| Policy | Engine | Check |
+| --- | --- | --- |
+| G01 | `01_structural_api_gate.py` | API symbols and declaration shape derived from the official test |
+| G02 | `03_two_stage_build_verifier.py` | Candidate compile, test compile, and attributable linker failures |
+| G03 | `04_differential_semantic_verifier.py` | Reference positive control and candidate assertion score |
+| G04 | `05_response_integrity_verifier.py` | Empty, looping, or truncated model responses |
+| G05 | `06_candidate_boundary_verifier.py` | Whole-file parsing and editable-file boundaries |
+| G06 | `07_warning_hygiene_classifier.py` | Compiler diagnostic classes and repair guidance |
+| G07 | `08_safety_sanitizer_verifier.py` | ASan/UBSan findings without duplicating build or functional penalties |
+
+The Python CLIs use only the standard library. Build, semantic, and safety
+checks require a C++17 compiler (`g++` by default, or `$CXX`). Every engine
+supports `--json` and `--receipt DIR`; receipt mode records hashes of the
+verifier and its inputs. Run all positive and negative controls with:
+
+```bash
+python3 generalized_verifier_docs/validation/self_check.py
+```
+
+Validate the targeted registry, reward-family denominators, and probe inventory:
+
+```bash
+PYTHONPATH=src:. python3 Reward_GRPO/topic_coverage/self_check.py
+```
+
+Each engine also provides `--help` with its task-independent input contract.
+
 ## How to reproduce
 
 ```bash
