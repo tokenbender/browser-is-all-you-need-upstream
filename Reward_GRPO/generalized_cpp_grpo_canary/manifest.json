@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "task_id": "portable-arithmetic",
+  "source": "generalized-cpp-grpo-canary-v1",
+  "candidate_files": [
+    "arithmetic.cpp",
+    "arithmetic.h"
+  ],
+  "protected_files": {
+    ".meta/example.cpp": "566d2942d8057b1ce6a9f40d55d5c6a8fdb2351cd9236a808a608251ea040cb8",
+    ".meta/example.h": "ba8efbd3d48ea085b26cfc291d2238ef122ac5cc256f298b60832fdaa6d664c5",
+    "arithmetic.cpp": "566d2942d8057b1ce6a9f40d55d5c6a8fdb2351cd9236a808a608251ea040cb8",
+    "arithmetic.h": "ba8efbd3d48ea085b26cfc291d2238ef122ac5cc256f298b60832fdaa6d664c5",
+    "arithmetic_test.cpp": "efa73590d96d9ef06b88236cb9e6825eb0d07cfc60b99dc4b4073daaec0d31a9",
+    "test/tests-main.cpp": "1d666b80f4eba93218aa008dea042b9ee68a694f7e2c7f0596897f8da85f82a6"
+  },
+  "fixture_dir": "fixture",
+  "policies": {
+    "G02": [],
+    "G03": [],
+    "G04": [],
+    "G05": [],
+    "G06": [],
+    "G07": []
+  }
+}

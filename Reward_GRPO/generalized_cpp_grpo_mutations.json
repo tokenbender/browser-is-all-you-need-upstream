@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "tasks": {
+    "allergies": {
+      "semantic": {
+        "file": "allergies.cpp",
+        "find": "return (result & allergen_value) == allergen_value;",
+        "replace": "return (result & allergen_value) == 0;"
+      }
+    },
+    "bank-account": {
+      "semantic": {
+        "file": "bank_account.cpp",
+        "find": "balance_ -= amount;",
+        "replace": "balance_ += amount;"
+      }
+    },
+    "circular-buffer": {
+      "semantic": {
+        "file": "circular_buffer.h",
+        "find": "if (is_full()) move_position(head_);",
+        "replace": "if (is_full()) move_position(tail_);"
+      }
+    },
+    "clock": {
+      "semantic": {
+        "file": "clock.cpp",
+        "find": "minute_ += minutes;",
+        "replace": "minute_ -= minutes;"
+      }
+    },
+    "complex-numbers": {
+      "semantic": {
+        "file": "complex_numbers.cpp",
+        "find": "re + other.re",
+        "replace": "re - other.re"
+      }
+    },
+    "crypto-square": {
+      "semantic": {
+        "file": "crypto_square.cpp",
+        "find": "!isspace(c) && !ispunct(c)",
+        "replace": "!isspace(c)"
+      }
+    },
+    "dnd-character": {
+      "semantic": {
+        "file": "dnd_character.cpp",
+        "find": "(static_cast<double>(score) - 10) / 2",
+        "replace": "(static_cast<double>(score) - 11) / 2"
+      }
+    },
+    "grade-school": {
+      "semantic": {
+        "file": "grade_school.cpp",
+        "find": "vector<string>{};",
+        "replace": "vector<string>{\"mutant\"};"
+      }
+    },
+    "kindergarten-garden": {
+      "semantic": {
+        "file": "kindergarten_garden.cpp",
+        "find": "diagram[first_plant_index], diagram[first_plant_index + 1]",
+        "replace": "diagram[first_plant_index + 1], diagram[first_plant_index]"
+      }
+    },
+    "perfect-numbers": {
+      "semantic": {
+        "file": "perfect_numbers.cpp",
+        "find": "if (aliq < n)",
+        "replace": "if (aliq <= n)"
+      }
+    },
+    "queen-attack": {
+      "semantic": {
+        "file": "queen_attack.cpp",
+        "find": "(black_.second - white_.second));",
+        "replace": "(white_.second - black_.second));"
+      }
+    },
+    "space-age": {
+      "semantic": {
+        "file": "space_age.cpp",
+        "find": "earth_years_per_mercury_year = 0.2408467",
+        "replace": "earth_years_per_mercury_year = 0.3408467"
+      }
+    },
+    "spiral-matrix": {
+      "semantic": {
+        "file": "spiral_matrix.cpp",
+        "find": "matrix_elem(coords) = i;",
+        "replace": "matrix_elem(coords) = i + (i > 1 ? 1u : 0u);"
+      }
+    },
+    "sublist": {
+      "semantic": {
+        "file": "sublist.cpp",
+        "find": "if (std::equal(sublist.begin(), sublist.end(), it)) return true;",
+        "replace": "if (it == superlist.begin() && std::equal(sublist.begin(), sublist.end(), it)) return true;"
+      }
+    },
+    "yacht": {
+      "semantic": {
+        "file": "yacht.cpp",
+        "find": "return is_yacht(dice) ? 50 : 0;",
+        "replace": "return is_yacht(dice) ? 40 : 0;"
+      }
+    }
+  }
+}

@@ -25,3 +25,9 @@ task-pools/
 gem5-results/
 perf-results/
 *.parquet
+
+# Local credentials and verifier-generated evidence; never publication inputs.
+.gcp-service-account.json
+generalized_verifier_docs/validation/SELF_CHECK.md
+generalized_verifier_docs/validation/self_check_generated/
+generalized_verifier_docs/validation/self_check_receipts/

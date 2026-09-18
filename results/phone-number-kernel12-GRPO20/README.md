@@ -9,9 +9,12 @@
 | Scored checkpoint | `iter_0000014` |
 | Training status | Passed |
 | Fixed26 evaluation | Four authoritative trials, 104 task-trial samples |
-| Hugging Face archive | [TokenBender/phone-number-kernel12-GRPO20](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20) |
+| Hugging Face archive | [WootzappLab/phone-number-kernel12-GRPO20](https://huggingface.co/WootzappLab/phone-number-kernel12-GRPO20/tree/adf419fcb32baa335d80c3d9a96c618f3f286a14) |
 | W&B run | [phone-number-kernel12-grpo20-spot-20260822-102653](https://wandb.ai/models-iit-bhu-news/glm47-phone-number-dnd-grpo/runs/phone-number-kernel12-grpo20-spot-20260822-102653) |
-| Dataset | [Phone_Number_train.jsonl](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/blob/main/Phone_Number_train.jsonl) |
+| Dataset | [Phone_Number_train.jsonl](https://huggingface.co/WootzappLab/phone-number-kernel12-GRPO20/blob/adf419fcb32baa335d80c3d9a96c618f3f286a14/Phone_Number_train.jsonl) |
+
+The Wootzapp archive requires an authorized Hugging Face login. The original
+run identity, public-release history and result receipts remain unchanged.
 
 ## Release checklist
 
@@ -19,7 +22,7 @@
 | ---: | --- | --- |
 | 1 | Public release | Published as `phone-number-kernel12-GRPO20`. |
 | 2 | Hugging Face run archive | Public under `TokenBender`; contains adapters from iterations 4, 9, 14, and 19. |
-| 3 | Direct scored adapter | [iter_0000014 adapter](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/tree/main/checkpoints/iter_0000014/adapter). |
+| 3 | Direct scored adapter | [iter_0000014 adapter](https://huggingface.co/WootzappLab/phone-number-kernel12-GRPO20/tree/adf419fcb32baa335d80c3d9a96c618f3f286a14/checkpoints/iter_0000014/adapter). |
 | 4 | Fixed26 evaluation archive | Four aggregate and eight shard receipts are committed under [`trials/`](trials/); complete raw workspaces remain in durable GCS. |
 | 5 | Training/evaluation configs | Published on this GitHub branch: [reward implementation](../../Reward_GRPO/phone_number_grpo.py), [training YAML](../../Reward_GRPO/phone_number_grpo_skypilot.yaml), and [evaluation YAML](../../eval-job22-contractv2/phone-number-iter14-skypilot.yaml). |
 | 6 | W&B | Public run link recorded above. |
@@ -85,7 +88,7 @@ LoRA target modules:
 
 ## Dataset
 
-Dataset artifact: [TokenBender/phone-number-kernel12-GRPO20/Phone_Number_train.jsonl](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/blob/main/Phone_Number_train.jsonl)
+Dataset artifact: [WootzappLab/phone-number-kernel12-GRPO20/Phone_Number_train.jsonl](https://huggingface.co/WootzappLab/phone-number-kernel12-GRPO20/blob/adf419fcb32baa335d80c3d9a96c618f3f286a14/Phone_Number_train.jsonl)
 
 | Field | Value |
 | --- | --- |

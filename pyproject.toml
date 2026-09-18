@@ -15,6 +15,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "pytest>=8",
+    "jsonschema>=4.18",
+    # Existing training-gate verifier tests exercise real CPU tensors.
+    "torch>=2.4",
     "ruff>=0.6",
 ]
 
@@ -29,3 +33,17 @@ packages = ["src/glm47_posttraining"]
 
 [tool.ruff]
 line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", ".", "tests"]
+addopts = "-p test_generalized_cpp_grpo"
+markers = ["staged_assets: integration checks requiring an explicitly supplied production task registry"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

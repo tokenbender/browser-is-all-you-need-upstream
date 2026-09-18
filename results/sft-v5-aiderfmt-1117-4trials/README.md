@@ -13,7 +13,10 @@
 - Statistics: [summary](../statistics.md) · [per-task frequencies](../per_task_success.csv)
 - Checkpoint: [TokenBender/glm47-aider-sft-v5-aiderfmt-1117-3ep](https://huggingface.co/TokenBender/glm47-aider-sft-v5-aiderfmt-1117-3ep/tree/5d06951941a30939920fb2b7558aa95085531d52)
 - Training dataset: [sft-v5-aiderfmt-1117-api-contracts.jsonl](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/blob/6ef50c6fd1aca637c3df2df00c9aab4120140797/datasets/aiderfmt-api-contracts-20260727/sft/sft-v5-aiderfmt-1117-api-contracts.jsonl)
-- Evaluation evidence: [fixed26 pass-8 archive](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/2397232ab6476b414a7af99d9ee6cfe45a856c86/evals/sft-v5-aiderfmt-1117-fixed26contract-pass8-20260727)
+- Evaluation evidence: [fixed26 pass-8 archive](https://huggingface.co/datasets/WootzappLab/glm47-aider-fixed26-responses/tree/b47e31f014c4128cad19d625317229637f337996/evals/sft-v5-aiderfmt-1117-fixed26contract-pass8-20260727) (private; authorized HF access required; exact payload preserved)
+
+The training-dataset link above is historical provenance. Its URL/hash mapping
+remains unverified; it is not a verified current download instruction.
 
 ## How to reproduce
 
