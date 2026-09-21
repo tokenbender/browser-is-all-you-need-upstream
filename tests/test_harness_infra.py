@@ -33,8 +33,8 @@ SEMANTIC_LOG = "FAILED: restart_resets_zero\nVerification failed after 19 assert
 PASS_LOG = "All tests passed (19 assertions in 19 test cases)\n"
 
 LEDGER = (
-    pathlib.Path(__file__).resolve().parent.parent
-    / "docs/worklogs/issue110-r3-rollout-forensics/gate_records.jsonl"
+    pathlib.Path(__file__).resolve().parent
+    / "fixtures/issue110-r3-gate-records.jsonl"
 )
 
 

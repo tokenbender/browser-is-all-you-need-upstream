@@ -1,0 +1,17 @@
+arithmetic.h
+```cpp
+#pragma once
+namespace demo {
+int add(int left, int right);
+int multiply(int left, int right);
+}
+```
+
+arithmetic.cpp
+```cpp
+#include "arithmetic.h"
+namespace demo {
+int add(int left, int right) { return left + right; }
+int multiply(int left, int right) { return left * right; }
+}
+```

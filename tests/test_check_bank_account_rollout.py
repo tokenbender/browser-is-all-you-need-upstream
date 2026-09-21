@@ -22,7 +22,7 @@ EAGAIN_LOG = (
     "terminate called after throwing an instance of 'std::system_error'\n"
     "  what():  Resource temporarily unavailable\n"
 )
-LEDGER = ROOT / "docs/worklogs/issue110-r3-rollout-forensics/gate_records.jsonl"
+LEDGER = ROOT / "tests/fixtures/issue110-r3-gate-records.jsonl"
 
 
 def _row(task, sample, *, passed=False, load=1, test_log="", infra=False):

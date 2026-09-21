@@ -14,7 +14,8 @@ FENCE_RE = re.compile(
 TERMINAL_STOP_RE = re.compile(
     r"(?:[ \t\r\n]*(?:<\|endoftext\|>|<\|user\|>|<\|observation\|>))+$"
 )
-RECOVERABLE_LABEL_RE = re.compile(r"^(?:#{1,6}\s+|[-*]\s+)?`{0,2}(?P<label>[^`]+?)`{0,2}:?$")
+LABEL_PREFIX_RE = re.compile(r"^(?:#{1,6}\s+|[-+*]\s+)")
+MARKDOWN_WRAPPERS = ("**", "__", "``", "`", "*", "_")
 PROTECTED_NAMES = {"CMakeLists.txt"}
 PROTECTED_SUFFIXES = ("_test.cpp", "_test.cc", "_test.h", ".cmake")
 MAX_RESPONSE_BYTES = 1024 * 1024
@@ -35,7 +36,12 @@ class ParsedAiderResponse:
     format_valid: bool
 
 
-def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> ParsedAiderResponse:
+def parse_whole_file_response(
+    response: str,
+    editable_files: Iterable[str],
+    *,
+    recover_boundary_errors: bool = False,
+) -> ParsedAiderResponse:
 
 
 
@@ -65,6 +71,7 @@ def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> P
     parsed: dict[str, str] = {}
     format_valid = True
     fence_count = 0
+    first_boundary_error: AiderResponseError | None = None
 
     for match in FENCE_RE.finditer(response):
         fence_count += 1
@@ -77,23 +84,34 @@ def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> P
         elif normalized and PurePath(normalized).name in allowed:
             target, exact = PurePath(normalized).name, False
         elif _looks_like_file_target(normalized):
-            raise AiderResponseError(
+            error = AiderResponseError(
                 "forbidden_file", f"response targets non-editable file: {normalized}"
             )
+            if not recover_boundary_errors:
+                raise error
+            first_boundary_error = first_boundary_error or error
+            format_valid = False
+            continue
         else:
             format_valid = False
             continue
 
         if target in parsed:
-            raise AiderResponseError(
+            error = AiderResponseError(
                 "duplicate_file", f"response contains duplicate file: {target}"
             )
+            if not recover_boundary_errors:
+                raise error
+            first_boundary_error = first_boundary_error or error
+            format_valid = False
         if language not in {"", "cpp", "c++", "cc", "hpp", "h"}:
             format_valid = False
         if not exact:
             format_valid = False
         parsed[target] = match.group("code").rstrip() + "\n"
 
+    if not parsed and first_boundary_error is not None:
+        raise first_boundary_error
     if fence_count == 0 or not parsed:
         raise AiderResponseError("invalid_format", "response contains no complete editable files")
     return ParsedAiderResponse(files=parsed, format_valid=format_valid)
@@ -108,8 +126,19 @@ def _preceding_line(text: str, offset: int) -> str:
 
 def _normalize_label(label_line: str) -> tuple[str, bool]:
     exact = label_line.strip()
-    match = RECOVERABLE_LABEL_RE.fullmatch(exact)
-    normalized = match.group("label").strip() if match else exact
+    normalized = LABEL_PREFIX_RE.sub("", exact, count=1).strip()
+    if normalized.endswith(":"):
+        normalized = normalized[:-1].rstrip()
+    for wrapper in MARKDOWN_WRAPPERS:
+        if (
+            normalized.startswith(wrapper)
+            and normalized.endswith(wrapper)
+            and len(normalized) > 2 * len(wrapper)
+        ):
+            normalized = normalized[len(wrapper):-len(wrapper)].strip()
+            if normalized.endswith(":"):
+                normalized = normalized[:-1].rstrip()
+            break
     return normalized, normalized == exact
 
 

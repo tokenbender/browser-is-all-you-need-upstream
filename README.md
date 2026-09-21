@@ -21,7 +21,7 @@
 | [execution-midband-RL-v1](https://huggingface.co/TokenBender/glm47-bank-account-official-grpo20) | 8.25/26 mean | 13/26 mean | 4 | 104 |
 | [execution-midband-RL-v2](https://huggingface.co/TokenBender/execution-midband-RL-v2) | 10.5/26 mean | 14.5/26 mean | 4 | 104 |
 | [Phone Number kernel12 GRPO20, iter 14](results/phone-number-kernel12-GRPO20/) | 11.25/26 mean | 15.25/26 mean | 4 | 104 |
-| [Generalized C++ kernel GRPO20, iter 14](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20) | 11.75/26 mean | 16/26 mean | 4 | 104 |
+| [Generalized C++ kernel GRPO20, iter 14](https://huggingface.co/WootzappLab/generalized-cpp-kernel-GRPO20/tree/269560b1f4d6471a1726dd7a95712ef4e3da0838) | 11.75/26 mean | 16/26 mean | 4 | 104 |
 
 | Result | Pass@1 SD, range, 95% CI (out of 26) | Multi turn with feedback (turn=2) SD, range, 95% CI (out of 26) | Conditional turn-2 recovery |
 | --- | --- | --- | ---: |
@@ -32,19 +32,25 @@
 | Phone Number kernel12 GRPO20, iter 14 | 0.5; 11-12; 7.5-15 | 0.5; 15-16; 11-19.25 | 16/59 (27.1%; CI 13.1-44.2%) |
 | Generalized C++ kernel GRPO20, iter 14 | 1.50; 10-13; 8-15.5 | 1.41; 14-17; 11.75-20 | 17/57 (29.8%; CI 14.5-48.9%) |
 
-Statistics: [method and summary](results/statistics.md) · [per-task frequencies](results/per_task_success.csv) · [recompute](results/compute_statistics.py)
+Statistics: [machine summary](results/statistics.json) · [per-task frequencies](results/per_task_success.csv) · [recompute](results/compute_statistics.py)
 
-SFT v5 artifacts: [checkpoint](https://huggingface.co/TokenBender/glm47-aider-sft-v5-aiderfmt-1117-3ep/tree/5d06951941a30939920fb2b7558aa95085531d52) · [training dataset](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/blob/6ef50c6fd1aca637c3df2df00c9aab4120140797/datasets/aiderfmt-api-contracts-20260727/sft/sft-v5-aiderfmt-1117-api-contracts.jsonl) · [evaluation evidence](https://huggingface.co/datasets/TokenBender/glm47-aider-fixed26-responses/tree/2397232ab6476b414a7af99d9ee6cfe45a856c86/evals/sft-v5-aiderfmt-1117-fixed26contract-pass8-20260727)
+SFT v5 artifacts: [checkpoint](https://huggingface.co/TokenBender/glm47-aider-sft-v5-aiderfmt-1117-3ep/tree/5d06951941a30939920fb2b7558aa95085531d52) · [training dataset](https://huggingface.co/datasets/TokenBender/glm47-aider-posttraining-data/blob/6ef50c6fd1aca637c3df2df00c9aab4120140797/datasets/aiderfmt-api-contracts-20260727/sft/sft-v5-aiderfmt-1117-api-contracts.jsonl) · [evaluation evidence](https://huggingface.co/datasets/WootzappLab/glm47-aider-fixed26-responses/tree/b47e31f014c4128cad19d625317229637f337996/evals/sft-v5-aiderfmt-1117-fixed26contract-pass8-20260727)
 
-Synth v1 artifacts: [reproducibility bundle](https://huggingface.co/TokenBender/glm47-synth-v1-reproducibility) · [checkpoint archive](https://huggingface.co/TokenBender/glm47-synth-v1-100ep) · [training dataset](https://huggingface.co/datasets/TokenBender/glm47-synth-v1-dataset) · [evaluation archive](https://huggingface.co/datasets/TokenBender/glm47-synth-v1-fixed26-evals) · [W&B run](https://wandb.ai/ahm-rimer/glm47-aider-cpp-sft/runs/glm47-synth-memorization-v1-100ep-20260731T071000Z)
+Synth v1 artifacts: [reproducibility bundle](https://huggingface.co/TokenBender/glm47-synth-v1-reproducibility) · [checkpoint archive](https://huggingface.co/TokenBender/glm47-synth-v1-100ep) · [training dataset](https://huggingface.co/datasets/WootzappLab/glm47-synth-v1-dataset/tree/face23163ca2e9c27f2506b8c757af6ed666dfb7) · [evaluation archive](https://huggingface.co/datasets/WootzappLab/glm47-synth-v1-fixed26-evals/tree/ec8b93b8f5916f81b9fecdc9f55960919ef92e2e) · [W&B run](https://wandb.ai/ahm-rimer/glm47-aider-cpp-sft/runs/glm47-synth-memorization-v1-100ep-20260731T071000Z)
+
+The evaluation archives require authorized WootzappLab HF access and remain
+evaluation-only. Their payloads are unchanged; historical result manifests
+retain their source identities.
+The SFT v5 training-dataset URL records historical provenance: its URL/hash mapping
+remains unverified and must not be treated as a verified current download.
 
 execution-midband-RL-v1 artifacts: [run archive](https://huggingface.co/TokenBender/glm47-bank-account-official-grpo20) · [final adapter](https://huggingface.co/TokenBender/glm47-bank-account-official-grpo20/tree/main/runs/issue111-bank-official-grpo20-20260817T151213Z/checkpoints/grpo_lora_r16/iter_0000019/adapter) · [evaluation evidence](https://huggingface.co/TokenBender/glm47-bank-account-official-grpo20/tree/main/fixed26-evaluations/issue111-grpo20-iter19-fixed26-mt2-suite-20260817T193037Z) · [evaluation method](results/execution-midband-rl-v1/method/)
 
 execution-midband-RL-v2 artifacts: [run archive](https://huggingface.co/TokenBender/execution-midband-RL-v2) · [final adapter](https://huggingface.co/TokenBender/execution-midband-RL-v2/tree/main/execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter) · [evaluation evidence](https://huggingface.co/TokenBender/execution-midband-RL-v2/tree/main/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818) · [evaluation method](results/execution-midband-rl-v2/method/) · [launch configurations](results/execution-midband-rl-v2/launch-configs/) · [W&B run](https://wandb.ai/ahm-rimer/execution-bank-RL-v2-think/runs/execution-bank-RL-v2-think-r2)
 
-Phone Number kernel12 GRPO20 artifacts: [run archive](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20) · [scored adapter](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/tree/main/checkpoints/iter_0000014/adapter) · [training dataset](https://huggingface.co/TokenBender/phone-number-kernel12-GRPO20/blob/main/Phone_Number_train.jsonl) · [evaluation evidence](results/phone-number-kernel12-GRPO20/trials/) · [evaluation method](results/phone-number-kernel12-GRPO20/method/) · [launch configurations](results/phone-number-kernel12-GRPO20/launch-configs/) · [W&B run](https://wandb.ai/models-iit-bhu-news/glm47-phone-number-dnd-grpo/runs/phone-number-kernel12-grpo20-spot-20260822-102653)
+Phone Number kernel12 GRPO20 artifacts: [run archive](https://huggingface.co/WootzappLab/phone-number-kernel12-GRPO20/tree/adf419fcb32baa335d80c3d9a96c618f3f286a14) · [scored adapter](https://huggingface.co/WootzappLab/phone-number-kernel12-GRPO20/tree/adf419fcb32baa335d80c3d9a96c618f3f286a14/checkpoints/iter_0000014/adapter) · [training dataset](https://huggingface.co/WootzappLab/phone-number-kernel12-GRPO20/blob/adf419fcb32baa335d80c3d9a96c618f3f286a14/Phone_Number_train.jsonl) · [evaluation evidence](results/phone-number-kernel12-GRPO20/trials/) · [evaluation method](results/phone-number-kernel12-GRPO20/method/) · [launch configurations](results/phone-number-kernel12-GRPO20/launch-configs/) · [W&B run](https://wandb.ai/models-iit-bhu-news/glm47-phone-number-dnd-grpo/runs/phone-number-kernel12-grpo20-spot-20260822-102653)
 
-Generalized C++ kernel GRPO20 artifacts: [run archive](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20) · [scored adapter, iter 14](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20/tree/main/checkpoints/iter_0000014/adapter) · [training dataset](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20/blob/main/Generalized_CPP_GRPO20_train.jsonl) · [evaluation evidence](https://huggingface.co/Terrano09/generalized-cpp-kernel-GRPO20/tree/main/evaluations/iter14-fixed26-mt2-best4-20260902) · [W&B run](https://wandb.ai/himanshu2725pathak-wootzapp/glm47-generalized-cpp-grpo/runs/generalized-cpp-kernel-grpo20-spot-20260829-083214-retry1)
+Generalized C++ kernel GRPO20 artifacts: [run archive](https://huggingface.co/WootzappLab/generalized-cpp-kernel-GRPO20/tree/269560b1f4d6471a1726dd7a95712ef4e3da0838) · [scored adapter, iter 14](https://huggingface.co/WootzappLab/generalized-cpp-kernel-GRPO20/tree/269560b1f4d6471a1726dd7a95712ef4e3da0838/checkpoints/iter_0000014/adapter) · [training dataset](https://huggingface.co/WootzappLab/generalized-cpp-kernel-GRPO20/blob/269560b1f4d6471a1726dd7a95712ef4e3da0838/Generalized_CPP_GRPO20_train.jsonl) · [evaluation evidence](https://huggingface.co/WootzappLab/generalized-cpp-kernel-GRPO20/tree/269560b1f4d6471a1726dd7a95712ef4e3da0838/evaluations/iter14-fixed26-mt2-best4-20260902) · [W&B run](https://wandb.ai/himanshu2725pathak-wootzapp/glm47-generalized-cpp-grpo/runs/generalized-cpp-kernel-grpo20-spot-20260829-083214-retry1)
 
 Generalized C++ result boundary: this row uses four selected, receipt-verified `fixed26-contract-v2` trials. It is an assisted regression result, not a random four-trial or pristine held-out benchmark claim; six training task IDs overlap Fixed26.
 
@@ -61,24 +67,6 @@ export OPENAI_API_KEY=local-eval
 cd results/luna-fixed26-20260805/reproduction
 export OPENROUTER_API_KEY=...
 ./run.sh
-```
-
-```bash
-cd results/sft-v5-aiderfmt-1117-4trials/reproduction
-./run.sh
-```
-
-```bash
-cd results/synth-v1-ep50-9.5-mean/reproduction
-./run.sh
-```
-
-```bash
-modal run results/execution-midband-rl-v1/method/aider_eval_app.py --parallel \
-  --adapter-path /runs/issue111-bank-official-grpo20-20260817T151213Z/checkpoints/grpo_lora_r16/iter_0000019/adapter \
-  --expected-adapter-sha256 186b0fc5b200fb8bb55bf85ee4416f2682a470580f0231c6f3f2a4d414bd898e \
-  --expected-data-manifest-sha256 b9c80354d4d05123f8a3768898379ff215251fdf3444e6e0f05d52b02b968299 \
-  --run-id <fresh-fixed26-run-id>
 ```
 
 ```bash
